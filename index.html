@@ -81,124 +81,131 @@
   <body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-50 text-slate-800 antialiased select-none">
 
     <!-- TOP HEADER NAVBAR -->
-    <header class="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 z-30 shadow-xs">
-      <!-- Left Brand -->
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-sm ring-2 ring-blue-100">
+    <header class="h-14 bg-white border-b border-slate-200 px-3 sm:px-4 flex items-center justify-between shrink-0 z-30 shadow-xs">
+      <!-- Left: Logo (Icon Only) & Default Controls (Split, View Code, Preview Diagram) -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <!-- Logo Icon Only (Text Hidden) -->
+        <div
+          id="app-logo"
+          class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-sm ring-2 ring-blue-100 shrink-0"
+          title="Sequence Diagram Visualizer"
+        >
           <i data-lucide="git-commit" class="w-5 h-5"></i>
         </div>
-        <div>
-          <h1 class="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            Sequence Diagram Visualizer
-            <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold bg-blue-50 text-blue-700 rounded-full border border-blue-100">
-              Vanilla JS &amp; Mermaid
-            </span>
-          </h1>
-          <p class="text-[11px] text-slate-500 leading-tight hidden md:block">
-            Editor real-time tanpa build process &bull; Ekspor gambar otomatis (PNG/SVG)
-          </p>
-        </div>
-      </div>
 
-      <!-- Center Toolbar -->
-      <div class="flex items-center gap-2">
-        <!-- Template Menu Dropdown -->
-        <div class="relative">
-          <button
-            id="btn-templates-menu"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors shadow-2xs"
-          >
-            <i data-lucide="folder-open" class="w-3.5 h-3.5 text-blue-600"></i>
-            <span class="hidden sm:inline">Pilih Template</span>
-            <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
-          </button>
-          <div
-            id="dropdown-templates"
-            class="hidden absolute left-0 mt-1.5 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-40"
-          >
-            <div class="px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-              Pustaka Template Diagram
-            </div>
-            <div id="templates-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100"></div>
-          </div>
-        </div>
-
-        <!-- Layout Mode Switcher -->
-        <div class="hidden lg:flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
+        <!-- Layout Mode Switcher (Split, View Code, Preview Diagram - Icon Only, No Text) -->
+        <div class="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
           <button
             id="layout-split"
-            class="layout-btn px-2.5 py-1 rounded-md font-semibold transition-colors flex items-center gap-1.5 bg-white text-slate-800 shadow-2xs"
-            title="Tampilan Bersanding (Split)"
+            class="layout-btn w-8 h-8 rounded-md font-semibold transition-colors flex items-center justify-center bg-white text-slate-800 shadow-2xs"
+            title="Tampilan Split (Bersanding / Atas-Bawah)"
+            aria-label="Tampilan Split"
           >
-            <i data-lucide="columns" class="w-3.5 h-3.5 text-blue-600"></i>
-            <span>Split</span>
+            <i data-lucide="columns" class="w-4 h-4 text-blue-600"></i>
           </button>
           <button
             id="layout-editor"
-            class="layout-btn px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5"
-            title="Hanya Editor Kode"
+            class="layout-btn w-8 h-8 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center"
+            title="Tampilkan Kode (Editor Saja)"
+            aria-label="Tampilan Editor Kode"
           >
-            <i data-lucide="file-code" class="w-3.5 h-3.5"></i>
-            <span>Editor</span>
+            <i data-lucide="file-code" class="w-4 h-4"></i>
           </button>
           <button
             id="layout-diagram"
-            class="layout-btn px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5"
-            title="Hanya Kanvas Diagram"
+            class="layout-btn w-8 h-8 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center"
+            title="Tampilkan Diagram (Pratinjau Saja)"
+            aria-label="Tampilan Pratinjau Diagram"
           >
-            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
-            <span>Diagram</span>
+            <i data-lucide="maximize-2" class="w-4 h-4"></i>
           </button>
         </div>
       </div>
 
-      <!-- Right Action Controls -->
-      <div class="flex items-center gap-2">
-        <!-- Auto Export Toggle -->
-        <button
-          id="btn-toggle-auto-export"
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-          title="Nyalakan/Matikan Ekspor Gambar Otomatis"
-        >
-          <i data-lucide="zap" id="icon-auto-zap" class="w-3.5 h-3.5 text-slate-400"></i>
-          <span id="label-auto-export" class="hidden sm:inline">Ekspor Otomatis: Mati</span>
-        </button>
+      <!-- Right: Extra Tools (Hide by default) & Toggle Button -->
+      <div class="flex items-center gap-1.5">
+        <!-- Extra Tools Container (HIDE BY DEFAULT) -->
+        <div id="extra-toolbar-group" class="hidden items-center gap-1.5 transition-all">
+          <!-- Template Menu Dropdown (Icon Only) -->
+          <div class="relative">
+            <button
+              id="btn-templates-menu"
+              class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs"
+              title="Pilih Template Diagram"
+              aria-label="Pilih Template Diagram"
+            >
+              <i data-lucide="folder-open" class="w-4 h-4 text-blue-600"></i>
+            </button>
+            <div
+              id="dropdown-templates"
+              class="hidden absolute right-0 mt-1.5 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-40"
+            >
+              <div class="px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                Pustaka Template Diagram
+              </div>
+              <div id="templates-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100"></div>
+            </div>
+          </div>
 
-        <!-- Gallery Snapshots Badge -->
-        <button
-          id="btn-header-gallery"
-          class="hidden flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium"
-          title="Buka Galeri Snapshot"
-        >
-          <i data-lucide="layers" class="w-3.5 h-3.5 text-blue-600"></i>
-          <span id="snapshot-count" class="font-mono text-xs font-bold">0</span>
-        </button>
+          <!-- Auto Export Toggle (Icon Only) -->
+          <button
+            id="btn-toggle-auto-export"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+            title="Ekspor Otomatis: Nonaktif (Klik untuk Menyalakan)"
+            aria-label="Toggle Ekspor Otomatis"
+          >
+            <i data-lucide="zap" id="icon-auto-zap" class="w-4 h-4 text-slate-400"></i>
+            <span id="label-auto-export" class="hidden">Ekspor Otomatis: Mati</span>
+          </button>
 
-        <!-- Quick Download PNG -->
-        <button
-          id="btn-quick-download-png"
-          class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-colors border border-slate-200"
-          title="Unduh PNG Langsung (Resolusi 2x)"
-        >
-          <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i>
-          <span>Unduh PNG</span>
-        </button>
+          <!-- Gallery Snapshots Badge -->
+          <button
+            id="btn-header-gallery"
+            class="hidden flex items-center justify-center gap-1 px-2 h-8 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium"
+            title="Buka Galeri Snapshot"
+            aria-label="Galeri Snapshot"
+          >
+            <i data-lucide="layers" class="w-4 h-4 text-blue-600"></i>
+            <span id="snapshot-count" class="font-mono text-xs font-bold">0</span>
+          </button>
 
-        <!-- Open Export Modal -->
+          <!-- Quick Download PNG (Icon Only) -->
+          <button
+            id="btn-quick-download-png"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200"
+            title="Unduh PNG Langsung (Resolusi 2x)"
+            aria-label="Unduh PNG Langsung"
+          >
+            <i data-lucide="image" class="w-4 h-4"></i>
+          </button>
+
+          <!-- Open Export Modal (Icon Only) -->
+          <button
+            id="btn-open-export-modal"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white transition-colors shadow-xs"
+            title="Ekspor Gambar &amp; Pengaturan (PNG / SVG)"
+            aria-label="Buka Menu Ekspor Gambar"
+          >
+            <i data-lucide="download" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Toggle Button to Show/Hide Extra Tools -->
         <button
-          id="btn-open-export-modal"
-          class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-semibold transition-colors shadow-xs"
+          id="btn-toggle-extra-tools"
+          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-blue-600 transition-colors shadow-2xs"
+          title="Tampilkan Opsi &amp; Alat Tambahan"
+          aria-label="Toggle alat tambahan"
         >
-          <i data-lucide="download" class="w-3.5 h-3.5"></i>
-          <span>Ekspor Gambar</span>
+          <i data-lucide="sliders-horizontal" id="icon-toggle-extra" class="w-4 h-4"></i>
         </button>
       </div>
     </header>
 
     <!-- MAIN WORKSPACE -->
-    <main class="flex-1 flex overflow-hidden relative">
-      <!-- LEFT: CODE EDITOR PANE -->
-      <section id="pane-editor" class="h-full flex flex-col shrink-0 min-w-[280px] w-[45%] bg-white border-r border-slate-200 overflow-hidden">
+    <main id="main-container" class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+      <!-- LEFT / TOP: CODE EDITOR PANE -->
+      <section id="pane-editor" class="w-full md:w-[45%] h-[46%] md:h-full flex flex-col shrink-0 min-w-0 md:min-w-[280px] min-h-[120px] md:min-h-0 bg-white border-b md:border-b-0 md:border-r border-slate-200 overflow-hidden">
         <!-- Editor Header -->
         <div class="flex items-center justify-between px-4 py-2.5 border-b border-slate-200 bg-slate-50/80">
           <div class="flex items-center gap-2">
@@ -329,18 +336,18 @@
       <!-- DRAGGABLE DIVIDER RESIZER -->
       <div
         id="pane-resizer"
-        class="w-1.5 h-full bg-slate-200 hover:bg-blue-500 active:bg-blue-600 cursor-col-resize shrink-0 transition-colors z-20 flex items-center justify-center group"
+        class="w-full h-2 md:w-2 md:h-full bg-slate-200 hover:bg-blue-500 active:bg-blue-600 cursor-row-resize md:cursor-col-resize shrink-0 transition-colors z-20 flex items-center justify-center group touch-none"
         title="Tarik untuk mengubah ukuran panel"
       >
-        <div class="w-0.5 h-6 bg-slate-400 group-hover:bg-white rounded-full transition-colors"></div>
+        <div class="w-8 h-1 md:w-1 md:h-8 bg-slate-400 group-hover:bg-white rounded-full transition-colors"></div>
       </div>
 
-      <!-- RIGHT: DIAGRAM CANVAS PANE -->
-      <section id="pane-diagram" class="flex-1 h-full flex flex-col overflow-hidden min-w-0 relative bg-white">
+      <!-- RIGHT / BOTTOM: DIAGRAM CANVAS PANE -->
+      <section id="pane-diagram" class="flex-1 w-full md:w-auto h-[54%] md:h-full flex flex-col overflow-hidden min-w-0 min-h-[140px] relative bg-white">
         <!-- Floating Top Canvas Toolbar -->
-        <div class="absolute top-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none">
-          <!-- Left Badge Status -->
-          <div class="pointer-events-auto">
+        <div class="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 z-20 flex items-center justify-between pointer-events-none">
+          <!-- Left Badge Status (compact on mobile) -->
+          <div class="pointer-events-auto hidden sm:block">
             <div id="canvas-status-badge" class="px-3 py-1.5 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200/80 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-700">
               <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
               <span>Pratinjau Sequence Real-time</span>
@@ -872,6 +879,7 @@
           mermaidTarget: document.getElementById('mermaid-target'),
           canvasStage: document.getElementById('canvas-stage'),
           canvasTransform: document.getElementById('canvas-transform'),
+          mainContainer: document.getElementById('main-container'),
           paneEditor: document.getElementById('pane-editor'),
           paneDiagram: document.getElementById('pane-diagram'),
           paneResizer: document.getElementById('pane-resizer'),
@@ -903,6 +911,8 @@
           galleryContainer: document.getElementById('gallery-container'),
           galleryEmpty: document.getElementById('gallery-empty'),
           btnLabelPngScale: document.getElementById('btn-label-png-scale'),
+          btnToggleExtraTools: document.getElementById('btn-toggle-extra-tools'),
+          extraToolbarGroup: document.getElementById('extra-toolbar-group'),
         };
 
         // Initialize Lucide icons
@@ -1245,27 +1255,76 @@
           }
         });
 
-        // --- 9. RESIZABLE SPLIT PANES ---
+        // --- 9. RESIZABLE SPLIT PANES (HORIZONTAL ON DESKTOP, VERTICAL ON MOBILE) ---
         let isResizing = false;
-        el.paneResizer.addEventListener('mousedown', (e) => {
+
+        function startResize(e) {
           e.preventDefault();
           isResizing = true;
-          document.body.style.cursor = 'col-resize';
-        });
+          const isMobile = window.innerWidth < 768;
+          document.body.style.cursor = isMobile ? 'row-resize' : 'col-resize';
+        }
 
-        window.addEventListener('mousemove', (e) => {
+        function handleResize(clientX, clientY) {
           if (!isResizing) return;
-          const totalW = window.innerWidth;
-          const pct = (e.clientX / totalW) * 100;
-          if (pct >= 20 && pct <= 80) {
+          const isMobile = window.innerWidth < 768;
+          if (isMobile) {
+            if (!el.mainContainer) return;
+            const rect = el.mainContainer.getBoundingClientRect();
+            const relY = clientY - rect.top;
+            const pct = Math.min(Math.max((relY / rect.height) * 100, 20), 80);
+            el.paneEditor.style.height = pct + '%';
+            el.paneEditor.style.width = '100%';
+          } else {
+            const totalW = window.innerWidth;
+            const pct = Math.min(Math.max((clientX / totalW) * 100, 20), 80);
             el.paneEditor.style.width = pct + '%';
+            el.paneEditor.style.height = '100%';
           }
-        });
+        }
 
-        window.addEventListener('mouseup', () => {
+        function stopResize() {
           if (isResizing) {
             isResizing = false;
             document.body.style.cursor = '';
+          }
+        }
+
+        el.paneResizer.addEventListener('mousedown', startResize);
+        window.addEventListener('mousemove', (e) => handleResize(e.clientX, e.clientY));
+        window.addEventListener('mouseup', stopResize);
+
+        // Mobile Touch Support for Resizing
+        el.paneResizer.addEventListener('touchstart', (e) => {
+          if (e.touches && e.touches.length === 1) {
+            isResizing = true;
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+          if (isResizing && e.touches && e.touches.length === 1) {
+            handleResize(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchend', stopResize);
+        window.addEventListener('touchcancel', stopResize);
+
+        // Window resize responsive adjustment
+        window.addEventListener('resize', () => {
+          if (state.layout === 'split') {
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+              if (el.paneEditor.style.width !== '100%') {
+                el.paneEditor.style.width = '100%';
+                el.paneEditor.style.height = '46%';
+              }
+            } else {
+              if (el.paneEditor.style.height !== '100%') {
+                el.paneEditor.style.height = '100%';
+                el.paneEditor.style.width = '45%';
+              }
+            }
           }
         });
 
@@ -1281,20 +1340,30 @@
             btn.classList.add('bg-white', 'text-slate-800', 'shadow-2xs', 'font-semibold');
             btn.classList.remove('text-slate-600');
 
+            const isMobile = window.innerWidth < 768;
             if (id === 'split') {
               el.paneEditor.classList.remove('hidden');
               el.paneDiagram.classList.remove('hidden');
               el.paneResizer.classList.remove('hidden');
-              el.paneEditor.style.width = '45%';
+              if (isMobile) {
+                el.paneEditor.style.width = '100%';
+                el.paneEditor.style.height = '46%';
+              } else {
+                el.paneEditor.style.width = '45%';
+                el.paneEditor.style.height = '100%';
+              }
             } else if (id === 'editor') {
               el.paneEditor.classList.remove('hidden');
               el.paneDiagram.classList.add('hidden');
               el.paneResizer.classList.add('hidden');
               el.paneEditor.style.width = '100%';
+              el.paneEditor.style.height = '100%';
             } else if (id === 'diagram') {
               el.paneEditor.classList.add('hidden');
               el.paneDiagram.classList.remove('hidden');
               el.paneResizer.classList.add('hidden');
+              el.paneDiagram.style.width = '100%';
+              el.paneDiagram.style.height = '100%';
             }
           });
         });
@@ -1446,8 +1515,33 @@
 
         document.getElementById('btn-open-export-modal').addEventListener('click', () => openModal('manual'));
         document.getElementById('btn-canvas-quick-export').addEventListener('click', () => openModal('manual'));
+        if (el.btnHeaderGallery) {
+          el.btnHeaderGallery.addEventListener('click', () => openModal('gallery'));
+        }
         document.getElementById('btn-close-modal').addEventListener('click', closeModal);
         document.getElementById('btn-finish-modal').addEventListener('click', closeModal);
+
+        // Toggle Extra Toolbar Tools (Show/Hide By Default)
+        let extraToolsVisible = false;
+        if (el.btnToggleExtraTools && el.extraToolbarGroup) {
+          el.btnToggleExtraTools.addEventListener('click', () => {
+            extraToolsVisible = !extraToolsVisible;
+            if (extraToolsVisible) {
+              el.extraToolbarGroup.classList.remove('hidden');
+              el.extraToolbarGroup.classList.add('flex');
+              el.btnToggleExtraTools.classList.add('bg-blue-50', 'border-blue-300', 'text-blue-600');
+              el.btnToggleExtraTools.classList.remove('bg-white', 'border-slate-200', 'text-slate-600');
+              el.btnToggleExtraTools.title = 'Sembunyikan Opsi & Alat Tambahan';
+            } else {
+              el.extraToolbarGroup.classList.add('hidden');
+              el.extraToolbarGroup.classList.remove('flex');
+              el.btnToggleExtraTools.classList.remove('bg-blue-50', 'border-blue-300', 'text-blue-600');
+              el.btnToggleExtraTools.classList.add('bg-white', 'border-slate-200', 'text-slate-600');
+              el.btnToggleExtraTools.title = 'Tampilkan Opsi & Alat Tambahan';
+              el.dropdownTemplates.classList.add('hidden');
+            }
+          });
+        }
 
         function switchTab(tabName) {
           document.querySelectorAll('.tab-btn').forEach(b => {
@@ -1588,15 +1682,17 @@
           if (enabled) {
             el.autoStatusPill.textContent = 'Aktif';
             el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-700';
-            el.btnToggleAutoExport.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-emerald-50 border-emerald-300 text-emerald-800 shadow-2xs';
-            el.iconAutoZap.className = 'w-3.5 h-3.5 text-emerald-600 fill-emerald-600 animate-pulse';
-            el.labelAutoExport.textContent = 'Ekspor Otomatis: Aktif';
+            el.btnToggleAutoExport.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-emerald-50 border-emerald-300 text-emerald-800 shadow-2xs';
+            el.iconAutoZap.className = 'w-4 h-4 text-emerald-600 fill-emerald-600 animate-pulse';
+            if (el.labelAutoExport) el.labelAutoExport.textContent = 'Ekspor Otomatis: Aktif';
+            el.btnToggleAutoExport.title = 'Ekspor Otomatis: Aktif (Klik untuk Mematikan)';
           } else {
             el.autoStatusPill.textContent = 'Nonaktif';
             el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-slate-200 text-slate-600';
-            el.btnToggleAutoExport.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50';
-            el.iconAutoZap.className = 'w-3.5 h-3.5 text-slate-400';
-            el.labelAutoExport.textContent = 'Ekspor Otomatis: Mati';
+            el.btnToggleAutoExport.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50';
+            el.iconAutoZap.className = 'w-4 h-4 text-slate-400';
+            if (el.labelAutoExport) el.labelAutoExport.textContent = 'Ekspor Otomatis: Mati';
+            el.btnToggleAutoExport.title = 'Ekspor Otomatis: Nonaktif (Klik untuk Menyalakan)';
           }
           localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
         }
@@ -1637,9 +1733,11 @@
           el.modalSnapshotCount.textContent = count;
           if (count > 0) {
             el.btnHeaderGallery.classList.remove('hidden');
+            el.btnHeaderGallery.classList.add('flex');
             el.galleryEmpty.classList.add('hidden');
           } else {
             el.btnHeaderGallery.classList.add('hidden');
+            el.btnHeaderGallery.classList.remove('flex');
             el.galleryEmpty.classList.remove('hidden');
           }
 
