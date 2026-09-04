@@ -1,0 +1,1699 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sequence Diagram Visualizer - Vanilla JS &amp; Mermaid</title>
+    <meta name="description" content="Aplikasi visualizer sequence diagram real-time berbasis Vanilla JavaScript dan Mermaid.js dengan fitur editor langsung dan ekspor gambar otomatis." />
+    <meta property="og:title" content="Sequence Diagram Visualizer" />
+    <meta property="og:description" content="Aplikasi visualizer sequence diagram real-time berbasis Vanilla JavaScript dan Mermaid.js dengan fitur editor langsung dan ekspor gambar otomatis." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS (CDN Standalone) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'Menlo', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Lucide Icons (CDN Standalone) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Mermaid.js (CDN Standalone) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #1e293b;
+        background-color: #f8fafc;
+        overflow: hidden;
+      }
+      pre, code, textarea, .font-mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+      /* Custom Scrollbars */
+      ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+      /* Ensure Mermaid SVG scales nicely inside container */
+      .mermaid-container svg {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+      .bg-checkerboard {
+        background-image: repeating-conic-gradient(#e2e8f0 0% 25%, #ffffff 0% 50%);
+        background-size: 16px 16px;
+      }
+      .bg-dots {
+        background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+        background-size: 24px 24px;
+      }
+    </style>
+  </head>
+  <body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-50 text-slate-800 antialiased select-none">
+
+    <!-- TOP HEADER NAVBAR -->
+    <header class="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 z-30 shadow-xs">
+      <!-- Left Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-sm ring-2 ring-blue-100">
+          <i data-lucide="git-commit" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            Sequence Diagram Visualizer
+            <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold bg-blue-50 text-blue-700 rounded-full border border-blue-100">
+              Vanilla JS &amp; Mermaid
+            </span>
+          </h1>
+          <p class="text-[11px] text-slate-500 leading-tight hidden md:block">
+            Editor real-time tanpa build process &bull; Ekspor gambar otomatis (PNG/SVG)
+          </p>
+        </div>
+      </div>
+
+      <!-- Center Toolbar -->
+      <div class="flex items-center gap-2">
+        <!-- Template Menu Dropdown -->
+        <div class="relative">
+          <button
+            id="btn-templates-menu"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors shadow-2xs"
+          >
+            <i data-lucide="folder-open" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span class="hidden sm:inline">Pilih Template</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+          </button>
+          <div
+            id="dropdown-templates"
+            class="hidden absolute left-0 mt-1.5 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-40"
+          >
+            <div class="px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+              Pustaka Template Diagram
+            </div>
+            <div id="templates-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100"></div>
+          </div>
+        </div>
+
+        <!-- Layout Mode Switcher -->
+        <div class="hidden lg:flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs">
+          <button
+            id="layout-split"
+            class="layout-btn px-2.5 py-1 rounded-md font-semibold transition-colors flex items-center gap-1.5 bg-white text-slate-800 shadow-2xs"
+            title="Tampilan Bersanding (Split)"
+          >
+            <i data-lucide="columns" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>Split</span>
+          </button>
+          <button
+            id="layout-editor"
+            class="layout-btn px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5"
+            title="Hanya Editor Kode"
+          >
+            <i data-lucide="file-code" class="w-3.5 h-3.5"></i>
+            <span>Editor</span>
+          </button>
+          <button
+            id="layout-diagram"
+            class="layout-btn px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5"
+            title="Hanya Kanvas Diagram"
+          >
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+            <span>Diagram</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-2">
+        <!-- Auto Export Toggle -->
+        <button
+          id="btn-toggle-auto-export"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+          title="Nyalakan/Matikan Ekspor Gambar Otomatis"
+        >
+          <i data-lucide="zap" id="icon-auto-zap" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span id="label-auto-export" class="hidden sm:inline">Ekspor Otomatis: Mati</span>
+        </button>
+
+        <!-- Gallery Snapshots Badge -->
+        <button
+          id="btn-header-gallery"
+          class="hidden flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium"
+          title="Buka Galeri Snapshot"
+        >
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-blue-600"></i>
+          <span id="snapshot-count" class="font-mono text-xs font-bold">0</span>
+        </button>
+
+        <!-- Quick Download PNG -->
+        <button
+          id="btn-quick-download-png"
+          class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-colors border border-slate-200"
+          title="Unduh PNG Langsung (Resolusi 2x)"
+        >
+          <i data-lucide="download" class="w-3.5 h-3.5 text-slate-600"></i>
+          <span>Unduh PNG</span>
+        </button>
+
+        <!-- Open Export Modal -->
+        <button
+          id="btn-open-export-modal"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-semibold transition-colors shadow-xs"
+        >
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Ekspor Gambar</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 flex overflow-hidden relative">
+      <!-- LEFT: CODE EDITOR PANE -->
+      <section id="pane-editor" class="h-full flex flex-col shrink-0 min-w-[280px] w-[45%] bg-white border-r border-slate-200 overflow-hidden">
+        <!-- Editor Header -->
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-slate-200 bg-slate-50/80">
+          <div class="flex items-center gap-2">
+            <div class="p-1.5 bg-blue-50 text-blue-600 rounded-md border border-blue-100">
+              <i data-lucide="code-2" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h2 class="text-xs font-semibold text-slate-800 leading-none">Editor Teks Mermaid</h2>
+              <p class="text-[11px] text-slate-500 mt-0.5">Real-time sequence syntax</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <button
+              id="btn-syntax-help"
+              class="px-2.5 py-1 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition-colors flex items-center gap-1"
+              title="Lihat Panduan Sintaks"
+            >
+              <i data-lucide="help-circle" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span class="hidden sm:inline">Panduan</span>
+            </button>
+            <button
+              id="btn-copy-code"
+              class="px-2.5 py-1 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition-colors flex items-center gap-1"
+              title="Salin Kode Mermaid"
+            >
+              <i data-lucide="copy" id="icon-copy-code" class="w-3.5 h-3.5"></i>
+              <span id="label-copy-code" class="hidden sm:inline">Salin</span>
+            </button>
+            <button
+              id="btn-reset-code"
+              class="p-1.5 text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition-colors"
+              title="Kembalikan ke Contoh Semula"
+            >
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            </button>
+            <button
+              id="btn-clear-code"
+              class="p-1.5 text-slate-400 bg-white border border-slate-200 rounded-md hover:bg-rose-50 hover:text-rose-600 transition-colors"
+              title="Hapus Semua Teks"
+            >
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Snippets Toolbar -->
+        <div class="flex items-center gap-1 px-3 py-1.5 bg-slate-100/80 border-b border-slate-200 overflow-x-auto text-xs whitespace-nowrap">
+          <span class="text-slate-500 font-medium text-[11px] mr-1 flex items-center gap-1">
+            <i data-lucide="sparkles" class="w-3 h-3 text-amber-500"></i>
+            Sisipkan:
+          </span>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="actor Pengguna as 👤 Pengguna">actor</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="participant Web as 🌐 Frontend Web">participant</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="A->>B: Request()">-&gt;&gt; Pesan</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="B-->>A: Respon OK">--&gt;&gt; Balasan</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="activate B&#10;    deactivate B">activate</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="alt Berhasil&#10;        A->>B: Lanjut&#10;    else Gagal&#10;        A-->>B: Batalkan&#10;    end">alt / else</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="loop Interval&#10;        A->>B: Ping&#10;    end">loop</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="Note over A,B: Catatan Keterangan">Note</button>
+        </div>
+
+        <!-- Syntax Cheat Sheet Panel -->
+        <div id="panel-syntax-help" class="hidden p-3 bg-blue-50/80 border-b border-blue-200 text-xs text-slate-700 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-semibold text-blue-900 flex items-center gap-1.5">
+              <i data-lucide="help-circle" class="w-3.5 h-3.5 text-blue-600"></i> Panduan Cepat Sequence Diagram:
+            </span>
+            <button id="btn-close-help" class="text-slate-400 hover:text-slate-600 text-[11px] font-medium">Tutup [✕]</button>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+            <div class="bg-white/90 p-2 rounded border border-blue-100">
+              <span class="text-blue-800 font-semibold block">Panah Pesan:</span>
+              <code>A -&gt;&gt; B: Teks</code> (Sinkron)<br />
+              <code>B --&gt;&gt; A: Teks</code> (Balasan)<br />
+              <code>A -x B: Gagal</code> (Kehilangan)
+            </div>
+            <div class="bg-white/90 p-2 rounded border border-blue-100">
+              <span class="text-blue-800 font-semibold block">Kondisi &amp; Catatan:</span>
+              <code>alt Sukses ... else ... end</code><br />
+              <code>loop Tiap Detik ... end</code><br />
+              <code>Note over A,B: Pesan</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code Area: Line Numbers + Textarea -->
+        <div class="relative flex-1 flex overflow-hidden bg-slate-900 text-slate-100 font-mono text-xs">
+          <!-- Line Numbers -->
+          <div id="line-numbers" class="py-3 px-2 select-none text-right bg-slate-950 text-slate-500 border-r border-slate-800/80 min-w-[3rem] font-mono text-[11px] leading-5">
+            1
+          </div>
+          <!-- Realtime Textarea -->
+          <div class="relative flex-1 h-full">
+            <textarea
+              id="code-input"
+              spellcheck="false"
+              autocapitalize="off"
+              autocomplete="off"
+              placeholder="Tulis kode sequenceDiagram Mermaid di sini..."
+              class="w-full h-full p-3 resize-none bg-transparent text-slate-100 font-mono text-xs leading-5 focus:outline-none placeholder:text-slate-600 select-text"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Status & Validation Bar -->
+        <div id="status-bar" class="border-t border-slate-200 bg-white">
+          <div id="status-valid" class="flex items-center justify-between px-3 py-2 bg-emerald-50 text-emerald-800 text-xs">
+            <div class="flex items-center gap-1.5 font-medium">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Sintaks Valid</span>
+              <span id="render-duration" class="text-[11px] text-emerald-600/80 font-normal"></span>
+            </div>
+            <div id="code-stats" class="text-[11px] text-emerald-700"></div>
+          </div>
+          <div id="status-invalid" class="hidden px-3 py-2 bg-rose-50 border-t border-rose-200 text-rose-800 text-xs">
+            <div class="flex items-start gap-1.5">
+              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
+              <div class="flex-1 min-w-0">
+                <span class="font-semibold text-rose-900 block">Kesalahan Sintaks Mermaid</span>
+                <p id="error-message" class="text-[11px] text-rose-700 font-mono break-all mt-0.5"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DRAGGABLE DIVIDER RESIZER -->
+      <div
+        id="pane-resizer"
+        class="w-1.5 h-full bg-slate-200 hover:bg-blue-500 active:bg-blue-600 cursor-col-resize shrink-0 transition-colors z-20 flex items-center justify-center group"
+        title="Tarik untuk mengubah ukuran panel"
+      >
+        <div class="w-0.5 h-6 bg-slate-400 group-hover:bg-white rounded-full transition-colors"></div>
+      </div>
+
+      <!-- RIGHT: DIAGRAM CANVAS PANE -->
+      <section id="pane-diagram" class="flex-1 h-full flex flex-col overflow-hidden min-w-0 relative bg-white">
+        <!-- Floating Top Canvas Toolbar -->
+        <div class="absolute top-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none">
+          <!-- Left Badge Status -->
+          <div class="pointer-events-auto">
+            <div id="canvas-status-badge" class="px-3 py-1.5 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200/80 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-700">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Pratinjau Sequence Real-time</span>
+            </div>
+          </div>
+
+          <!-- Right Floating Controls -->
+          <div class="flex items-center gap-1 pointer-events-auto bg-white/95 backdrop-blur-sm p-1 rounded-lg border border-slate-200/80 shadow-sm text-xs">
+            <!-- Theme Menu Button -->
+            <div class="relative">
+              <button
+                id="btn-theme-menu"
+                class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1"
+                title="Ganti Tema &amp; Latar Kanvas"
+              >
+                <i data-lucide="palette" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span id="current-theme-label" class="capitalize hidden md:inline">default</span>
+              </button>
+              <div
+                id="dropdown-theme"
+                class="hidden absolute right-0 mt-1 w-44 bg-white border border-slate-200 rounded-lg shadow-lg py-1 z-30"
+              >
+                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">Tema Mermaid</div>
+                <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 font-semibold text-blue-600" data-theme="default">Default</button>
+                <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="neutral">Neutral</button>
+                <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="dark">Dark</button>
+                <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="forest">Forest</button>
+                <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="base">Base</button>
+                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100 mt-1">Latar Kanvas</div>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 font-semibold text-blue-600" data-bg="white">Putih</button>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="light-slate">Abu Terang</button>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="dark">Gelap</button>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="transparent">Transparan (Catur)</button>
+              </div>
+            </div>
+
+            <div class="w-[1px] h-4 bg-slate-200 my-auto"></div>
+
+            <!-- Grid Toggle -->
+            <button id="btn-toggle-grid" class="p-1.5 rounded-md text-blue-600 bg-blue-50" title="Sembunyikan/Tampilkan Kisi-kisi">
+              <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+            </button>
+
+            <div class="w-[1px] h-4 bg-slate-200 my-auto"></div>
+
+            <!-- Zoom Controls -->
+            <button id="btn-zoom-in" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Perbesar">
+              <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+            </button>
+            <button id="btn-zoom-reset" class="px-1.5 py-1 text-[11px] font-mono font-medium text-slate-700 hover:bg-slate-100 rounded-md min-w-[3rem]" title="Reset 100%">
+              100%
+            </button>
+            <button id="btn-zoom-out" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Perkecil">
+              <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i>
+            </button>
+            <button id="btn-fit-screen" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Paskan ke Layar">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            </button>
+
+            <div class="w-[1px] h-4 bg-slate-200 my-auto"></div>
+
+            <!-- Fullscreen -->
+            <button id="btn-fullscreen" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Layar Penuh">
+              <i data-lucide="maximize-2" id="icon-fullscreen" class="w-3.5 h-3.5"></i>
+            </button>
+
+            <!-- Quick Export -->
+            <button id="btn-canvas-quick-export" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center gap-1 font-medium shadow-xs ml-1" title="Unduh Gambar Langsung">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">Ekspor</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pan & Drag Interactive Stage -->
+        <div id="canvas-stage" class="relative flex-1 w-full h-full overflow-hidden cursor-grab active:cursor-grabbing bg-dots">
+          <div id="canvas-transform" class="absolute inset-0 flex items-center justify-center pointer-events-none p-12 transition-transform duration-75">
+            <div id="mermaid-target" class="mermaid-container pointer-events-auto filter drop-shadow-sm select-text"></div>
+          </div>
+        </div>
+
+        <!-- Subtle Bottom Tip -->
+        <div class="absolute bottom-2 left-3 z-10 text-[11px] text-slate-400 pointer-events-none hidden md:flex items-center gap-2">
+          <span>Klik &amp; seret kanvas untuk menggeser</span>
+          <span>&bull;</span>
+          <span>Ctrl + Scroll untuk Zoom</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- EXPORT & AUTO-EXPORT MODAL -->
+    <div id="export-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+      <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div>
+            <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="download" class="w-5 h-5 text-blue-600"></i>
+              Ekspor Gambar &amp; Pengaturan Otomatis
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Unduh hasil diagram sequence dalam resolusi tinggi atau konfigurasi ekspor otomatis
+            </p>
+          </div>
+          <button id="btn-close-modal" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors">✕</button>
+        </div>
+
+        <!-- Modal Tabs -->
+        <div class="flex border-b border-slate-200 bg-white px-6 pt-2">
+          <button id="tab-btn-manual" class="tab-btn pb-2.5 px-3 text-xs font-semibold border-b-2 border-blue-600 text-blue-600 flex items-center gap-1.5">
+            <i data-lucide="image" class="w-3.5 h-3.5"></i>
+            Ekspor Manual
+          </button>
+          <button id="tab-btn-auto" class="tab-btn pb-2.5 px-3 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+            Ekspor Otomatis
+          </button>
+          <button id="tab-btn-gallery" class="tab-btn pb-2.5 px-3 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+            Galeri Snapshot (<span id="modal-snapshot-count">0</span>)
+          </button>
+        </div>
+
+        <!-- Modal Tab Contents -->
+        <div class="p-6 overflow-y-auto flex-1 space-y-6">
+          <!-- TAB 1: MANUAL EXPORT -->
+          <div id="tab-content-manual" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Scale Resolution -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Resolusi Gambar (PNG)</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button class="scale-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-scale="1">1x</button>
+                  <button class="scale-choice py-2 px-3 text-xs font-semibold rounded-lg border bg-blue-50 border-blue-500 text-blue-700" data-scale="2">2x (Retina)</button>
+                  <button class="scale-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-scale="3">3x (Ultra HD)</button>
+                </div>
+              </div>
+              <!-- Background -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Latar Belakang Gambar</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button class="export-bg-choice py-2 px-3 text-xs font-semibold rounded-lg border bg-blue-50 border-blue-500 text-blue-700" data-bg="white">Putih</button>
+                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="transparent">Transparan</button>
+                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="dark">Gelap</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Download & Copy Action Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <button id="btn-modal-download-png" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
+                <i data-lucide="image" class="w-4 h-4"></i>
+                <span id="btn-label-png-scale">Unduh Gambar PNG (2x)</span>
+              </button>
+              <button id="btn-modal-download-svg" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
+                <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i>
+                <span>Unduh Vektor SVG</span>
+              </button>
+              <button id="btn-modal-copy-png" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer">
+                <i data-lucide="copy" class="w-4 h-4 text-slate-500"></i>
+                <span id="copy-png-label">Salin PNG ke Clipboard</span>
+              </button>
+              <button id="btn-modal-copy-svg" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer">
+                <i data-lucide="copy" class="w-4 h-4 text-slate-500"></i>
+                <span id="copy-svg-label">Salin Kode Markup SVG</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Proses ekspor dieksekusi 100% lokal di browser Anda dengan resolusi tajam bebas watermark.</span>
+            </div>
+          </div>
+
+          <!-- TAB 2: AUTO EXPORT SETTINGS -->
+          <div id="tab-content-auto" class="hidden space-y-6">
+            <!-- Master Toggle -->
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-slate-800">Aktifkan Ekspor Gambar Otomatis</span>
+                  <span id="auto-status-pill" class="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-slate-200 text-slate-600">Nonaktif</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1 max-w-md">
+                  Diagram akan otomatis diekspor saat Anda berhenti mengetik kode sequence yang valid.
+                </p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="auto-switch-enabled" class="sr-only peer" />
+                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <!-- Auto Settings Options -->
+            <div class="space-y-4">
+              <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" id="auto-check-gallery" class="mt-1 rounded text-blue-600" checked />
+                <div>
+                  <span class="text-xs font-bold text-slate-800 block">Simpan ke Galeri Snapshot Internal (Direkomendasikan)</span>
+                  <span class="text-[11px] text-slate-500">Menyimpan riwayat thumbnail gambar dan kode diagram di panel galeri aplikasi tanpa memicu download file terus-menerus.</span>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" id="auto-check-download" class="mt-1 rounded text-blue-600" />
+                <div>
+                  <span class="text-xs font-bold text-slate-800 block">Unduh File Gambar Otomatis ke Komputer</span>
+                  <span class="text-[11px] text-slate-500">Setiap perubahan valid yang stabil akan otomatis memicu download file ke folder unduhan browser.</span>
+                </div>
+              </label>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Jeda Pengetikan (Debounce)</label>
+                  <select id="auto-select-delay" class="w-full text-xs font-medium p-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none">
+                    <option value="1500">1.5 detik setelah berhenti mengetik</option>
+                    <option value="2500" selected>2.5 detik (Optimal)</option>
+                    <option value="4000">4.0 detik (Santai)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Format Gambar Otomatis</label>
+                  <select id="auto-select-format" class="w-full text-xs font-medium p-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none">
+                    <option value="png" selected>PNG (Bitmap Resolusi Tinggi)</option>
+                    <option value="svg">SVG (Vektor Fleksibel)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: GALLERY SNAPSHOTS -->
+          <div id="tab-content-gallery" class="hidden space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Snapshot Hasil Ekspor</h3>
+                <p class="text-[11px] text-slate-500">Riwayat gambar yang diekspor selama sesi Anda</p>
+              </div>
+              <button id="btn-clear-snapshots" class="text-xs text-rose-600 hover:text-rose-700 flex items-center gap-1 font-medium p-1 rounded hover:bg-rose-50">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                Hapus Semua
+              </button>
+            </div>
+            <div id="gallery-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            <div id="gallery-empty" class="hidden text-center py-10 px-4 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+              <i data-lucide="clock" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i>
+              <p class="text-xs font-semibold text-slate-700">Belum Ada Snapshot Tersimpan</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">Aktifkan fitur Ekspor Otomatis untuk menyimpan snapshot otomatis.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+          <span class="text-xs text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+            File siap disematkan ke PRD, dokumentasi GitHub, dan presentasi
+          </span>
+          <button id="btn-finish-modal" class="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">
+            Selesai
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 z-50 animate-in fade-in slide-in-from-bottom-3 duration-200">
+      <div class="px-4 py-2.5 rounded-xl bg-slate-900/95 backdrop-blur-md text-white shadow-xl flex items-center gap-2.5 text-xs font-medium border border-slate-700">
+        <i data-lucide="zap" id="toast-icon" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">Notifikasi</span>
+      </div>
+    </div>
+
+    <!-- PURE VANILLA JAVASCRIPT APPLICATION CORE -->
+    <script>
+      (function() {
+        // --- 1. CONSTANTS & TEMPLATES ---
+        const STARTER_CODE = `sequenceDiagram
+    autonumber
+    actor Pengguna as 👤 Pengguna
+    participant Web as 🌐 Frontend Web
+    participant Server as ⚙️ API Backend
+    participant DB as 🗄️ Database
+
+    Pengguna->>Web: 1. Masukkan kredensial login
+    activate Web
+    Web->>Server: 2. POST /api/auth/login
+    activate Server
+    Server->>DB: 3. Query akun pengguna berdasarkan email
+    activate DB
+    DB-->>Server: 4. Kembalikan data profil & hash kata sandi
+    deactivate DB
+
+    alt Kredensial Valid
+        Server-->>Web: 200 OK (JWT Access Token & Refresh Token)
+        Web-->>Pengguna: Tampilkan Dashboard & Berhasil Masuk
+    else Kredensial Tidak Cocok
+        Server-->>Web: 401 Unauthorized (Pesan Kesalahan)
+        Web-->>Pengguna: Notifikasi "Kata sandi atau email salah"
+    end
+
+    deactivate Server
+    deactivate Web`;
+
+        const TEMPLATES = [
+          {
+            id: 'starter',
+            name: 'Login & Autentikasi Pengguna',
+            category: 'Autentikasi',
+            desc: 'Alur login dengan JWT Token, query DB, dan penanganan kondisi valid vs gagal.',
+            code: STARTER_CODE
+          },
+          {
+            id: 'ecommerce',
+            name: 'Transaksi & Payment Gateway E-Commerce',
+            category: 'Finansial',
+            desc: 'Checkout keranjang, Midtrans/Xendit gateway, webhook verifikasi settlement.',
+            code: `sequenceDiagram
+    autonumber
+    actor Pelanggan as 🛒 Pelanggan
+    participant Toko as 🏬 Aplikasi Toko
+    participant Payment as 💳 Payment Gateway
+    participant Bank as 🏦 Bank / QRIS
+    participant Notif as 📩 Notification Service
+
+    Pelanggan->>Toko: Klik "Bayar Sekarang" (Checkout)
+    activate Toko
+    Toko->>Payment: Buat Tagihan Pembayaran (#INV-9821)
+    activate Payment
+    Payment-->>Toko: Kembalikan Token & URL Pembayaran
+    deactivate Payment
+    Toko-->>Pelanggan: Tampilkan Halaman Pembayaran
+    deactivate Toko
+
+    Pelanggan->>Bank: Transfer nominal via QRIS / VA
+    activate Bank
+    Bank->>Payment: Callback settlement berhasil
+    activate Payment
+    deactivate Bank
+
+    Payment->>Toko: Webhook HTTP POST: status = SETTLEMENT
+    activate Toko
+    Toko->>Toko: Verifikasi signature & update pesanan
+    Toko-->>Payment: Respon HTTP 200 (Acknowledge)
+    deactivate Payment
+
+    par Beri Tahu Pelanggan
+        Toko->>Pelanggan: Tampilkan konfirmasi "Pembayaran Berhasil"
+    and Kirim Bukti Transaksi
+        Toko->>Notif: Trigger kirim invoice ke WhatsApp
+        activate Notif
+        Notif-->>Pelanggan: Kirim PDF kwitansi pembayaran
+        deactivate Notif
+    end
+    deactivate Toko`
+          },
+          {
+            id: 'microservices',
+            name: 'Microservices Order Fulfillment & Saga',
+            category: 'Arsitektur',
+            desc: 'Komunikasi antar service: Gateway, Order Service, Kafka Bus, Inventory, & Payment.',
+            code: `sequenceDiagram
+    autonumber
+    actor Client as 📱 Mobile App
+    participant Gateway as 🚪 API Gateway
+    participant OrderSvc as 📦 Order Service
+    participant EventBus as ⚡ Kafka Broker
+    participant StockSvc as 📊 Inventory Service
+    participant PaymentSvc as 💰 Payment Service
+
+    Client->>Gateway: POST /orders (Item: 402, Qty: 2)
+    activate Gateway
+    Gateway->>OrderSvc: Forward order request
+    activate OrderSvc
+    OrderSvc->>OrderSvc: Buat pesanan status = PENDING
+    OrderSvc->>EventBus: Publish event: OrderCreated
+    deactivate OrderSvc
+    Gateway-->>Client: 202 Accepted (Order ID: ORD-551)
+    deactivate Gateway
+
+    par Validasi Stok
+        EventBus->>StockSvc: Consume: OrderCreated
+        activate StockSvc
+        StockSvc->>StockSvc: Kunci stok barang (Reserve)
+        StockSvc->>EventBus: Publish: StockReserved
+        deactivate StockSvc
+    and Proses Pembayaran
+        EventBus->>PaymentSvc: Consume: OrderCreated
+        activate PaymentSvc
+        PaymentSvc->>PaymentSvc: Debet saldo pelanggan
+        PaymentSvc->>EventBus: Publish: PaymentCompleted
+        deactivate PaymentSvc
+    end
+
+    EventBus->>OrderSvc: Consume: StockReserved & PaymentCompleted
+    activate OrderSvc
+    OrderSvc->>OrderSvc: Update status pesanan = CONFIRMED
+    OrderSvc->>EventBus: Publish event: OrderConfirmed
+    deactivate OrderSvc`
+          },
+          {
+            id: 'chat',
+            name: 'Sistem Chat Real-Time (WebSocket & Redis)',
+            category: 'Komunikasi',
+            desc: 'Pertukaran pesan real-time antara 2 user dengan WebSocket, Redis Pub/Sub, & ACK.',
+            code: `sequenceDiagram
+    autonumber
+    actor Alice as 👩 Alice
+    participant WS1 as 🔌 Socket Node A
+    participant Redis as 🔴 Redis Pub/Sub
+    participant WS2 as 🔌 Socket Node B
+    actor Bob as 👨 Bob
+
+    Alice->>WS1: Kirim Pesan: "Halo Bob, apa kabar?"
+    activate WS1
+    WS1->>WS1: Simpan riwayat pesan ke DB
+    WS1-->>Alice: ACK Pesan Terkirim (Check 1)
+
+    WS1->>Redis: PUBLISH chat:bob {msg: 'Halo Bob'}
+    activate Redis
+    Redis->>WS2: Forward pesan ke subscriber Bob
+    deactivate Redis
+    activate WS2
+
+    WS2->>Bob: Emit 'incoming_message'
+    deactivate WS1
+    activate Bob
+    Bob-->>WS2: Kirim status 'READ'
+    deactivate Bob
+
+    WS2->>Redis: PUBLISH receipt {status: 'READ'}
+    activate Redis
+    Redis->>WS1: Forward ke Node A
+    deactivate Redis
+    activate WS1
+    WS1->>Alice: Update tanda baca biru ganda
+    deactivate WS1
+    deactivate WS2`
+          },
+          {
+            id: 'oauth',
+            name: 'Alur Login Google (OAuth 2.0 PKCE)',
+            category: 'Keamanan',
+            desc: 'Otorisasi OAuth 2.0 dengan Authorization Code & PKCE (Proof Key for Code Exchange).',
+            code: `sequenceDiagram
+    autonumber
+    actor User as 👤 Pengguna
+    participant Browser as 💻 Web Browser
+    participant AppServer as 🏢 Backend Aplikasi
+    participant GoogleAuth as 🔐 Google OAuth 2.0
+
+    User->>Browser: Klik "Masuk dengan Google"
+    activate Browser
+    Browser->>Browser: Generate PKCE (verifier & challenge)
+    Browser->>GoogleAuth: Redirect ke /o/oauth2/v2/auth
+    deactivate Browser
+    activate GoogleAuth
+    GoogleAuth-->>User: Tampilkan halaman persetujuan izin
+    User->>GoogleAuth: Pengguna klik "Setuju"
+    GoogleAuth-->>Browser: Redirect dengan Authorization Code
+    deactivate GoogleAuth
+    activate Browser
+
+    Browser->>AppServer: Kirim Auth Code & code_verifier
+    activate AppServer
+    AppServer->>GoogleAuth: POST /token (code + code_verifier)
+    activate GoogleAuth
+    GoogleAuth-->>AppServer: Return id_token & access_token
+    deactivate GoogleAuth
+
+    AppServer->>AppServer: Verifikasi JWT & Buat Session
+    AppServer-->>Browser: Set HTTPOnly session cookie
+    deactivate AppServer
+    Browser-->>User: Tampilkan dashboard akun berhasil masuk
+    deactivate Browser`
+          }
+        ];
+
+        // --- 2. STATE STORAGE KEYS ---
+        const KEY_CODE = 'vanilla_mermaid_code';
+        const KEY_SETTINGS = 'vanilla_mermaid_settings';
+        const KEY_SNAPSHOTS = 'vanilla_mermaid_snapshots';
+
+        // --- 3. APPLICATION STATE ---
+        const state = {
+          code: localStorage.getItem(KEY_CODE) || STARTER_CODE,
+          theme: 'default',
+          canvasBg: 'white',
+          currentSvg: '',
+          lastValidSvg: '',
+          scale: 1,
+          posX: 0,
+          posY: 0,
+          isDragging: false,
+          dragStart: { x: 0, y: 0 },
+          showGrid: true,
+          layout: 'split', // 'split' | 'editor' | 'diagram'
+          autoSettings: {
+            enabled: false,
+            format: 'png',
+            scale: 2,
+            background: 'white',
+            delayMs: 2500,
+            autoDownload: false,
+            saveToGallery: true,
+          },
+          snapshots: [],
+          manualExportScale: 2,
+          manualExportBg: 'white',
+        };
+
+        // Load persisted settings & snapshots
+        try {
+          const savedSettings = localStorage.getItem(KEY_SETTINGS);
+          if (savedSettings) Object.assign(state.autoSettings, JSON.parse(savedSettings));
+          const savedSnaps = localStorage.getItem(KEY_SNAPSHOTS);
+          if (savedSnaps) state.snapshots = JSON.parse(savedSnaps);
+        } catch(e) {}
+
+        // --- 4. DOM ELEMENTS ---
+        const el = {
+          codeInput: document.getElementById('code-input'),
+          lineNumbers: document.getElementById('line-numbers'),
+          statusValid: document.getElementById('status-valid'),
+          statusInvalid: document.getElementById('status-invalid'),
+          renderDuration: document.getElementById('render-duration'),
+          codeStats: document.getElementById('code-stats'),
+          errorMessage: document.getElementById('error-message'),
+          mermaidTarget: document.getElementById('mermaid-target'),
+          canvasStage: document.getElementById('canvas-stage'),
+          canvasTransform: document.getElementById('canvas-transform'),
+          paneEditor: document.getElementById('pane-editor'),
+          paneDiagram: document.getElementById('pane-diagram'),
+          paneResizer: document.getElementById('pane-resizer'),
+          btnZoomReset: document.getElementById('btn-zoom-reset'),
+          currentThemeLabel: document.getElementById('current-theme-label'),
+          btnToggleGrid: document.getElementById('btn-toggle-grid'),
+          btnFullscreen: document.getElementById('btn-fullscreen'),
+          iconFullscreen: document.getElementById('icon-fullscreen'),
+          dropdownTemplates: document.getElementById('dropdown-templates'),
+          templatesList: document.getElementById('templates-list'),
+          dropdownTheme: document.getElementById('dropdown-theme'),
+          btnToggleAutoExport: document.getElementById('btn-toggle-auto-export'),
+          iconAutoZap: document.getElementById('icon-auto-zap'),
+          labelAutoExport: document.getElementById('label-auto-export'),
+          snapshotCount: document.getElementById('snapshot-count'),
+          btnHeaderGallery: document.getElementById('btn-header-gallery'),
+          modalSnapshotCount: document.getElementById('modal-snapshot-count'),
+          exportModal: document.getElementById('export-modal'),
+          panelSyntaxHelp: document.getElementById('panel-syntax-help'),
+          toast: document.getElementById('toast'),
+          toastMessage: document.getElementById('toast-message'),
+          toastIcon: document.getElementById('toast-icon'),
+          autoSwitchEnabled: document.getElementById('auto-switch-enabled'),
+          autoStatusPill: document.getElementById('auto-status-pill'),
+          autoCheckGallery: document.getElementById('auto-check-gallery'),
+          autoCheckDownload: document.getElementById('auto-check-download'),
+          autoSelectDelay: document.getElementById('auto-select-delay'),
+          autoSelectFormat: document.getElementById('auto-select-format'),
+          galleryContainer: document.getElementById('gallery-container'),
+          galleryEmpty: document.getElementById('gallery-empty'),
+          btnLabelPngScale: document.getElementById('btn-label-png-scale'),
+        };
+
+        // Initialize Lucide icons
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+
+        // --- 5. MERMAID INITIALIZATION ---
+        function initMermaid(themeName) {
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: themeName || 'default',
+            securityLevel: 'loose',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            sequence: {
+              diagramMarginX: 50,
+              diagramMarginY: 30,
+              actorMargin: 50,
+              width: 150,
+              height: 65,
+              boxMargin: 10,
+              boxTextMargin: 5,
+              noteMargin: 10,
+              messageMargin: 35,
+              mirrorActors: true,
+              bottomMarginAdj: 1,
+              useMaxWidth: false,
+              showSequenceNumbers: true,
+            }
+          });
+        }
+        initMermaid(state.theme);
+
+        // --- 6. UTILITY FUNCTIONS ---
+        function showToast(message, isZap = false) {
+          el.toastMessage.textContent = message;
+          el.toast.classList.remove('hidden');
+          if (window.lucide) window.lucide.createIcons();
+          setTimeout(() => {
+            el.toast.classList.add('hidden');
+          }, 3000);
+        }
+
+        function getBgColor(bgName) {
+          switch(bgName) {
+            case 'transparent': return 'transparent';
+            case 'light-slate': return '#f1f5f9';
+            case 'dark': return '#0f172a';
+            default: return '#ffffff';
+          }
+        }
+
+        function sanitizeSvg(rawSvg, bgOption) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(rawSvg, 'image/svg+xml');
+          const svgEl = doc.documentElement;
+
+          if (!svgEl.getAttribute('xmlns')) svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          if (!svgEl.getAttribute('xmlns:xlink')) svgEl.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+          let width = parseFloat(svgEl.getAttribute('width') || '0');
+          let height = parseFloat(svgEl.getAttribute('height') || '0');
+          const viewBox = svgEl.getAttribute('viewBox');
+          if (viewBox) {
+            const parts = viewBox.split(/\s+|,/).filter(Boolean).map(Number);
+            if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+              if (!width) width = parts[2];
+              if (!height) height = parts[3];
+            }
+          }
+          if (!width || width <= 0) width = 800;
+          if (!height || height <= 0) height = 600;
+
+          const bgColor = getBgColor(bgOption);
+          if (bgColor !== 'transparent') {
+            const rect = doc.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('width', '100%');
+            rect.setAttribute('height', '100%');
+            rect.setAttribute('fill', bgColor);
+            svgEl.insertBefore(rect, svgEl.firstChild);
+          }
+
+          return {
+            cleanSvg: new XMLSerializer().serializeToString(svgEl),
+            width,
+            height
+          };
+        }
+
+        function svgToPngDataUrl(rawSvg, scale = 2, bgOption = 'white') {
+          const { cleanSvg, width, height } = sanitizeSvg(rawSvg, bgOption);
+          return new Promise((resolve, reject) => {
+            const blob = new Blob([cleanSvg], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const img = new Image();
+
+            img.onload = () => {
+              try {
+                const canvas = document.createElement('canvas');
+                const tw = Math.round(width * scale);
+                const th = Math.round(height * scale);
+                canvas.width = tw;
+                canvas.height = th;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) {
+                  URL.revokeObjectURL(url);
+                  return reject(new Error('Canvas ctx unavailable'));
+                }
+                const bgColor = getBgColor(bgOption);
+                if (bgColor !== 'transparent') {
+                  ctx.fillStyle = bgColor;
+                  ctx.fillRect(0, 0, tw, th);
+                }
+                ctx.drawImage(img, 0, 0, tw, th);
+                URL.revokeObjectURL(url);
+                resolve({ dataUrl: canvas.toDataURL('image/png'), width: tw, height: th });
+              } catch(e) {
+                URL.revokeObjectURL(url);
+                reject(e);
+              }
+            };
+            img.onerror = () => {
+              URL.revokeObjectURL(url);
+              reject(new Error('Gagal me-render SVG ke PNG'));
+            };
+            img.src = url;
+          });
+        }
+
+        function triggerDownload(href, filename) {
+          const a = document.createElement('a');
+          a.href = href;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+
+        function generateFilename(ext = 'png') {
+          const now = new Date();
+          const d = now.toISOString().replace(/[-:T]/g, '').slice(0, 14);
+          return `sequence-diagram-${d}.${ext}`;
+        }
+
+        // --- 7. REALTIME RENDERING & VALIDATION ---
+        let renderDebounceTimer = null;
+        let autoExportDebounceTimer = null;
+        let lastRenderedValidCode = '';
+
+        async function renderSequenceDiagram() {
+          const code = el.codeInput.value;
+          state.code = code;
+          localStorage.setItem(KEY_CODE, code);
+          updateLineNumbers();
+
+          if (!code.trim()) {
+            el.mermaidTarget.innerHTML = '';
+            el.statusValid.classList.add('hidden');
+            el.statusInvalid.classList.add('hidden');
+            return;
+          }
+
+          const t0 = performance.now();
+          const renderId = 'mermaid-vanilla-' + Math.random().toString(36).substring(2, 8);
+
+          try {
+            const { svg } = await mermaid.render(renderId, code);
+            const duration = Math.round(performance.now() - t0);
+
+            el.mermaidTarget.innerHTML = svg;
+            state.currentSvg = svg;
+            state.lastValidSvg = svg;
+            lastRenderedValidCode = code;
+
+            // Update UI status to valid
+            el.statusValid.classList.remove('hidden');
+            el.statusInvalid.classList.add('hidden');
+            el.renderDuration.textContent = `(${duration}ms)`;
+            const lineCount = code.split('\n').length;
+            el.codeStats.textContent = `${lineCount} baris • ${code.length} karakter`;
+
+            // Trigger auto export if enabled
+            scheduleAutoExport();
+          } catch(err) {
+            // Display error and keep last valid diagram visible
+            el.statusValid.classList.add('hidden');
+            el.statusInvalid.classList.remove('hidden');
+            el.errorMessage.textContent = err.message || 'Periksa kembali kata kunci atau format baris sequence diagram.';
+
+            // Remove any dangling error element injected by mermaid
+            document.querySelectorAll('[id^="dmermaid-vanilla-"]').forEach(n => n.remove());
+          }
+        }
+
+        function updateLineNumbers() {
+          const lines = el.codeInput.value.split('\n');
+          el.lineNumbers.innerHTML = lines.map((_, i) => `<div>${i + 1}</div>`).join('');
+        }
+
+        // Auto Export Worker
+        function scheduleAutoExport() {
+          if (!state.autoSettings.enabled) return;
+          if (!state.currentSvg || !state.code.trim()) return;
+
+          clearTimeout(autoExportDebounceTimer);
+          autoExportDebounceTimer = setTimeout(async () => {
+            try {
+              const filename = generateFilename(state.autoSettings.format);
+              if (state.autoSettings.format === 'png') {
+                const { dataUrl } = await svgToPngDataUrl(
+                  state.currentSvg,
+                  state.autoSettings.scale,
+                  state.autoSettings.background
+                );
+
+                if (state.autoSettings.saveToGallery) {
+                  const snapshot = {
+                    id: Date.now().toString(),
+                    timestamp: Date.now(),
+                    code: state.code,
+                    previewDataUrl: dataUrl,
+                    format: 'png',
+                  };
+                  state.snapshots.unshift(snapshot);
+                  if (state.snapshots.length > 20) state.snapshots.pop();
+                  localStorage.setItem(KEY_SNAPSHOTS, JSON.stringify(state.snapshots));
+                  updateGalleryUI();
+                }
+
+                if (state.autoSettings.autoDownload) {
+                  triggerDownload(dataUrl, filename);
+                  showToast(`Gambar otomatis diunduh: ${filename}`, true);
+                } else {
+                  showToast('Snapshot otomatis tersimpan di galeri!', true);
+                }
+              } else {
+                // SVG
+                if (state.autoSettings.autoDownload) {
+                  const { cleanSvg } = sanitizeSvg(state.currentSvg, state.autoSettings.background);
+                  const blob = new Blob([cleanSvg], { type: 'image/svg+xml;charset=utf-8' });
+                  const url = URL.createObjectURL(blob);
+                  triggerDownload(url, filename);
+                  setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  showToast(`Vektor SVG otomatis diunduh: ${filename}`, true);
+                }
+              }
+            } catch(e) {
+              console.error('Auto export failed:', e);
+            }
+          }, state.autoSettings.delayMs);
+        }
+
+        // --- 8. CANVAS TRANSFORM (ZOOM & PAN) ---
+        function updateCanvasTransform() {
+          el.canvasTransform.style.transform = `translate(${state.posX}px, ${state.posY}px) scale(${state.scale})`;
+          el.btnZoomReset.textContent = Math.round(state.scale * 100) + '%';
+        }
+
+        el.canvasStage.addEventListener('mousedown', (e) => {
+          if (e.button !== 0) return;
+          state.isDragging = true;
+          state.dragStart.x = e.clientX - state.posX;
+          state.dragStart.y = e.clientY - state.posY;
+          el.canvasStage.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+          if (!state.isDragging) return;
+          state.posX = e.clientX - state.dragStart.x;
+          state.posY = e.clientY - state.dragStart.y;
+          updateCanvasTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+          state.isDragging = false;
+          el.canvasStage.style.cursor = 'grab';
+        });
+
+        el.canvasStage.addEventListener('wheel', (e) => {
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? -0.12 : 0.12;
+            state.scale = Math.max(0.2, Math.min(3.5, state.scale + delta));
+            updateCanvasTransform();
+          }
+        }, { passive: false });
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => {
+          state.scale = Math.min(state.scale + 0.15, 3.5);
+          updateCanvasTransform();
+        });
+
+        document.getElementById('btn-zoom-out').addEventListener('click', () => {
+          state.scale = Math.max(state.scale - 0.15, 0.2);
+          updateCanvasTransform();
+        });
+
+        el.btnZoomReset.addEventListener('click', () => {
+          state.scale = 1;
+          state.posX = 0;
+          state.posY = 0;
+          updateCanvasTransform();
+        });
+
+        document.getElementById('btn-fit-screen').addEventListener('click', () => {
+          const svg = el.mermaidTarget.querySelector('svg');
+          if (!svg) return;
+          const rect = svg.getBoundingClientRect();
+          const stageW = el.canvasStage.clientWidth - 80;
+          const stageH = el.canvasStage.clientHeight - 80;
+          if (rect.width > 0 && rect.height > 0) {
+            const fitScale = Math.min(stageW / (rect.width / state.scale), stageH / (rect.height / state.scale), 1.2);
+            state.scale = Math.max(fitScale, 0.35);
+            state.posX = 0;
+            state.posY = 0;
+            updateCanvasTransform();
+          }
+        });
+
+        // Grid Toggle
+        el.btnToggleGrid.addEventListener('click', () => {
+          state.showGrid = !state.showGrid;
+          if (state.showGrid) {
+            el.canvasStage.classList.add('bg-dots');
+            el.btnToggleGrid.classList.add('text-blue-600', 'bg-blue-50');
+            el.btnToggleGrid.classList.remove('text-slate-600');
+          } else {
+            el.canvasStage.classList.remove('bg-dots');
+            el.btnToggleGrid.classList.remove('text-blue-600', 'bg-blue-50');
+            el.btnToggleGrid.classList.add('text-slate-600');
+          }
+        });
+
+        // Fullscreen Toggle
+        el.btnFullscreen.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+            el.paneDiagram.requestFullscreen().catch(() => {});
+          } else {
+            document.exitFullscreen().catch(() => {});
+          }
+        });
+
+        // --- 9. RESIZABLE SPLIT PANES ---
+        let isResizing = false;
+        el.paneResizer.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          isResizing = true;
+          document.body.style.cursor = 'col-resize';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+          if (!isResizing) return;
+          const totalW = window.innerWidth;
+          const pct = (e.clientX / totalW) * 100;
+          if (pct >= 20 && pct <= 80) {
+            el.paneEditor.style.width = pct + '%';
+          }
+        });
+
+        window.addEventListener('mouseup', () => {
+          if (isResizing) {
+            isResizing = false;
+            document.body.style.cursor = '';
+          }
+        });
+
+        // Layout Switcher (Split, Editor, Diagram)
+        document.querySelectorAll('.layout-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.id.replace('layout-', '');
+            state.layout = id;
+            document.querySelectorAll('.layout-btn').forEach(b => {
+              b.classList.remove('bg-white', 'text-slate-800', 'shadow-2xs', 'font-semibold');
+              b.classList.add('text-slate-600', 'font-medium');
+            });
+            btn.classList.add('bg-white', 'text-slate-800', 'shadow-2xs', 'font-semibold');
+            btn.classList.remove('text-slate-600');
+
+            if (id === 'split') {
+              el.paneEditor.classList.remove('hidden');
+              el.paneDiagram.classList.remove('hidden');
+              el.paneResizer.classList.remove('hidden');
+              el.paneEditor.style.width = '45%';
+            } else if (id === 'editor') {
+              el.paneEditor.classList.remove('hidden');
+              el.paneDiagram.classList.add('hidden');
+              el.paneResizer.classList.add('hidden');
+              el.paneEditor.style.width = '100%';
+            } else if (id === 'diagram') {
+              el.paneEditor.classList.add('hidden');
+              el.paneDiagram.classList.remove('hidden');
+              el.paneResizer.classList.add('hidden');
+            }
+          });
+        });
+
+        // --- 10. EDITOR INTERACTIONS & SNIPPETS ---
+        el.codeInput.addEventListener('input', () => {
+          clearTimeout(renderDebounceTimer);
+          renderDebounceTimer = setTimeout(renderSequenceDiagram, 200);
+        });
+
+        // Tab Key Indentation
+        el.codeInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = el.codeInput.selectionStart;
+            const end = el.codeInput.selectionEnd;
+            el.codeInput.value = el.codeInput.value.substring(0, start) + '    ' + el.codeInput.value.substring(end);
+            el.codeInput.selectionStart = el.codeInput.selectionEnd = start + 4;
+            renderSequenceDiagram();
+          }
+        });
+
+        // Snippet Toolbar buttons
+        document.querySelectorAll('.snippet-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const snippet = '\n    ' + btn.getAttribute('data-snippet');
+            const start = el.codeInput.selectionStart;
+            const end = el.codeInput.selectionEnd;
+            const text = el.codeInput.value;
+            el.codeInput.value = text.substring(0, start) + snippet + text.substring(end);
+            el.codeInput.focus();
+            el.codeInput.selectionStart = el.codeInput.selectionEnd = start + snippet.length;
+            renderSequenceDiagram();
+          });
+        });
+
+        // Syntax Help Toggle
+        document.getElementById('btn-syntax-help').addEventListener('click', () => {
+          el.panelSyntaxHelp.classList.toggle('hidden');
+        });
+        document.getElementById('btn-close-help').addEventListener('click', () => {
+          el.panelSyntaxHelp.classList.add('hidden');
+        });
+
+        // Copy Code
+        document.getElementById('btn-copy-code').addEventListener('click', async () => {
+          await navigator.clipboard.writeText(el.codeInput.value);
+          document.getElementById('label-copy-code').textContent = 'Tersalin!';
+          setTimeout(() => {
+            document.getElementById('label-copy-code').textContent = 'Salin';
+          }, 2000);
+        });
+
+        // Reset Code
+        document.getElementById('btn-reset-code').addEventListener('click', () => {
+          el.codeInput.value = STARTER_CODE;
+          renderSequenceDiagram();
+          showToast('Kode dikembalikan ke contoh semula');
+        });
+
+        // Clear Code
+        document.getElementById('btn-clear-code').addEventListener('click', () => {
+          el.codeInput.value = 'sequenceDiagram\n    ';
+          renderSequenceDiagram();
+          showToast('Editor dibersihkan');
+        });
+
+        // --- 11. TEMPLATES MENU ---
+        const btnTemplates = document.getElementById('btn-templates-menu');
+        btnTemplates.addEventListener('click', (e) => {
+          e.stopPropagation();
+          el.dropdownTemplates.classList.toggle('hidden');
+          el.dropdownTheme.classList.add('hidden');
+        });
+
+        el.templatesList.innerHTML = TEMPLATES.map(t => `
+          <button class="tmpl-select-btn w-full text-left px-3.5 py-2 hover:bg-blue-50/70 transition-colors group" data-tmpl-id="${t.id}">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-800 group-hover:text-blue-700">${t.name}</span>
+              <span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">${t.category}</span>
+            </div>
+            <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">${t.desc}</p>
+          </button>
+        `).join('');
+
+        el.templatesList.querySelectorAll('.tmpl-select-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-tmpl-id');
+            const tmpl = TEMPLATES.find(x => x.id === id);
+            if (tmpl) {
+              el.codeInput.value = tmpl.code;
+              renderSequenceDiagram();
+              showToast(`Template dimuat: ${tmpl.name}`);
+              el.dropdownTemplates.classList.add('hidden');
+            }
+          });
+        });
+
+        // --- 12. THEME & CANVAS BACKGROUND MENU ---
+        const btnTheme = document.getElementById('btn-theme-menu');
+        btnTheme.addEventListener('click', (e) => {
+          e.stopPropagation();
+          el.dropdownTheme.classList.toggle('hidden');
+          el.dropdownTemplates.classList.add('hidden');
+        });
+
+        document.querySelectorAll('.theme-option').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const theme = btn.getAttribute('data-theme');
+            state.theme = theme;
+            el.currentThemeLabel.textContent = theme;
+            document.querySelectorAll('.theme-option').forEach(b => b.classList.replace('text-blue-600', 'text-slate-700'));
+            btn.classList.replace('text-slate-700', 'text-blue-600');
+            el.dropdownTheme.classList.add('hidden');
+            initMermaid(theme);
+            renderSequenceDiagram();
+          });
+        });
+
+        document.querySelectorAll('.bg-option').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const bg = btn.getAttribute('data-bg');
+            state.canvasBg = bg;
+            document.querySelectorAll('.bg-option').forEach(b => b.classList.replace('text-blue-600', 'text-slate-700'));
+            btn.classList.replace('text-slate-700', 'text-blue-600');
+            el.dropdownTheme.classList.add('hidden');
+
+            el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard');
+            if (bg === 'dark') el.paneDiagram.classList.add('bg-slate-900');
+            else if (bg === 'light-slate') el.paneDiagram.classList.add('bg-slate-100');
+            else if (bg === 'transparent') el.paneDiagram.classList.add('bg-checkerboard');
+            else el.paneDiagram.classList.add('bg-white');
+          });
+        });
+
+        window.addEventListener('click', () => {
+          el.dropdownTemplates.classList.add('hidden');
+          el.dropdownTheme.classList.add('hidden');
+        });
+
+        // --- 13. EXPORT MODAL & ACTIONS ---
+        function openModal(tab = 'manual') {
+          el.exportModal.classList.remove('hidden');
+          switchTab(tab);
+        }
+        function closeModal() {
+          el.exportModal.classList.add('hidden');
+        }
+
+        document.getElementById('btn-open-export-modal').addEventListener('click', () => openModal('manual'));
+        document.getElementById('btn-canvas-quick-export').addEventListener('click', () => openModal('manual'));
+        document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+        document.getElementById('btn-finish-modal').addEventListener('click', closeModal);
+
+        function switchTab(tabName) {
+          document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('border-blue-600', 'text-blue-600');
+            b.classList.add('border-transparent', 'text-slate-500');
+          });
+          document.getElementById('tab-btn-' + tabName).classList.add('border-blue-600', 'text-blue-600');
+          document.getElementById('tab-btn-' + tabName).classList.remove('border-transparent', 'text-slate-500');
+
+          document.getElementById('tab-content-manual').classList.toggle('hidden', tabName !== 'manual');
+          document.getElementById('tab-content-auto').classList.toggle('hidden', tabName !== 'auto');
+          document.getElementById('tab-content-gallery').classList.toggle('hidden', tabName !== 'gallery');
+        }
+
+        document.getElementById('tab-btn-manual').addEventListener('click', () => switchTab('manual'));
+        document.getElementById('tab-btn-auto').addEventListener('click', () => switchTab('auto'));
+        document.getElementById('tab-btn-gallery').addEventListener('click', () => switchTab('gallery'));
+
+        // Scale Choices in Modal
+        document.querySelectorAll('.scale-choice').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const sc = parseInt(btn.getAttribute('data-scale'), 10);
+            state.manualExportScale = sc;
+            document.querySelectorAll('.scale-choice').forEach(b => {
+              b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+              b.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+            });
+            btn.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+            btn.classList.remove('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+            el.btnLabelPngScale.textContent = `Unduh Gambar PNG (${sc}x)`;
+          });
+        });
+
+        // Background Choices in Modal
+        document.querySelectorAll('.export-bg-choice').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const bg = btn.getAttribute('data-bg');
+            state.manualExportBg = bg;
+            document.querySelectorAll('.export-bg-choice').forEach(b => {
+              b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+              b.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+            });
+            btn.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+            btn.classList.remove('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+          });
+        });
+
+        // Download PNG (Modal)
+        document.getElementById('btn-modal-download-png').addEventListener('click', async () => {
+          if (!state.currentSvg) return;
+          try {
+            const filename = generateFilename('png');
+            const { dataUrl } = await svgToPngDataUrl(state.currentSvg, state.manualExportScale, state.manualExportBg);
+            triggerDownload(dataUrl, filename);
+            showToast(`Berhasil mengunduh ${filename}`);
+          } catch(e) {
+            console.error(e);
+          }
+        });
+
+        // Quick Download PNG (Header)
+        document.getElementById('btn-quick-download-png').addEventListener('click', async () => {
+          if (!state.currentSvg) return;
+          try {
+            const filename = generateFilename('png');
+            const { dataUrl } = await svgToPngDataUrl(state.currentSvg, 2, 'white');
+            triggerDownload(dataUrl, filename);
+            showToast(`Berhasil mengunduh ${filename}`);
+          } catch(e) {
+            console.error(e);
+          }
+        });
+
+        // Download SVG (Modal)
+        document.getElementById('btn-modal-download-svg').addEventListener('click', () => {
+          if (!state.currentSvg) return;
+          const filename = generateFilename('svg');
+          const { cleanSvg } = sanitizeSvg(state.currentSvg, state.manualExportBg);
+          const blob = new Blob([cleanSvg], { type: 'image/svg+xml;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          triggerDownload(url, filename);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast(`Berhasil mengunduh ${filename}`);
+        });
+
+        // Copy PNG to Clipboard
+        document.getElementById('btn-modal-copy-png').addEventListener('click', async () => {
+          if (!state.currentSvg) return;
+          try {
+            const { cleanSvg, width, height } = sanitizeSvg(state.currentSvg, state.manualExportBg);
+            const blob = new Blob([cleanSvg], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = Math.round(width * state.manualExportScale);
+              canvas.height = Math.round(height * state.manualExportScale);
+              const ctx = canvas.getContext('2d');
+              const bgColor = getBgColor(state.manualExportBg);
+              if (bgColor !== 'transparent') {
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+              }
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              URL.revokeObjectURL(url);
+              canvas.toBlob(async (pngBlob) => {
+                if (!pngBlob) return;
+                try {
+                  await navigator.clipboard.write([new ClipboardItem({ 'image/png': pngBlob })]);
+                  document.getElementById('copy-png-label').textContent = 'PNG Tersalin ke Clipboard!';
+                  setTimeout(() => {
+                    document.getElementById('copy-png-label').textContent = 'Salin PNG ke Clipboard';
+                  }, 2500);
+                } catch(e) {
+                  showToast('Gagal menyalin gambar langsung ke clipboard');
+                }
+              }, 'image/png');
+            };
+            img.src = url;
+          } catch(e) {}
+        });
+
+        // Copy SVG Code
+        document.getElementById('btn-modal-copy-svg').addEventListener('click', async () => {
+          if (!state.currentSvg) return;
+          const { cleanSvg } = sanitizeSvg(state.currentSvg, state.manualExportBg);
+          await navigator.clipboard.writeText(cleanSvg);
+          document.getElementById('copy-svg-label').textContent = 'Markup SVG Tersalin!';
+          setTimeout(() => {
+            document.getElementById('copy-svg-label').textContent = 'Salin Kode Markup SVG';
+          }, 2500);
+        });
+
+        // --- 14. AUTO EXPORT CONFIGURATION & GALLERY ---
+        function updateAutoExportUI() {
+          const enabled = state.autoSettings.enabled;
+          el.autoSwitchEnabled.checked = enabled;
+          if (enabled) {
+            el.autoStatusPill.textContent = 'Aktif';
+            el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-700';
+            el.btnToggleAutoExport.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-emerald-50 border-emerald-300 text-emerald-800 shadow-2xs';
+            el.iconAutoZap.className = 'w-3.5 h-3.5 text-emerald-600 fill-emerald-600 animate-pulse';
+            el.labelAutoExport.textContent = 'Ekspor Otomatis: Aktif';
+          } else {
+            el.autoStatusPill.textContent = 'Nonaktif';
+            el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-slate-200 text-slate-600';
+            el.btnToggleAutoExport.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50';
+            el.iconAutoZap.className = 'w-3.5 h-3.5 text-slate-400';
+            el.labelAutoExport.textContent = 'Ekspor Otomatis: Mati';
+          }
+          localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
+        }
+
+        function toggleAutoExport() {
+          state.autoSettings.enabled = !state.autoSettings.enabled;
+          updateAutoExportUI();
+          showToast(state.autoSettings.enabled ? 'Ekspor gambar otomatis diaktifkan ⚡' : 'Ekspor gambar otomatis dinonaktifkan');
+        }
+
+        el.btnToggleAutoExport.addEventListener('click', toggleAutoExport);
+        el.autoSwitchEnabled.addEventListener('change', (e) => {
+          state.autoSettings.enabled = e.target.checked;
+          updateAutoExportUI();
+        });
+
+        el.autoCheckGallery.addEventListener('change', (e) => {
+          state.autoSettings.saveToGallery = e.target.checked;
+          localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
+        });
+        el.autoCheckDownload.addEventListener('change', (e) => {
+          state.autoSettings.autoDownload = e.target.checked;
+          localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
+        });
+        el.autoSelectDelay.addEventListener('change', (e) => {
+          state.autoSettings.delayMs = parseInt(e.target.value, 10);
+          localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
+        });
+        el.autoSelectFormat.addEventListener('change', (e) => {
+          state.autoSettings.format = e.target.value;
+          localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
+        });
+
+        // Gallery UI updater
+        function updateGalleryUI() {
+          const count = state.snapshots.length;
+          el.snapshotCount.textContent = count;
+          el.modalSnapshotCount.textContent = count;
+          if (count > 0) {
+            el.btnHeaderGallery.classList.remove('hidden');
+            el.galleryEmpty.classList.add('hidden');
+          } else {
+            el.btnHeaderGallery.classList.add('hidden');
+            el.galleryEmpty.classList.remove('hidden');
+          }
+
+          el.galleryContainer.innerHTML = state.snapshots.map(s => {
+            const time = new Date(s.timestamp).toLocaleTimeString();
+            return `
+              <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs flex flex-col">
+                <div class="h-32 bg-slate-100 flex items-center justify-center p-2 overflow-hidden border-b border-slate-100">
+                  <img src="${s.previewDataUrl}" class="max-h-full max-w-full object-contain" alt="Snapshot Preview" />
+                </div>
+                <div class="p-3 flex items-center justify-between">
+                  <span class="text-[11px] font-mono text-slate-500">${time}</span>
+                  <div class="flex items-center gap-1.5">
+                    <a href="${s.previewDataUrl}" download="sequence-snapshot-${s.id}.png" class="py-1 px-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
+                      Unduh
+                    </a>
+                    <button class="restore-snap-btn py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium" data-snap-id="${s.id}">
+                      Pulihkan
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          el.galleryContainer.querySelectorAll('.restore-snap-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-snap-id');
+              const snap = state.snapshots.find(x => x.id === id);
+              if (snap) {
+                el.codeInput.value = snap.code;
+                renderSequenceDiagram();
+                closeModal();
+                showToast('Kode berhasil dipulihkan dari snapshot!', true);
+              }
+            });
+          });
+        }
+
+        el.btnHeaderGallery.addEventListener('click', () => openModal('gallery'));
+
+        document.getElementById('btn-clear-snapshots').addEventListener('click', () => {
+          state.snapshots = [];
+          localStorage.removeItem(KEY_SNAPSHOTS);
+          updateGalleryUI();
+          showToast('Semua snapshot telah dihapus');
+        });
+
+        // --- 15. BOOTSTRAP APP ---
+        el.codeInput.value = state.code;
+        updateAutoExportUI();
+        updateGalleryUI();
+        renderSequenceDiagram();
+      })();
+    </script>
+  </body>
+</html>
