@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sequence Diagram Visualizer - Vanilla JS &amp; Mermaid</title>
-    <meta name="description" content="Aplikasi visualizer sequence diagram real-time berbasis Vanilla JavaScript dan Mermaid.js dengan fitur editor langsung dan ekspor gambar otomatis." />
+    <meta name="description" content="Real-time sequence diagram visualizer powered by Vanilla JavaScript and Mermaid.js with live editing and automatic image export." />
     <meta property="og:title" content="Sequence Diagram Visualizer" />
-    <meta property="og:description" content="Aplikasi visualizer sequence diagram real-time berbasis Vanilla JavaScript dan Mermaid.js dengan fitur editor langsung dan ekspor gambar otomatis." />
+    <meta property="og:description" content="Real-time sequence diagram visualizer powered by Vanilla JavaScript and Mermaid.js with live editing and automatic image export." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -98,24 +98,24 @@
           <button
             id="layout-split"
             class="layout-btn w-8 h-8 rounded-md font-semibold transition-colors flex items-center justify-center bg-white text-slate-800 shadow-2xs"
-            title="Tampilan Split (Bersanding / Atas-Bawah)"
-            aria-label="Tampilan Split"
+            title="Split View (Side-by-side / Stacked)"
+            aria-label="Split View"
           >
             <i data-lucide="columns" class="w-4 h-4 text-blue-600"></i>
           </button>
           <button
             id="layout-editor"
             class="layout-btn w-8 h-8 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center"
-            title="Tampilkan Kode (Editor Saja)"
-            aria-label="Tampilan Editor Kode"
+            title="Code View (Editor Only)"
+            aria-label="Code Editor View"
           >
             <i data-lucide="file-code" class="w-4 h-4"></i>
           </button>
           <button
             id="layout-diagram"
             class="layout-btn w-8 h-8 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center"
-            title="Tampilkan Diagram (Pratinjau Saja)"
-            aria-label="Tampilan Pratinjau Diagram"
+            title="Diagram View (Preview Only)"
+            aria-label="Diagram Preview View"
           >
             <i data-lucide="maximize-2" class="w-4 h-4"></i>
           </button>
@@ -131,8 +131,8 @@
             <button
               id="btn-templates-menu"
               class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs"
-              title="Pilih Template Diagram"
-              aria-label="Pilih Template Diagram"
+              title="Select Diagram Template"
+              aria-label="Select Diagram Template"
             >
               <i data-lucide="folder-open" class="w-4 h-4 text-blue-600"></i>
             </button>
@@ -141,7 +141,7 @@
               class="hidden absolute right-0 mt-1.5 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-40"
             >
               <div class="px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                Pustaka Template Diagram
+                Diagram Template Library
               </div>
               <div id="templates-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100"></div>
             </div>
@@ -151,19 +151,19 @@
           <button
             id="btn-toggle-auto-export"
             class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-            title="Ekspor Otomatis: Nonaktif (Klik untuk Menyalakan)"
-            aria-label="Toggle Ekspor Otomatis"
+            title="Auto Export: Disabled (Click to Enable)"
+            aria-label="Toggle Auto Export"
           >
             <i data-lucide="zap" id="icon-auto-zap" class="w-4 h-4 text-slate-400"></i>
-            <span id="label-auto-export" class="hidden">Ekspor Otomatis: Mati</span>
+            <span id="label-auto-export" class="hidden">Auto Export: Off</span>
           </button>
 
           <!-- Gallery Snapshots Badge -->
           <button
             id="btn-header-gallery"
             class="hidden flex items-center justify-center gap-1 px-2 h-8 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium"
-            title="Buka Galeri Snapshot"
-            aria-label="Galeri Snapshot"
+            title="Open Snapshot Gallery"
+            aria-label="Snapshot Gallery"
           >
             <i data-lucide="layers" class="w-4 h-4 text-blue-600"></i>
             <span id="snapshot-count" class="font-mono text-xs font-bold">0</span>
@@ -173,8 +173,8 @@
           <button
             id="btn-quick-download-png"
             class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200"
-            title="Unduh PNG Langsung (Resolusi 2x)"
-            aria-label="Unduh PNG Langsung"
+            title="Quick PNG Download (2x Resolution)"
+            aria-label="Quick PNG Download"
           >
             <i data-lucide="image" class="w-4 h-4"></i>
           </button>
@@ -183,8 +183,8 @@
           <button
             id="btn-open-export-modal"
             class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white transition-colors shadow-xs"
-            title="Ekspor Gambar &amp; Pengaturan (PNG / SVG)"
-            aria-label="Buka Menu Ekspor Gambar"
+            title="Export Image &amp; Settings (PNG / SVG)"
+            aria-label="Open Image Export Menu"
           >
             <i data-lucide="download" class="w-4 h-4"></i>
           </button>
@@ -194,8 +194,8 @@
         <button
           id="btn-toggle-extra-tools"
           class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-blue-600 transition-colors shadow-2xs"
-          title="Tampilkan Opsi &amp; Alat Tambahan"
-          aria-label="Toggle alat tambahan"
+          title="Show Extra Options &amp; Tools"
+          aria-label="Toggle extra tools"
         >
           <i data-lucide="sliders-horizontal" id="icon-toggle-extra" class="w-4 h-4"></i>
         </button>
@@ -213,7 +213,7 @@
               <i data-lucide="code-2" class="w-4 h-4"></i>
             </div>
             <div>
-              <h2 class="text-xs font-semibold text-slate-800 leading-none">Editor Teks Mermaid</h2>
+              <h2 class="text-xs font-semibold text-slate-800 leading-none">Mermaid Sequence Editor</h2>
               <p class="text-[11px] text-slate-500 mt-0.5">Real-time sequence syntax</p>
             </div>
           </div>
@@ -222,30 +222,30 @@
             <button
               id="btn-syntax-help"
               class="px-2.5 py-1 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition-colors flex items-center gap-1"
-              title="Lihat Panduan Sintaks"
+              title="View Syntax Guide"
             >
               <i data-lucide="help-circle" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span class="hidden sm:inline">Panduan</span>
+              <span class="hidden sm:inline">Guide</span>
             </button>
             <button
               id="btn-copy-code"
               class="px-2.5 py-1 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition-colors flex items-center gap-1"
-              title="Salin Kode Mermaid"
+              title="Copy Mermaid Code"
             >
               <i data-lucide="copy" id="icon-copy-code" class="w-3.5 h-3.5"></i>
-              <span id="label-copy-code" class="hidden sm:inline">Salin</span>
+              <span id="label-copy-code" class="hidden sm:inline">Copy</span>
             </button>
             <button
               id="btn-reset-code"
               class="p-1.5 text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 transition-colors"
-              title="Kembalikan ke Contoh Semula"
+              title="Reset to Starter Example"
             >
               <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
             </button>
             <button
               id="btn-clear-code"
               class="p-1.5 text-slate-400 bg-white border border-slate-200 rounded-md hover:bg-rose-50 hover:text-rose-600 transition-colors"
-              title="Hapus Semua Teks"
+              title="Clear Editor"
             >
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
@@ -256,38 +256,38 @@
         <div class="flex items-center gap-1 px-3 py-1.5 bg-slate-100/80 border-b border-slate-200 overflow-x-auto text-xs whitespace-nowrap">
           <span class="text-slate-500 font-medium text-[11px] mr-1 flex items-center gap-1">
             <i data-lucide="sparkles" class="w-3 h-3 text-amber-500"></i>
-            Sisipkan:
+            Insert:
           </span>
-          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="actor Pengguna as 👤 Pengguna">actor</button>
-          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="participant Web as 🌐 Frontend Web">participant</button>
-          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="A->>B: Request()">-&gt;&gt; Pesan</button>
-          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="B-->>A: Respon OK">--&gt;&gt; Balasan</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="actor User as 👤 User">actor</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="participant Web as 🌐 Web App">participant</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="A->>B: Request()">-&gt;&gt; Message</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="B-->>A: Response OK">--&gt;&gt; Reply</button>
           <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="activate B&#10;    deactivate B">activate</button>
-          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="alt Berhasil&#10;        A->>B: Lanjut&#10;    else Gagal&#10;        A-->>B: Batalkan&#10;    end">alt / else</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="alt Success&#10;        A->>B: Proceed&#10;    else Failed&#10;        A-->>B: Cancel&#10;    end">alt / else</button>
           <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="loop Interval&#10;        A->>B: Ping&#10;    end">loop</button>
-          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="Note over A,B: Catatan Keterangan">Note</button>
+          <button class="snippet-btn px-2 py-0.5 rounded bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 font-mono text-[11px]" data-snippet="Note over A,B: Note Description">Note</button>
         </div>
 
         <!-- Syntax Cheat Sheet Panel -->
         <div id="panel-syntax-help" class="hidden p-3 bg-blue-50/80 border-b border-blue-200 text-xs text-slate-700 space-y-1.5">
           <div class="flex items-center justify-between">
             <span class="font-semibold text-blue-900 flex items-center gap-1.5">
-              <i data-lucide="help-circle" class="w-3.5 h-3.5 text-blue-600"></i> Panduan Cepat Sequence Diagram:
+              <i data-lucide="help-circle" class="w-3.5 h-3.5 text-blue-600"></i> Quick Sequence Diagram Guide:
             </span>
-            <button id="btn-close-help" class="text-slate-400 hover:text-slate-600 text-[11px] font-medium">Tutup [✕]</button>
+            <button id="btn-close-help" class="text-slate-400 hover:text-slate-600 text-[11px] font-medium">Close [✕]</button>
           </div>
           <div class="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
             <div class="bg-white/90 p-2 rounded border border-blue-100">
-              <span class="text-blue-800 font-semibold block">Panah Pesan:</span>
-              <code>A -&gt;&gt; B: Teks</code> (Sinkron)<br />
-              <code>B --&gt;&gt; A: Teks</code> (Balasan)<br />
-              <code>A -x B: Gagal</code> (Kehilangan)
+              <span class="text-blue-800 font-semibold block">Message Arrows:</span>
+              <code>A -&gt;&gt; B: Text</code> (Sync)<br />
+              <code>B --&gt;&gt; A: Text</code> (Reply)<br />
+              <code>A -x B: Failed</code> (Lost)
             </div>
             <div class="bg-white/90 p-2 rounded border border-blue-100">
-              <span class="text-blue-800 font-semibold block">Kondisi &amp; Catatan:</span>
-              <code>alt Sukses ... else ... end</code><br />
-              <code>loop Tiap Detik ... end</code><br />
-              <code>Note over A,B: Pesan</code>
+              <span class="text-blue-800 font-semibold block">Conditions &amp; Notes:</span>
+              <code>alt Success ... else ... end</code><br />
+              <code>loop Every Second ... end</code><br />
+              <code>Note over A,B: Note</code>
             </div>
           </div>
         </div>
@@ -305,7 +305,7 @@
               spellcheck="false"
               autocapitalize="off"
               autocomplete="off"
-              placeholder="Tulis kode sequenceDiagram Mermaid di sini..."
+              placeholder="Type Mermaid sequenceDiagram code here..."
               class="w-full h-full p-3 resize-none bg-transparent text-slate-100 font-mono text-xs leading-5 focus:outline-none placeholder:text-slate-600 select-text"
             ></textarea>
           </div>
@@ -316,18 +316,21 @@
           <div id="status-valid" class="flex items-center justify-between px-3 py-2 bg-emerald-50 text-emerald-800 text-xs">
             <div class="flex items-center gap-1.5 font-medium">
               <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
-              <span>Sintaks Valid</span>
+              <span>Syntax Valid</span>
               <span id="render-duration" class="text-[11px] text-emerald-600/80 font-normal"></span>
             </div>
             <div id="code-stats" class="text-[11px] text-emerald-700"></div>
           </div>
           <div id="status-invalid" class="hidden px-3 py-2 bg-rose-50 border-t border-rose-200 text-rose-800 text-xs">
-            <div class="flex items-start gap-1.5">
-              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
-              <div class="flex-1 min-w-0">
-                <span class="font-semibold text-rose-900 block">Kesalahan Sintaks Mermaid</span>
-                <p id="error-message" class="text-[11px] text-rose-700 font-mono break-all mt-0.5"></p>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-start gap-1.5 min-w-0">
+                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
+                <div class="min-w-0">
+                  <span class="font-semibold text-rose-900 block">Mermaid Syntax Error</span>
+                  <p id="error-message" class="text-[11px] text-rose-700 font-mono break-all mt-0.5"></p>
+                </div>
               </div>
+              <button id="btn-fix-syntax" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 border border-rose-300 rounded font-medium text-[11px] shrink-0 transition-colors cursor-pointer">Reset Code</button>
             </div>
           </div>
         </div>
@@ -337,7 +340,7 @@
       <div
         id="pane-resizer"
         class="w-full h-2 md:w-2 md:h-full bg-slate-200 hover:bg-blue-500 active:bg-blue-600 cursor-row-resize md:cursor-col-resize shrink-0 transition-colors z-20 flex items-center justify-center group touch-none"
-        title="Tarik untuk mengubah ukuran panel"
+        title="Drag to resize panels"
       >
         <div class="w-8 h-1 md:w-1 md:h-8 bg-slate-400 group-hover:bg-white rounded-full transition-colors"></div>
       </div>
@@ -350,7 +353,7 @@
           <div class="pointer-events-auto hidden sm:block">
             <div id="canvas-status-badge" class="px-3 py-1.5 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200/80 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-700">
               <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
-              <span>Pratinjau Sequence Real-time</span>
+              <span>Real-time Sequence Preview</span>
             </div>
           </div>
 
@@ -361,7 +364,7 @@
               <button
                 id="btn-theme-menu"
                 class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors flex items-center gap-1"
-                title="Ganti Tema &amp; Latar Kanvas"
+                title="Change Theme &amp; Canvas Background"
               >
                 <i data-lucide="palette" class="w-3.5 h-3.5 text-blue-600"></i>
                 <span id="current-theme-label" class="capitalize hidden md:inline">default</span>
@@ -370,54 +373,54 @@
                 id="dropdown-theme"
                 class="hidden absolute right-0 mt-1 w-44 bg-white border border-slate-200 rounded-lg shadow-lg py-1 z-30"
               >
-                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">Tema Mermaid</div>
+                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">Mermaid Theme</div>
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 font-semibold text-blue-600" data-theme="default">Default</button>
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="neutral">Neutral</button>
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="dark">Dark</button>
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="forest">Forest</button>
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="base">Base</button>
-                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100 mt-1">Latar Kanvas</div>
-                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 font-semibold text-blue-600" data-bg="white">Putih</button>
-                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="light-slate">Abu Terang</button>
-                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="dark">Gelap</button>
-                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="transparent">Transparan (Catur)</button>
+                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100 mt-1">Canvas Background</div>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 font-semibold text-blue-600" data-bg="white">White</button>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="light-slate">Light Slate</button>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="dark">Dark</button>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="transparent">Transparent (Grid)</button>
               </div>
             </div>
 
             <div class="w-[1px] h-4 bg-slate-200 my-auto"></div>
 
             <!-- Grid Toggle -->
-            <button id="btn-toggle-grid" class="p-1.5 rounded-md text-blue-600 bg-blue-50" title="Sembunyikan/Tampilkan Kisi-kisi">
+            <button id="btn-toggle-grid" class="p-1.5 rounded-md text-blue-600 bg-blue-50" title="Toggle Background Grid">
               <i data-lucide="grid" class="w-3.5 h-3.5"></i>
             </button>
 
             <div class="w-[1px] h-4 bg-slate-200 my-auto"></div>
 
             <!-- Zoom Controls -->
-            <button id="btn-zoom-in" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Perbesar">
+            <button id="btn-zoom-in" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Zoom In">
               <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
             </button>
-            <button id="btn-zoom-reset" class="px-1.5 py-1 text-[11px] font-mono font-medium text-slate-700 hover:bg-slate-100 rounded-md min-w-[3rem]" title="Reset 100%">
+            <button id="btn-zoom-reset" class="px-1.5 py-1 text-[11px] font-mono font-medium text-slate-700 hover:bg-slate-100 rounded-md min-w-[3rem]" title="Reset Zoom (100%)">
               100%
             </button>
-            <button id="btn-zoom-out" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Perkecil">
+            <button id="btn-zoom-out" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Zoom Out">
               <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i>
             </button>
-            <button id="btn-fit-screen" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Paskan ke Layar">
+            <button id="btn-fit-screen" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Fit to Screen">
               <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
             </button>
 
             <div class="w-[1px] h-4 bg-slate-200 my-auto"></div>
 
             <!-- Fullscreen -->
-            <button id="btn-fullscreen" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Layar Penuh">
+            <button id="btn-fullscreen" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md transition-colors" title="Toggle Fullscreen">
               <i data-lucide="maximize-2" id="icon-fullscreen" class="w-3.5 h-3.5"></i>
             </button>
 
             <!-- Quick Export -->
-            <button id="btn-canvas-quick-export" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center gap-1 font-medium shadow-xs ml-1" title="Unduh Gambar Langsung">
+            <button id="btn-canvas-quick-export" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center gap-1 font-medium shadow-xs ml-1" title="Quick Download Image">
               <i data-lucide="download" class="w-3.5 h-3.5"></i>
-              <span class="hidden sm:inline">Ekspor</span>
+              <span class="hidden sm:inline">Export</span>
             </button>
           </div>
         </div>
@@ -431,9 +434,9 @@
 
         <!-- Subtle Bottom Tip -->
         <div class="absolute bottom-2 left-3 z-10 text-[11px] text-slate-400 pointer-events-none hidden md:flex items-center gap-2">
-          <span>Klik &amp; seret kanvas untuk menggeser</span>
+          <span>Click &amp; drag canvas to pan</span>
           <span>&bull;</span>
-          <span>Ctrl + Scroll untuk Zoom</span>
+          <span>Ctrl + Scroll to Zoom</span>
         </div>
       </section>
     </main>
@@ -446,10 +449,10 @@
           <div>
             <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="download" class="w-5 h-5 text-blue-600"></i>
-              Ekspor Gambar &amp; Pengaturan Otomatis
+              Export Diagram &amp; Auto-Export Settings
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">
-              Unduh hasil diagram sequence dalam resolusi tinggi atau konfigurasi ekspor otomatis
+              Download high-resolution sequence diagrams or configure automatic background export
             </p>
           </div>
           <button id="btn-close-modal" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors">✕</button>
@@ -459,15 +462,15 @@
         <div class="flex border-b border-slate-200 bg-white px-6 pt-2">
           <button id="tab-btn-manual" class="tab-btn pb-2.5 px-3 text-xs font-semibold border-b-2 border-blue-600 text-blue-600 flex items-center gap-1.5">
             <i data-lucide="image" class="w-3.5 h-3.5"></i>
-            Ekspor Manual
+            Manual Export
           </button>
           <button id="tab-btn-auto" class="tab-btn pb-2.5 px-3 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5">
             <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
-            Ekspor Otomatis
+            Auto Export
           </button>
           <button id="tab-btn-gallery" class="tab-btn pb-2.5 px-3 text-xs font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5">
             <i data-lucide="layers" class="w-3.5 h-3.5"></i>
-            Galeri Snapshot (<span id="modal-snapshot-count">0</span>)
+            Snapshot Gallery (<span id="modal-snapshot-count">0</span>)
           </button>
         </div>
 
@@ -478,7 +481,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Scale Resolution -->
               <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Resolusi Gambar (PNG)</label>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Image Resolution (PNG)</label>
                 <div class="grid grid-cols-3 gap-2">
                   <button class="scale-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-scale="1">1x</button>
                   <button class="scale-choice py-2 px-3 text-xs font-semibold rounded-lg border bg-blue-50 border-blue-500 text-blue-700" data-scale="2">2x (Retina)</button>
@@ -487,11 +490,11 @@
               </div>
               <!-- Background -->
               <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Latar Belakang Gambar</label>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Image Background</label>
                 <div class="grid grid-cols-3 gap-2">
-                  <button class="export-bg-choice py-2 px-3 text-xs font-semibold rounded-lg border bg-blue-50 border-blue-500 text-blue-700" data-bg="white">Putih</button>
-                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="transparent">Transparan</button>
-                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="dark">Gelap</button>
+                  <button class="export-bg-choice py-2 px-3 text-xs font-semibold rounded-lg border bg-blue-50 border-blue-500 text-blue-700" data-bg="white">White</button>
+                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="transparent">Transparent</button>
+                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="dark">Dark</button>
                 </div>
               </div>
             </div>
@@ -500,25 +503,25 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <button id="btn-modal-download-png" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
                 <i data-lucide="image" class="w-4 h-4"></i>
-                <span id="btn-label-png-scale">Unduh Gambar PNG (2x)</span>
+                <span id="btn-label-png-scale">Download PNG Image (2x)</span>
               </button>
               <button id="btn-modal-download-svg" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
                 <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i>
-                <span>Unduh Vektor SVG</span>
+                <span>Download SVG Vector</span>
               </button>
               <button id="btn-modal-copy-png" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer">
                 <i data-lucide="copy" class="w-4 h-4 text-slate-500"></i>
-                <span id="copy-png-label">Salin PNG ke Clipboard</span>
+                <span id="copy-png-label">Copy PNG to Clipboard</span>
               </button>
               <button id="btn-modal-copy-svg" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer">
                 <i data-lucide="copy" class="w-4 h-4 text-slate-500"></i>
-                <span id="copy-svg-label">Salin Kode Markup SVG</span>
+                <span id="copy-svg-label">Copy SVG Markup Code</span>
               </button>
             </div>
 
             <div class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600">
               <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
-              <span>Proses ekspor dieksekusi 100% lokal di browser Anda dengan resolusi tajam bebas watermark.</span>
+              <span>Export is processed 100% locally in your browser with crisp resolution and zero watermarks.</span>
             </div>
           </div>
 
@@ -528,11 +531,11 @@
             <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
               <div>
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-slate-800">Aktifkan Ekspor Gambar Otomatis</span>
-                  <span id="auto-status-pill" class="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-slate-200 text-slate-600">Nonaktif</span>
+                  <span class="text-xs font-bold text-slate-800">Enable Automatic Image Export</span>
+                  <span id="auto-status-pill" class="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-slate-200 text-slate-600">Disabled</span>
                 </div>
                 <p class="text-xs text-slate-500 mt-1 max-w-md">
-                  Diagram akan otomatis diekspor saat Anda berhenti mengetik kode sequence yang valid.
+                  Diagrams are automatically exported whenever you pause typing valid sequence syntax.
                 </p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
@@ -546,33 +549,33 @@
               <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
                 <input type="checkbox" id="auto-check-gallery" class="mt-1 rounded text-blue-600" checked />
                 <div>
-                  <span class="text-xs font-bold text-slate-800 block">Simpan ke Galeri Snapshot Internal (Direkomendasikan)</span>
-                  <span class="text-[11px] text-slate-500">Menyimpan riwayat thumbnail gambar dan kode diagram di panel galeri aplikasi tanpa memicu download file terus-menerus.</span>
+                  <span class="text-xs font-bold text-slate-800 block">Save to Internal Snapshot Gallery (Recommended)</span>
+                  <span class="text-[11px] text-slate-500">Saves visual history and diagram code in the internal gallery without triggering browser download prompts.</span>
                 </div>
               </label>
 
               <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
                 <input type="checkbox" id="auto-check-download" class="mt-1 rounded text-blue-600" />
                 <div>
-                  <span class="text-xs font-bold text-slate-800 block">Unduh File Gambar Otomatis ke Komputer</span>
-                  <span class="text-[11px] text-slate-500">Setiap perubahan valid yang stabil akan otomatis memicu download file ke folder unduhan browser.</span>
+                  <span class="text-xs font-bold text-slate-800 block">Automatically Download Files to Computer</span>
+                  <span class="text-[11px] text-slate-500">Each stable valid update will trigger an automatic file download into your browser download folder.</span>
                 </div>
               </label>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                 <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Jeda Pengetikan (Debounce)</label>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Typing Pause Delay (Debounce)</label>
                   <select id="auto-select-delay" class="w-full text-xs font-medium p-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none">
-                    <option value="1500">1.5 detik setelah berhenti mengetik</option>
-                    <option value="2500" selected>2.5 detik (Optimal)</option>
-                    <option value="4000">4.0 detik (Santai)</option>
+                    <option value="1500">1.5s after typing stops</option>
+                    <option value="2500" selected>2.5s (Optimal)</option>
+                    <option value="4000">4.0s (Relaxed)</option>
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Format Gambar Otomatis</label>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Auto Export Format</label>
                   <select id="auto-select-format" class="w-full text-xs font-medium p-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none">
-                    <option value="png" selected>PNG (Bitmap Resolusi Tinggi)</option>
-                    <option value="svg">SVG (Vektor Fleksibel)</option>
+                    <option value="png" selected>PNG (High-Res Bitmap)</option>
+                    <option value="svg">SVG (Scalable Vector)</option>
                   </select>
                 </div>
               </div>
@@ -583,19 +586,19 @@
           <div id="tab-content-gallery" class="hidden space-y-4">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Snapshot Hasil Ekspor</h3>
-                <p class="text-[11px] text-slate-500">Riwayat gambar yang diekspor selama sesi Anda</p>
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Exported Snapshots</h3>
+                <p class="text-[11px] text-slate-500">History of diagrams exported during your active session</p>
               </div>
               <button id="btn-clear-snapshots" class="text-xs text-rose-600 hover:text-rose-700 flex items-center gap-1 font-medium p-1 rounded hover:bg-rose-50">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                Hapus Semua
+                Clear All
               </button>
             </div>
             <div id="gallery-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             <div id="gallery-empty" class="hidden text-center py-10 px-4 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
               <i data-lucide="clock" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i>
-              <p class="text-xs font-semibold text-slate-700">Belum Ada Snapshot Tersimpan</p>
-              <p class="text-[11px] text-slate-400 mt-0.5">Aktifkan fitur Ekspor Otomatis untuk menyimpan snapshot otomatis.</p>
+              <p class="text-xs font-semibold text-slate-700">No Snapshots Saved Yet</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">Enable Auto Export to capture snapshots automatically.</p>
             </div>
           </div>
         </div>
@@ -604,10 +607,10 @@
         <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
           <span class="text-xs text-slate-500 flex items-center gap-1.5">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
-            File siap disematkan ke PRD, dokumentasi GitHub, dan presentasi
+            Files ready for PRDs, GitHub documentation, and presentations
           </span>
           <button id="btn-finish-modal" class="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">
-            Selesai
+            Done
           </button>
         </div>
       </div>
@@ -617,7 +620,7 @@
     <div id="toast" class="hidden fixed bottom-4 right-4 z-50 animate-in fade-in slide-in-from-bottom-3 duration-200">
       <div class="px-4 py-2.5 rounded-xl bg-slate-900/95 backdrop-blur-md text-white shadow-xl flex items-center gap-2.5 text-xs font-medium border border-slate-700">
         <i data-lucide="zap" id="toast-icon" class="w-4 h-4 text-emerald-400"></i>
-        <span id="toast-message">Notifikasi</span>
+        <span id="toast-message">Notification</span>
       </div>
     </div>
 
@@ -627,26 +630,26 @@
         // --- 1. CONSTANTS & TEMPLATES ---
         const STARTER_CODE = `sequenceDiagram
     autonumber
-    actor Pengguna as 👤 Pengguna
-    participant Web as 🌐 Frontend Web
-    participant Server as ⚙️ API Backend
+    actor User as 👤 User
+    participant Web as 🌐 Web Frontend
+    participant Server as ⚙️ Backend API
     participant DB as 🗄️ Database
 
-    Pengguna->>Web: 1. Masukkan kredensial login
+    User->>Web: 1. Enter login credentials
     activate Web
     Web->>Server: 2. POST /api/auth/login
     activate Server
-    Server->>DB: 3. Query akun pengguna berdasarkan email
+    Server->>DB: 3. Query user account by email
     activate DB
-    DB-->>Server: 4. Kembalikan data profil & hash kata sandi
+    DB-->>Server: 4. Return user profile & password hash
     deactivate DB
 
-    alt Kredensial Valid
-        Server-->>Web: 200 OK (JWT Access Token & Refresh Token)
-        Web-->>Pengguna: Tampilkan Dashboard & Berhasil Masuk
-    else Kredensial Tidak Cocok
-        Server-->>Web: 401 Unauthorized (Pesan Kesalahan)
-        Web-->>Pengguna: Notifikasi "Kata sandi atau email salah"
+    alt Valid Credentials
+        Server-->>Web: 200 OK (JWT Access & Refresh Token)
+        Web-->>User: Display Dashboard & Login Success
+    else Invalid Credentials
+        Server-->>Web: 401 Unauthorized (Error Message)
+        Web-->>User: Show "Incorrect email or password" alert
     end
 
     deactivate Server
@@ -655,60 +658,60 @@
         const TEMPLATES = [
           {
             id: 'starter',
-            name: 'Login & Autentikasi Pengguna',
-            category: 'Autentikasi',
-            desc: 'Alur login dengan JWT Token, query DB, dan penanganan kondisi valid vs gagal.',
+            name: 'Login & User Authentication',
+            category: 'Authentication',
+            desc: 'User login flow with JWT Tokens, database query, and branch conditions.',
             code: STARTER_CODE
           },
           {
             id: 'ecommerce',
-            name: 'Transaksi & Payment Gateway E-Commerce',
-            category: 'Finansial',
-            desc: 'Checkout keranjang, Midtrans/Xendit gateway, webhook verifikasi settlement.',
+            name: 'E-Commerce Checkout & Payment Gateway',
+            category: 'Financial',
+            desc: 'Cart checkout, payment gateway integration, and settlement verification webhook.',
             code: `sequenceDiagram
     autonumber
-    actor Pelanggan as 🛒 Pelanggan
-    participant Toko as 🏬 Aplikasi Toko
+    actor Customer as 🛒 Customer
+    participant Store as 🏬 Store App
     participant Payment as 💳 Payment Gateway
-    participant Bank as 🏦 Bank / QRIS
+    participant Bank as 🏦 Bank / Card
     participant Notif as 📩 Notification Service
 
-    Pelanggan->>Toko: Klik "Bayar Sekarang" (Checkout)
-    activate Toko
-    Toko->>Payment: Buat Tagihan Pembayaran (#INV-9821)
+    Customer->>Store: Click "Pay Now" (Checkout)
+    activate Store
+    Store->>Payment: Create Payment Request (#INV-9821)
     activate Payment
-    Payment-->>Toko: Kembalikan Token & URL Pembayaran
+    Payment-->>Store: Return Payment Token & Checkout URL
     deactivate Payment
-    Toko-->>Pelanggan: Tampilkan Halaman Pembayaran
-    deactivate Toko
+    Store-->>Customer: Display Payment Page
+    deactivate Store
 
-    Pelanggan->>Bank: Transfer nominal via QRIS / VA
+    Customer->>Bank: Complete transfer / card payment
     activate Bank
-    Bank->>Payment: Callback settlement berhasil
+    Bank->>Payment: Settlement callback success
     activate Payment
     deactivate Bank
 
-    Payment->>Toko: Webhook HTTP POST: status = SETTLEMENT
-    activate Toko
-    Toko->>Toko: Verifikasi signature & update pesanan
-    Toko-->>Payment: Respon HTTP 200 (Acknowledge)
+    Payment->>Store: Webhook HTTP POST: status = SETTLEMENT
+    activate Store
+    Store->>Store: Verify signature & update order status
+    Store-->>Payment: HTTP 200 OK (Acknowledge)
     deactivate Payment
 
-    par Beri Tahu Pelanggan
-        Toko->>Pelanggan: Tampilkan konfirmasi "Pembayaran Berhasil"
-    and Kirim Bukti Transaksi
-        Toko->>Notif: Trigger kirim invoice ke WhatsApp
+    par Notify Customer
+        Store->>Customer: Display "Payment Successful" confirmation
+    and Send Receipt
+        Store->>Notif: Trigger invoice delivery
         activate Notif
-        Notif-->>Pelanggan: Kirim PDF kwitansi pembayaran
+        Notif-->>Customer: Send invoice PDF
         deactivate Notif
     end
-    deactivate Toko`
+    deactivate Store`
           },
           {
             id: 'microservices',
             name: 'Microservices Order Fulfillment & Saga',
-            category: 'Arsitektur',
-            desc: 'Komunikasi antar service: Gateway, Order Service, Kafka Bus, Inventory, & Payment.',
+            category: 'Architecture',
+            desc: 'Inter-service communication: Gateway, Order Service, Kafka Broker, Inventory, & Payment.',
             code: `sequenceDiagram
     autonumber
     actor Client as 📱 Mobile App
@@ -722,37 +725,37 @@
     activate Gateway
     Gateway->>OrderSvc: Forward order request
     activate OrderSvc
-    OrderSvc->>OrderSvc: Buat pesanan status = PENDING
+    OrderSvc->>OrderSvc: Create order with status = PENDING
     OrderSvc->>EventBus: Publish event: OrderCreated
     deactivate OrderSvc
     Gateway-->>Client: 202 Accepted (Order ID: ORD-551)
     deactivate Gateway
 
-    par Validasi Stok
+    par Validate Inventory
         EventBus->>StockSvc: Consume: OrderCreated
         activate StockSvc
-        StockSvc->>StockSvc: Kunci stok barang (Reserve)
+        StockSvc->>StockSvc: Reserve item inventory
         StockSvc->>EventBus: Publish: StockReserved
         deactivate StockSvc
-    and Proses Pembayaran
+    and Process Payment
         EventBus->>PaymentSvc: Consume: OrderCreated
         activate PaymentSvc
-        PaymentSvc->>PaymentSvc: Debet saldo pelanggan
+        PaymentSvc->>PaymentSvc: Debit customer balance
         PaymentSvc->>EventBus: Publish: PaymentCompleted
         deactivate PaymentSvc
     end
 
     EventBus->>OrderSvc: Consume: StockReserved & PaymentCompleted
     activate OrderSvc
-    OrderSvc->>OrderSvc: Update status pesanan = CONFIRMED
+    OrderSvc->>OrderSvc: Update order status = CONFIRMED
     OrderSvc->>EventBus: Publish event: OrderConfirmed
     deactivate OrderSvc`
           },
           {
             id: 'chat',
-            name: 'Sistem Chat Real-Time (WebSocket & Redis)',
-            category: 'Komunikasi',
-            desc: 'Pertukaran pesan real-time antara 2 user dengan WebSocket, Redis Pub/Sub, & ACK.',
+            name: 'Real-Time Chat System (WebSocket & Redis)',
+            category: 'Communication',
+            desc: 'Real-time message exchange between 2 users with WebSocket, Redis Pub/Sub, & ACK receipts.',
             code: `sequenceDiagram
     autonumber
     actor Alice as 👩 Alice
@@ -761,67 +764,67 @@
     participant WS2 as 🔌 Socket Node B
     actor Bob as 👨 Bob
 
-    Alice->>WS1: Kirim Pesan: "Halo Bob, apa kabar?"
+    Alice->>WS1: Send Message: "Hello Bob, how are you?"
     activate WS1
-    WS1->>WS1: Simpan riwayat pesan ke DB
-    WS1-->>Alice: ACK Pesan Terkirim (Check 1)
+    WS1->>WS1: Persist message history to DB
+    WS1-->>Alice: ACK Message Sent (Single check)
 
-    WS1->>Redis: PUBLISH chat:bob {msg: 'Halo Bob'}
+    WS1->>Redis: PUBLISH chat:bob {msg: 'Hello Bob'}
     activate Redis
-    Redis->>WS2: Forward pesan ke subscriber Bob
+    Redis->>WS2: Forward message to subscriber Bob
     deactivate Redis
     activate WS2
 
     WS2->>Bob: Emit 'incoming_message'
     deactivate WS1
     activate Bob
-    Bob-->>WS2: Kirim status 'READ'
+    Bob-->>WS2: Send status 'READ'
     deactivate Bob
 
     WS2->>Redis: PUBLISH receipt {status: 'READ'}
     activate Redis
-    Redis->>WS1: Forward ke Node A
+    Redis->>WS1: Forward to Node A
     deactivate Redis
     activate WS1
-    WS1->>Alice: Update tanda baca biru ganda
+    WS1->>Alice: Update double blue checkmark
     deactivate WS1
     deactivate WS2`
           },
           {
             id: 'oauth',
-            name: 'Alur Login Google (OAuth 2.0 PKCE)',
-            category: 'Keamanan',
-            desc: 'Otorisasi OAuth 2.0 dengan Authorization Code & PKCE (Proof Key for Code Exchange).',
+            name: 'Google Login Flow (OAuth 2.0 PKCE)',
+            category: 'Security',
+            desc: 'OAuth 2.0 authorization with Authorization Code & PKCE (Proof Key for Code Exchange).',
             code: `sequenceDiagram
     autonumber
-    actor User as 👤 Pengguna
+    actor User as 👤 User
     participant Browser as 💻 Web Browser
-    participant AppServer as 🏢 Backend Aplikasi
+    participant AppServer as 🏢 App Backend
     participant GoogleAuth as 🔐 Google OAuth 2.0
 
-    User->>Browser: Klik "Masuk dengan Google"
+    User->>Browser: Click "Sign in with Google"
     activate Browser
     Browser->>Browser: Generate PKCE (verifier & challenge)
-    Browser->>GoogleAuth: Redirect ke /o/oauth2/v2/auth
+    Browser->>GoogleAuth: Redirect to /o/oauth2/v2/auth
     deactivate Browser
     activate GoogleAuth
-    GoogleAuth-->>User: Tampilkan halaman persetujuan izin
-    User->>GoogleAuth: Pengguna klik "Setuju"
-    GoogleAuth-->>Browser: Redirect dengan Authorization Code
+    GoogleAuth-->>User: Display consent & permissions screen
+    User->>GoogleAuth: User clicks "Allow / Consent"
+    GoogleAuth-->>Browser: Redirect with Authorization Code
     deactivate GoogleAuth
     activate Browser
 
-    Browser->>AppServer: Kirim Auth Code & code_verifier
+    Browser->>AppServer: Send Auth Code & code_verifier
     activate AppServer
     AppServer->>GoogleAuth: POST /token (code + code_verifier)
     activate GoogleAuth
     GoogleAuth-->>AppServer: Return id_token & access_token
     deactivate GoogleAuth
 
-    AppServer->>AppServer: Verifikasi JWT & Buat Session
+    AppServer->>AppServer: Verify JWT & Create Session
     AppServer-->>Browser: Set HTTPOnly session cookie
     deactivate AppServer
-    Browser-->>User: Tampilkan dashboard akun berhasil masuk
+    Browser-->>User: Redirect to user dashboard
     deactivate Browser`
           }
         ];
@@ -830,10 +833,90 @@
         const KEY_CODE = 'vanilla_mermaid_code';
         const KEY_SETTINGS = 'vanilla_mermaid_settings';
         const KEY_SNAPSHOTS = 'vanilla_mermaid_snapshots';
+        const KEY_LANG_MIGRATED = 'vanilla_mermaid_en_migrated_v2';
 
         // --- 3. APPLICATION STATE ---
+        function convertIndonesianDiagramToEnglish(code) {
+          if (!code) return STARTER_CODE;
+
+          // Check if this is the default Starter/Login diagram in Indonesian
+          if (
+            code.includes('Pengguna') ||
+            code.includes('kredensial') ||
+            code.includes('Frontend Web') ||
+            code.includes('API Backend') ||
+            code.includes('Kata sandi') ||
+            code.includes('Masukkan')
+          ) {
+            if (code.includes('POST /api/auth/login') || code.includes('JWT Access Token') || code.includes('kredensial') || code.includes('Pengguna->>Web')) {
+              return STARTER_CODE;
+            }
+          }
+
+          // Check if this is the E-Commerce Checkout template in Indonesian
+          if (code.includes('Pelanggan') || code.includes('Aplikasi Toko') || code.includes('Bayar Sekarang') || code.includes('Tagihan Pembayaran') || code.includes('Midtrans')) {
+            const ecom = TEMPLATES.find(t => t.id === 'ecommerce');
+            if (ecom) return ecom.code;
+          }
+
+          // Check if this is the Microservices template in Indonesian
+          if (code.includes('Validasi Stok') || code.includes('Kunci stok') || code.includes('Debet saldo') || code.includes('Kirim Bukti Transaksi')) {
+            const micro = TEMPLATES.find(t => t.id === 'microservices');
+            if (micro) return micro.code;
+          }
+
+          // Check if this is the Real-Time Chat template in Indonesian
+          if (code.includes('Halo Bob') || code.includes('Pesan Terkirim') || code.includes('tanda baca biru') || code.includes('Kirim Pesan')) {
+            const chat = TEMPLATES.find(t => t.id === 'chat');
+            if (chat) return chat.code;
+          }
+
+          // Check if this is the Google OAuth template in Indonesian
+          if (code.includes('Masuk dengan Google') || code.includes('halaman persetujuan') || code.includes('Pengguna klik')) {
+            const oauth = TEMPLATES.find(t => t.id === 'oauth');
+            if (oauth) return oauth.code;
+          }
+
+          // Replace general Indonesian words & phrases
+          return code
+            .replace(/\bactor Pengguna as 👤 Pengguna\b/g, 'actor User as 👤 User')
+            .replace(/\bparticipant Web as 🌐 Frontend Web\b/g, 'participant Web as 🌐 Web Frontend')
+            .replace(/\bparticipant Server as ⚙️ API Backend\b/g, 'participant Server as ⚙️ Backend API')
+            .replace(/\bactor Pelanggan as 🛒 Pelanggan\b/g, 'actor Customer as 🛒 Customer')
+            .replace(/\bparticipant Toko as 🏬 Aplikasi Toko\b/g, 'participant Store as 🏬 Store App')
+            .replace(/\bparticipant Bank as 🏦 Bank \/ QRIS\b/g, 'participant Bank as 🏦 Bank / Card')
+            .replace(/Masukkan kredensial login/g, 'Enter login credentials')
+            .replace(/Query akun pengguna berdasarkan email/g, 'Query user account by email')
+            .replace(/Kembalikan data profil & hash kata sandi/g, 'Return user profile & password hash')
+            .replace(/alt Kredensial Valid/g, 'alt Valid Credentials')
+            .replace(/Tampilkan Dashboard & Berhasil Masuk/g, 'Display Dashboard & Login Success')
+            .replace(/else Kredensial Tidak Cocok/g, 'else Invalid Credentials')
+            .replace(/Pesan Kesalahan/g, 'Error Message')
+            .replace(/Notifikasi "Kata sandi atau email salah"/g, 'Show "Incorrect email or password" alert')
+            .replace(/Pengguna/g, 'User')
+            .replace(/Pelanggan/g, 'Customer');
+        }
+
+        let initialSavedCode = localStorage.getItem(KEY_CODE);
+        const hasMigrated = localStorage.getItem(KEY_LANG_MIGRATED);
+
+        if (!initialSavedCode || !hasMigrated || initialSavedCode.includes('Pengguna') || initialSavedCode.includes('Pelanggan') || initialSavedCode.includes('kredensial') || initialSavedCode.includes('Frontend Web')) {
+          initialSavedCode = convertIndonesianDiagramToEnglish(initialSavedCode || STARTER_CODE);
+          localStorage.setItem(KEY_CODE, initialSavedCode);
+          localStorage.setItem(KEY_LANG_MIGRATED, 'true');
+        }
+
+        // Automatic repair: if stored code had the deactivated without activation bug in microservices
+        if (initialSavedCode && initialSavedCode.includes('StockSvc->>StockSvc: Reserve item inventory') && !initialSavedCode.includes('activate StockSvc')) {
+          initialSavedCode = initialSavedCode.replace(
+            /StockSvc->>StockSvc: Reserve item inventory/g,
+            'activate StockSvc\n        StockSvc->>StockSvc: Reserve item inventory'
+          );
+          localStorage.setItem(KEY_CODE, initialSavedCode);
+        }
+
         const state = {
-          code: localStorage.getItem(KEY_CODE) || STARTER_CODE,
+          code: initialSavedCode,
           theme: 'default',
           canvasBg: 'white',
           currentSvg: '',
@@ -864,7 +947,12 @@
           const savedSettings = localStorage.getItem(KEY_SETTINGS);
           if (savedSettings) Object.assign(state.autoSettings, JSON.parse(savedSettings));
           const savedSnaps = localStorage.getItem(KEY_SNAPSHOTS);
-          if (savedSnaps) state.snapshots = JSON.parse(savedSnaps);
+          if (savedSnaps) {
+            state.snapshots = JSON.parse(savedSnaps).map(s => ({
+              ...s,
+              code: convertIndonesianDiagramToEnglish(s.code)
+            }));
+          }
         } catch(e) {}
 
         // --- 4. DOM ELEMENTS ---
@@ -1036,7 +1124,7 @@
             };
             img.onerror = () => {
               URL.revokeObjectURL(url);
-              reject(new Error('Gagal me-render SVG ke PNG'));
+              reject(new Error('Failed to render SVG to PNG'));
             };
             img.src = url;
           });
@@ -1092,7 +1180,7 @@
             el.statusInvalid.classList.add('hidden');
             el.renderDuration.textContent = `(${duration}ms)`;
             const lineCount = code.split('\n').length;
-            el.codeStats.textContent = `${lineCount} baris • ${code.length} karakter`;
+            el.codeStats.textContent = `${lineCount} lines • ${code.length} chars`;
 
             // Trigger auto export if enabled
             scheduleAutoExport();
@@ -1100,7 +1188,7 @@
             // Display error and keep last valid diagram visible
             el.statusValid.classList.add('hidden');
             el.statusInvalid.classList.remove('hidden');
-            el.errorMessage.textContent = err.message || 'Periksa kembali kata kunci atau format baris sequence diagram.';
+            el.errorMessage.textContent = err.message || 'Check Mermaid syntax keywords or line formatting.';
 
             // Remove any dangling error element injected by mermaid
             document.querySelectorAll('[id^="dmermaid-vanilla-"]').forEach(n => n.remove());
@@ -1144,9 +1232,9 @@
 
                 if (state.autoSettings.autoDownload) {
                   triggerDownload(dataUrl, filename);
-                  showToast(`Gambar otomatis diunduh: ${filename}`, true);
+                  showToast(`Image automatically downloaded: ${filename}`, true);
                 } else {
-                  showToast('Snapshot otomatis tersimpan di galeri!', true);
+                  showToast('Snapshot automatically saved to gallery!', true);
                 }
               } else {
                 // SVG
@@ -1156,7 +1244,7 @@
                   const url = URL.createObjectURL(blob);
                   triggerDownload(url, filename);
                   setTimeout(() => URL.revokeObjectURL(url), 1000);
-                  showToast(`Vektor SVG otomatis diunduh: ${filename}`, true);
+                  showToast(`SVG vector automatically downloaded: ${filename}`, true);
                 }
               }
             } catch(e) {
@@ -1411,24 +1499,26 @@
         // Copy Code
         document.getElementById('btn-copy-code').addEventListener('click', async () => {
           await navigator.clipboard.writeText(el.codeInput.value);
-          document.getElementById('label-copy-code').textContent = 'Tersalin!';
+          document.getElementById('label-copy-code').textContent = 'Copied!';
           setTimeout(() => {
-            document.getElementById('label-copy-code').textContent = 'Salin';
+            document.getElementById('label-copy-code').textContent = 'Copy';
           }, 2000);
         });
 
         // Reset Code
-        document.getElementById('btn-reset-code').addEventListener('click', () => {
+        const resetToStarter = () => {
           el.codeInput.value = STARTER_CODE;
           renderSequenceDiagram();
-          showToast('Kode dikembalikan ke contoh semula');
-        });
+          showToast('Code reset to default starter');
+        };
+        document.getElementById('btn-reset-code').addEventListener('click', resetToStarter);
+        document.getElementById('btn-fix-syntax')?.addEventListener('click', resetToStarter);
 
         // Clear Code
         document.getElementById('btn-clear-code').addEventListener('click', () => {
           el.codeInput.value = 'sequenceDiagram\n    ';
           renderSequenceDiagram();
-          showToast('Editor dibersihkan');
+          showToast('Editor cleared');
         });
 
         // --- 11. TEMPLATES MENU ---
@@ -1456,7 +1546,7 @@
             if (tmpl) {
               el.codeInput.value = tmpl.code;
               renderSequenceDiagram();
-              showToast(`Template dimuat: ${tmpl.name}`);
+              showToast(`Template loaded: ${tmpl.name}`);
               el.dropdownTemplates.classList.add('hidden');
             }
           });
@@ -1531,13 +1621,13 @@
               el.extraToolbarGroup.classList.add('flex');
               el.btnToggleExtraTools.classList.add('bg-blue-50', 'border-blue-300', 'text-blue-600');
               el.btnToggleExtraTools.classList.remove('bg-white', 'border-slate-200', 'text-slate-600');
-              el.btnToggleExtraTools.title = 'Sembunyikan Opsi & Alat Tambahan';
+              el.btnToggleExtraTools.title = 'Hide Additional Tools & Options';
             } else {
               el.extraToolbarGroup.classList.add('hidden');
               el.extraToolbarGroup.classList.remove('flex');
               el.btnToggleExtraTools.classList.remove('bg-blue-50', 'border-blue-300', 'text-blue-600');
               el.btnToggleExtraTools.classList.add('bg-white', 'border-slate-200', 'text-slate-600');
-              el.btnToggleExtraTools.title = 'Tampilkan Opsi & Alat Tambahan';
+              el.btnToggleExtraTools.title = 'Show Additional Tools & Options';
               el.dropdownTemplates.classList.add('hidden');
             }
           });
@@ -1571,7 +1661,7 @@
             });
             btn.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
             btn.classList.remove('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
-            el.btnLabelPngScale.textContent = `Unduh Gambar PNG (${sc}x)`;
+            el.btnLabelPngScale.textContent = `Download PNG Image (${sc}x)`;
           });
         });
 
@@ -1596,7 +1686,7 @@
             const filename = generateFilename('png');
             const { dataUrl } = await svgToPngDataUrl(state.currentSvg, state.manualExportScale, state.manualExportBg);
             triggerDownload(dataUrl, filename);
-            showToast(`Berhasil mengunduh ${filename}`);
+            showToast(`Successfully downloaded ${filename}`);
           } catch(e) {
             console.error(e);
           }
@@ -1609,7 +1699,7 @@
             const filename = generateFilename('png');
             const { dataUrl } = await svgToPngDataUrl(state.currentSvg, 2, 'white');
             triggerDownload(dataUrl, filename);
-            showToast(`Berhasil mengunduh ${filename}`);
+            showToast(`Successfully downloaded ${filename}`);
           } catch(e) {
             console.error(e);
           }
@@ -1624,7 +1714,7 @@
           const url = URL.createObjectURL(blob);
           triggerDownload(url, filename);
           setTimeout(() => URL.revokeObjectURL(url), 1000);
-          showToast(`Berhasil mengunduh ${filename}`);
+          showToast(`Successfully downloaded ${filename}`);
         });
 
         // Copy PNG to Clipboard
@@ -1651,12 +1741,12 @@
                 if (!pngBlob) return;
                 try {
                   await navigator.clipboard.write([new ClipboardItem({ 'image/png': pngBlob })]);
-                  document.getElementById('copy-png-label').textContent = 'PNG Tersalin ke Clipboard!';
+                  document.getElementById('copy-png-label').textContent = 'PNG Copied to Clipboard!';
                   setTimeout(() => {
-                    document.getElementById('copy-png-label').textContent = 'Salin PNG ke Clipboard';
+                    document.getElementById('copy-png-label').textContent = 'Copy PNG to Clipboard';
                   }, 2500);
                 } catch(e) {
-                  showToast('Gagal menyalin gambar langsung ke clipboard');
+                  showToast('Failed to copy image to clipboard');
                 }
               }, 'image/png');
             };
@@ -1669,9 +1759,9 @@
           if (!state.currentSvg) return;
           const { cleanSvg } = sanitizeSvg(state.currentSvg, state.manualExportBg);
           await navigator.clipboard.writeText(cleanSvg);
-          document.getElementById('copy-svg-label').textContent = 'Markup SVG Tersalin!';
+          document.getElementById('copy-svg-label').textContent = 'SVG Markup Copied!';
           setTimeout(() => {
-            document.getElementById('copy-svg-label').textContent = 'Salin Kode Markup SVG';
+            document.getElementById('copy-svg-label').textContent = 'Copy SVG Markup Code';
           }, 2500);
         });
 
@@ -1680,19 +1770,19 @@
           const enabled = state.autoSettings.enabled;
           el.autoSwitchEnabled.checked = enabled;
           if (enabled) {
-            el.autoStatusPill.textContent = 'Aktif';
+            el.autoStatusPill.textContent = 'Active';
             el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-700';
             el.btnToggleAutoExport.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-emerald-50 border-emerald-300 text-emerald-800 shadow-2xs';
             el.iconAutoZap.className = 'w-4 h-4 text-emerald-600 fill-emerald-600 animate-pulse';
-            if (el.labelAutoExport) el.labelAutoExport.textContent = 'Ekspor Otomatis: Aktif';
-            el.btnToggleAutoExport.title = 'Ekspor Otomatis: Aktif (Klik untuk Mematikan)';
+            if (el.labelAutoExport) el.labelAutoExport.textContent = 'Auto Export: On';
+            el.btnToggleAutoExport.title = 'Auto Export: Active (Click to Disable)';
           } else {
-            el.autoStatusPill.textContent = 'Nonaktif';
+            el.autoStatusPill.textContent = 'Disabled';
             el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-slate-200 text-slate-600';
             el.btnToggleAutoExport.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50';
             el.iconAutoZap.className = 'w-4 h-4 text-slate-400';
-            if (el.labelAutoExport) el.labelAutoExport.textContent = 'Ekspor Otomatis: Mati';
-            el.btnToggleAutoExport.title = 'Ekspor Otomatis: Nonaktif (Klik untuk Menyalakan)';
+            if (el.labelAutoExport) el.labelAutoExport.textContent = 'Auto Export: Off';
+            el.btnToggleAutoExport.title = 'Auto Export: Disabled (Click to Enable)';
           }
           localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
         }
@@ -1700,7 +1790,7 @@
         function toggleAutoExport() {
           state.autoSettings.enabled = !state.autoSettings.enabled;
           updateAutoExportUI();
-          showToast(state.autoSettings.enabled ? 'Ekspor gambar otomatis diaktifkan ⚡' : 'Ekspor gambar otomatis dinonaktifkan');
+          showToast(state.autoSettings.enabled ? 'Automatic image export enabled ⚡' : 'Automatic image export disabled');
         }
 
         el.btnToggleAutoExport.addEventListener('click', toggleAutoExport);
@@ -1752,10 +1842,10 @@
                   <span class="text-[11px] font-mono text-slate-500">${time}</span>
                   <div class="flex items-center gap-1.5">
                     <a href="${s.previewDataUrl}" download="sequence-snapshot-${s.id}.png" class="py-1 px-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
-                      Unduh
+                      Download
                     </a>
                     <button class="restore-snap-btn py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium" data-snap-id="${s.id}">
-                      Pulihkan
+                      Restore
                     </button>
                   </div>
                 </div>
@@ -1771,7 +1861,7 @@
                 el.codeInput.value = snap.code;
                 renderSequenceDiagram();
                 closeModal();
-                showToast('Kode berhasil dipulihkan dari snapshot!', true);
+                showToast('Code restored from snapshot!', true);
               }
             });
           });
@@ -1783,7 +1873,7 @@
           state.snapshots = [];
           localStorage.removeItem(KEY_SNAPSHOTS);
           updateGalleryUI();
-          showToast('Semua snapshot telah dihapus');
+          showToast('All snapshots have been cleared');
         });
 
         // --- 15. BOOTSTRAP APP ---
