@@ -76,6 +76,15 @@
         background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
         background-size: 24px 24px;
       }
+      .bg-monokai-theme {
+        background-color: #272822 !important;
+      }
+      .bg-monokai-theme .bg-dots {
+        background-image: radial-gradient(#49483e 1.5px, transparent 1.5px);
+      }
+      .bg-slate-900 .bg-dots {
+        background-image: radial-gradient(#334155 1.5px, transparent 1.5px);
+      }
     </style>
   </head>
   <body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-50 text-slate-800 antialiased select-none">
@@ -379,10 +388,23 @@
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="dark">Dark</button>
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="forest">Forest</button>
                 <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-theme="base">Base</button>
+                <button class="theme-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700 flex items-center justify-between group" data-theme="monokai">
+                  <span class="font-medium group-hover:text-slate-900">Monokai</span>
+                  <span class="flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#f92672]" title="Magenta"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#a6e22e]" title="Green"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#66d9ef]" title="Cyan"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#e6db74]" title="Yellow"></span>
+                  </span>
+                </button>
                 <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100 mt-1">Canvas Background</div>
                 <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 font-semibold text-blue-600" data-bg="white">White</button>
                 <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="light-slate">Light Slate</button>
                 <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="dark">Dark</button>
+                <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700 flex items-center justify-between" data-bg="monokai">
+                  <span>Monokai Dark</span>
+                  <span class="w-2.5 h-2.5 rounded-xs bg-[#272822] border border-slate-300"></span>
+                </button>
                 <button class="bg-option w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 text-slate-700" data-bg="transparent">Transparent (Grid)</button>
               </div>
             </div>
@@ -491,10 +513,11 @@
               <!-- Background -->
               <div>
                 <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Image Background</label>
-                <div class="grid grid-cols-3 gap-2">
-                  <button class="export-bg-choice py-2 px-3 text-xs font-semibold rounded-lg border bg-blue-50 border-blue-500 text-blue-700" data-bg="white">White</button>
-                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="transparent">Transparent</button>
-                  <button class="export-bg-choice py-2 px-3 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700" data-bg="dark">Dark</button>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <button class="export-bg-choice py-2 px-2.5 text-xs font-semibold rounded-lg border bg-blue-50 border-blue-500 text-blue-700 text-center" data-bg="white">White</button>
+                  <button class="export-bg-choice py-2 px-2.5 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700 text-center" data-bg="transparent">Transparent</button>
+                  <button class="export-bg-choice py-2 px-2.5 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700 text-center" data-bg="dark">Dark</button>
+                  <button class="export-bg-choice py-2 px-2.5 text-xs font-medium rounded-lg border bg-white border-slate-200 text-slate-700 text-center" data-bg="monokai">Monokai</button>
                 </div>
               </div>
             </div>
@@ -826,6 +849,67 @@
     deactivate AppServer
     Browser-->>User: Redirect to user dashboard
     deactivate Browser`
+          },
+          {
+            id: 'monokai',
+            name: 'Monokai Theme (VS Code & Sublime)',
+            category: 'Editor Theme',
+            desc: 'Signature VS Code & Sublime Monokai syntax colors (pink, cyan, lime, yellow, orange) on dark canvas.',
+            code: `%%{init: {'theme': 'base', 'themeVariables': {
+    'darkMode': true,
+    'background': '#272822',
+    'primaryColor': '#3e3d32',
+    'primaryTextColor': '#f8f8f2',
+    'primaryBorderColor': '#66d9ef',
+    'lineColor': '#f92672',
+    'secondaryColor': '#49483e',
+    'tertiaryColor': '#272822',
+    'noteBkgColor': '#3e3d32',
+    'noteTextColor': '#e6db74',
+    'noteBorderColor': '#e6db74',
+    'actorBkg': '#272822',
+    'actorBorder': '#66d9ef',
+    'actorTextColor': '#66d9ef',
+    'actorLineColor': '#75715e',
+    'signalColor': '#f92672',
+    'signalTextColor': '#f8f8f2',
+    'labelBoxBkgColor': '#3e3d32',
+    'labelBoxBorderColor': '#ae81ff',
+    'labelTextColor': '#f8f8f2',
+    'loopTextColor': '#fd971f',
+    'activationBorderColor': '#a6e22e',
+    'activationBkgColor': '#49483e',
+    'sequenceNumberColor': '#272822'
+}}}%%
+sequenceDiagram
+    autonumber
+    actor Dev as 💻 Developer
+    participant Editor as ⚡ VS Code / Sublime
+    participant LSP as 🔍 Language Server (LSP)
+    participant Compiler as ⚙️ Build Engine
+    participant Terminal as 📟 Output Console
+
+    Note over Dev,Editor: Monokai Dark Theme (VS Code & Sublime Text)
+    Dev->>Editor: 1. Edit TypeScript source file
+    activate Editor
+    Editor->>LSP: 2. textDocument/completion request
+    activate LSP
+    LSP-->>Editor: 3. Return symbol tokens & autocompletions (#66d9ef)
+    deactivate LSP
+
+    alt Code Validated & Type Checked
+        Editor->>Compiler: 4. Trigger build & typecheck
+        activate Compiler
+        Compiler-->>Editor: 5. Build successful: 0 errors (#a6e22e)
+        deactivate Compiler
+        Editor->>Terminal: 6. Execute binary in debug session
+        activate Terminal
+        Terminal-->>Dev: 7. Stream runtime stdout logs (#e6db74)
+        deactivate Terminal
+    else Syntax / Type Diagnostic Detected
+        Editor-->>Dev: 8. Highlight error tokens in magenta (#f92672)
+    end
+    deactivate Editor`
           }
         ];
 
@@ -1009,10 +1093,38 @@
         }
 
         // --- 5. MERMAID INITIALIZATION ---
+        const MONOKAI_THEME_VARIABLES = {
+          darkMode: true,
+          background: '#272822',
+          primaryColor: '#3e3d32',
+          primaryTextColor: '#f8f8f2',
+          primaryBorderColor: '#66d9ef',
+          lineColor: '#f92672',
+          secondaryColor: '#49483e',
+          tertiaryColor: '#272822',
+          noteBkgColor: '#3e3d32',
+          noteTextColor: '#e6db74',
+          noteBorderColor: '#e6db74',
+          actorBkg: '#272822',
+          actorBorder: '#66d9ef',
+          actorTextColor: '#66d9ef',
+          actorLineColor: '#75715e',
+          signalColor: '#f92672',
+          signalTextColor: '#f8f8f2',
+          labelBoxBkgColor: '#3e3d32',
+          labelBoxBorderColor: '#ae81ff',
+          labelTextColor: '#f8f8f2',
+          loopTextColor: '#fd971f',
+          activationBorderColor: '#a6e22e',
+          activationBkgColor: '#49483e',
+          sequenceNumberColor: '#272822'
+        };
+
         function initMermaid(themeName) {
-          mermaid.initialize({
+          const isMonokai = themeName === 'monokai';
+          const cfg = {
             startOnLoad: false,
-            theme: themeName || 'default',
+            theme: isMonokai ? 'base' : (themeName || 'default'),
             securityLevel: 'loose',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
             sequence: {
@@ -1030,7 +1142,11 @@
               useMaxWidth: false,
               showSequenceNumbers: true,
             }
-          });
+          };
+          if (isMonokai) {
+            cfg.themeVariables = MONOKAI_THEME_VARIABLES;
+          }
+          mermaid.initialize(cfg);
         }
         initMermaid(state.theme);
 
@@ -1049,6 +1165,7 @@
             case 'transparent': return 'transparent';
             case 'light-slate': return '#f1f5f9';
             case 'dark': return '#0f172a';
+            case 'monokai': return '#272822';
             default: return '#ffffff';
           }
         }
@@ -1545,6 +1662,30 @@
             const tmpl = TEMPLATES.find(x => x.id === id);
             if (tmpl) {
               el.codeInput.value = tmpl.code;
+              if (tmpl.id === 'monokai') {
+                state.canvasBg = 'monokai';
+                state.manualExportBg = 'monokai';
+                el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard', 'bg-monokai-theme');
+                el.paneDiagram.classList.add('bg-monokai-theme');
+                document.querySelectorAll('.bg-option').forEach(b => {
+                  if (b.getAttribute('data-bg') === 'monokai') {
+                    b.classList.replace('text-slate-700', 'text-blue-600');
+                    b.classList.add('font-semibold');
+                  } else {
+                    b.classList.replace('text-blue-600', 'text-slate-700');
+                    b.classList.remove('font-semibold');
+                  }
+                });
+                document.querySelectorAll('.export-bg-choice').forEach(b => {
+                  if (b.getAttribute('data-bg') === 'monokai') {
+                    b.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+                    b.classList.remove('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+                  } else {
+                    b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+                    b.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+                  }
+                });
+              }
               renderSequenceDiagram();
               showToast(`Template loaded: ${tmpl.name}`);
               el.dropdownTemplates.classList.add('hidden');
@@ -1568,6 +1709,23 @@
             document.querySelectorAll('.theme-option').forEach(b => b.classList.replace('text-blue-600', 'text-slate-700'));
             btn.classList.replace('text-slate-700', 'text-blue-600');
             el.dropdownTheme.classList.add('hidden');
+
+            if (theme === 'monokai' && state.canvasBg === 'white') {
+              state.canvasBg = 'monokai';
+              state.manualExportBg = 'monokai';
+              el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard', 'bg-monokai-theme');
+              el.paneDiagram.classList.add('bg-monokai-theme');
+              document.querySelectorAll('.bg-option').forEach(b => {
+                if (b.getAttribute('data-bg') === 'monokai') {
+                  b.classList.replace('text-slate-700', 'text-blue-600');
+                  b.classList.add('font-semibold');
+                } else {
+                  b.classList.replace('text-blue-600', 'text-slate-700');
+                  b.classList.remove('font-semibold');
+                }
+              });
+            }
+
             initMermaid(theme);
             renderSequenceDiagram();
           });
@@ -1581,8 +1739,9 @@
             btn.classList.replace('text-slate-700', 'text-blue-600');
             el.dropdownTheme.classList.add('hidden');
 
-            el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard');
+            el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard', 'bg-monokai-theme');
             if (bg === 'dark') el.paneDiagram.classList.add('bg-slate-900');
+            else if (bg === 'monokai') el.paneDiagram.classList.add('bg-monokai-theme');
             else if (bg === 'light-slate') el.paneDiagram.classList.add('bg-slate-100');
             else if (bg === 'transparent') el.paneDiagram.classList.add('bg-checkerboard');
             else el.paneDiagram.classList.add('bg-white');
