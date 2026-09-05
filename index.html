@@ -131,26 +131,89 @@
         </div>
       </div>
 
-      <!-- Right: Extra Tools (Hide by default) & Toggle Button -->
+      <!-- Center: Active Diagram Document Bar -->
+      <div class="flex items-center justify-center min-w-0">
+        <!-- Current Diagram Title & Save Status Badge -->
+        <div
+          id="diagram-info-container"
+          class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 h-8 sm:h-9 rounded-lg border border-slate-200 bg-slate-50/70 hover:bg-slate-100/80 transition-colors max-w-[160px] sm:max-w-[240px] md:max-w-[320px] group cursor-pointer"
+          title="Click to rename diagram"
+        >
+          <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 shrink-0 transition-colors"></i>
+          <span
+            id="current-diagram-title"
+            class="text-xs font-semibold text-slate-800 truncate"
+          >
+            Untitled Diagram
+          </span>
+          <span
+            id="diagram-save-badge"
+            class="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-md uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200"
+          >
+            Unsaved
+          </span>
+        </div>
+      </div>
+
+      <!-- Right: Extra Tools (Visible only when pinned) & Main Menu -->
       <div class="flex items-center gap-1.5">
-        <!-- Extra Tools Container (HIDE BY DEFAULT) -->
+        <!-- Extra Tools Container (Hidden by default unless pinned to toolbar) -->
         <div id="extra-toolbar-group" class="hidden items-center gap-1.5 transition-all">
-          <!-- Template Menu Dropdown (Icon Only) -->
+          <!-- Pinned File Operations -->
+          <!-- New Diagram Button -->
+          <button
+            id="btn-new-diagram"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs cursor-pointer"
+            title="Create New Blank/Starter Diagram"
+            aria-label="Create New Diagram"
+          >
+            <i data-lucide="plus" class="w-4 h-4 text-blue-600"></i>
+          </button>
+
+          <!-- Quick Save Button -->
+          <button
+            id="btn-save-diagram"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white transition-colors shadow-xs cursor-pointer"
+            title="Save Diagram to LocalStorage (Ctrl+S / Cmd+S)"
+            aria-label="Save Diagram"
+          >
+            <i data-lucide="save" class="w-4 h-4"></i>
+          </button>
+
+          <!-- Saved Diagrams Library / Load Button -->
+          <button
+            id="btn-open-saved-modal"
+            class="flex items-center justify-center gap-1 px-2 h-8 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors shadow-2xs cursor-pointer"
+            title="Load &amp; Manage Saved Diagrams from LocalStorage"
+            aria-label="Open Saved Diagrams"
+          >
+            <i data-lucide="folder" class="w-4 h-4 text-amber-600"></i>
+            <span
+              id="saved-diagrams-counter"
+              class="font-mono text-[11px] font-bold px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 border border-slate-200"
+            >
+              0
+            </span>
+          </button>
+
+          <div class="h-4 w-px bg-slate-200 mx-0.5"></div>
+
+          <!-- Predefined Themes & Templates Dropdown (Icon Only with Theme Palette Icon) -->
           <div class="relative">
             <button
               id="btn-templates-menu"
-              class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs"
-              title="Select Diagram Template"
-              aria-label="Select Diagram Template"
+              class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs cursor-pointer"
+              title="Predefined Themes &amp; Templates (Monokai, Neutral, etc.)"
+              aria-label="Predefined Themes and Templates"
             >
-              <i data-lucide="folder-open" class="w-4 h-4 text-blue-600"></i>
+              <i data-lucide="palette" class="w-4 h-4 text-purple-600"></i>
             </button>
             <div
               id="dropdown-templates"
               class="hidden absolute right-0 mt-1.5 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-40"
             >
               <div class="px-3 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                Diagram Template Library
+                Predefined Themes &amp; Templates
               </div>
               <div id="templates-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100"></div>
             </div>
@@ -159,7 +222,7 @@
           <!-- Auto Export Toggle (Icon Only) -->
           <button
             id="btn-toggle-auto-export"
-            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer"
             title="Auto Export: Disabled (Click to Enable)"
             aria-label="Toggle Auto Export"
           >
@@ -170,7 +233,7 @@
           <!-- Gallery Snapshots Badge -->
           <button
             id="btn-header-gallery"
-            class="hidden flex items-center justify-center gap-1 px-2 h-8 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium"
+            class="hidden flex items-center justify-center gap-1 px-2 h-8 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium cursor-pointer"
             title="Open Snapshot Gallery"
             aria-label="Snapshot Gallery"
           >
@@ -181,7 +244,7 @@
           <!-- Quick Download PNG (Icon Only) -->
           <button
             id="btn-quick-download-png"
-            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200 cursor-pointer"
             title="Quick PNG Download (2x Resolution)"
             aria-label="Quick PNG Download"
           >
@@ -191,23 +254,220 @@
           <!-- Open Export Modal (Icon Only) -->
           <button
             id="btn-open-export-modal"
-            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white transition-colors shadow-xs"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white transition-colors shadow-xs cursor-pointer"
             title="Export Image &amp; Settings (PNG / SVG)"
             aria-label="Open Image Export Menu"
           >
             <i data-lucide="download" class="w-4 h-4"></i>
           </button>
+
+          <!-- Unpin from Toolbar Button -->
+          <button
+            id="btn-unpin-toolbar"
+            class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors shadow-2xs cursor-pointer"
+            title="Unpin tools from toolbar"
+            aria-label="Unpin tools from toolbar"
+          >
+            <i data-lucide="pin-off" class="w-3.5 h-3.5"></i>
+          </button>
         </div>
 
-        <!-- Toggle Button to Show/Hide Extra Tools -->
-        <button
-          id="btn-toggle-extra-tools"
-          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-blue-600 transition-colors shadow-2xs"
-          title="Show Extra Options &amp; Tools"
-          aria-label="Toggle extra tools"
-        >
-          <i data-lucide="sliders-horizontal" id="icon-toggle-extra" class="w-4 h-4"></i>
-        </button>
+        <!-- Main Tools Menu Dropdown -->
+        <div class="relative">
+          <button
+            id="btn-main-menu"
+            class="flex items-center gap-1.5 px-2.5 sm:px-3 h-8 sm:h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors shadow-2xs cursor-pointer"
+            title="Open Tools &amp; Actions Menu"
+            aria-label="Open Tools Menu"
+            aria-haspopup="true"
+          >
+            <i data-lucide="menu" id="icon-main-menu" class="w-4 h-4 text-slate-600"></i>
+            <span>Menu</span>
+          </button>
+
+          <!-- The Menu Dropdown -->
+          <div
+            id="dropdown-main-menu"
+            class="hidden absolute right-0 mt-1.5 w-80 sm:w-88 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden select-none max-h-[85vh] overflow-y-auto"
+          >
+            <!-- Top Pin Control Header -->
+            <div class="sticky top-0 z-10 flex items-center justify-between px-3.5 py-2.5 bg-slate-50/95 backdrop-blur-xs border-b border-slate-200">
+              <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>File &amp; Tools Menu</span>
+              </div>
+              <button
+                id="btn-pin-menu-toggle"
+                class="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 cursor-pointer"
+                title="Pin quick tool icons directly to the top toolbar"
+              >
+                <i data-lucide="pin" id="icon-pin-menu" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span id="label-pin-menu">Pin to Toolbar</span>
+              </button>
+            </div>
+
+            <!-- Menu Items List -->
+            <div class="p-1.5 space-y-1">
+              <!-- SECTION A: FILE OPERATIONS -->
+              <div class="px-2.5 pt-1.5 pb-0.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                <span>File Operations</span>
+              </div>
+
+              <!-- 1. New Diagram -->
+              <button
+                id="menu-item-new-diagram"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 group-hover:text-blue-700">New Diagram</div>
+                    <div class="text-[11px] text-slate-500">Blank or starter sequence diagram</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">New</span>
+              </button>
+
+              <!-- 2. Save Diagram -->
+              <button
+                id="menu-item-save-diagram"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div id="menu-item-save-icon-wrap" class="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="save" id="menu-item-save-icon" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div id="menu-item-save-title" class="text-xs font-semibold text-slate-800 group-hover:text-blue-700">Save Diagram</div>
+                    <div id="menu-item-save-desc" class="text-[11px] text-slate-500">Save changes to LocalStorage</div>
+                  </div>
+                </div>
+                <span id="menu-item-save-badge" class="text-[10px] font-mono font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">Ctrl+S</span>
+              </button>
+
+              <!-- 3. Load Saved Diagrams -->
+              <button
+                id="menu-item-load-diagram"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="folder" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 group-hover:text-amber-700">Load Saved Diagrams...</div>
+                    <div class="text-[11px] text-slate-500">Manage saved diagrams in LocalStorage</div>
+                  </div>
+                </div>
+                <span id="menu-saved-diagrams-counter" class="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">0</span>
+              </button>
+
+              <div class="border-t border-slate-100 my-1"></div>
+
+              <!-- SECTION B: TOOLS & ACTIONS -->
+              <div class="px-2.5 pt-1 pb-0.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                <span>Tools &amp; Customization</span>
+              </div>
+
+              <!-- 4. Predefined Themes & Templates -->
+              <div class="rounded-lg border border-transparent hover:border-slate-200 transition-colors">
+                <button
+                  id="menu-item-templates"
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+                >
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-purple-50 border border-purple-200 text-purple-600 flex items-center justify-center shrink-0">
+                      <i data-lucide="palette" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <div class="text-xs font-semibold text-slate-800 group-hover:text-purple-700">Predefined Themes &amp; Templates</div>
+                      <div class="text-[11px] text-slate-500">Monokai, Dark, Neutral &amp; Flows</div>
+                    </div>
+                  </div>
+                  <i data-lucide="chevron-down" id="icon-chevron-templates" class="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-transform duration-200"></i>
+                </button>
+                <div id="menu-templates-accordion" class="hidden px-2 pt-1 pb-1.5 divide-y divide-slate-100 bg-slate-50/70 rounded-lg mt-1 border border-slate-100 max-h-52 overflow-y-auto">
+                  <!-- Populated dynamically with templates -->
+                </div>
+              </div>
+
+              <!-- 5. Auto Export Toggle -->
+              <div class="px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                      <span>Auto Export</span>
+                      <span id="menu-auto-status-badge" class="text-[10px] font-semibold px-1.5 py-0.2 rounded-md uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200">Off</span>
+                    </div>
+                    <div class="text-[11px] text-slate-500">Auto download on saved diagram</div>
+                  </div>
+                </div>
+                <button
+                  id="btn-menu-toggle-auto-export"
+                  class="px-2.5 py-1 text-[11px] font-semibold rounded-md border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 transition-colors cursor-pointer"
+                >
+                  Toggle
+                </button>
+              </div>
+
+              <!-- 6. Snapshot Gallery -->
+              <button
+                id="menu-item-gallery"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 group-hover:text-blue-700">Snapshot Gallery</div>
+                    <div class="text-[11px] text-slate-500">View auto-exported image history</div>
+                  </div>
+                </div>
+                <span id="menu-snapshot-count" class="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">0</span>
+              </button>
+
+              <!-- 7. Quick Download PNG (2x) -->
+              <button
+                id="menu-item-quick-png"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="image" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 group-hover:text-emerald-700">Quick Download PNG</div>
+                    <div class="text-[11px] text-slate-500">Direct 2x high-resolution snapshot</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">2x PNG</span>
+              </button>
+
+              <!-- 8. Export Dialog & Settings -->
+              <button
+                id="menu-item-export-modal"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 group-hover:text-indigo-700">Export Options &amp; Settings...</div>
+                    <div class="text-[11px] text-slate-500">Vector SVG, 1x-3x PNG, custom background</div>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-indigo-600"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -567,6 +827,26 @@
               </label>
             </div>
 
+            <!-- Saved Diagram Tie-In Status Banner -->
+            <div id="auto-export-status-banner" class="p-3.5 rounded-xl border flex items-start gap-3 bg-amber-50/80 border-amber-200 text-amber-900 transition-colors">
+              <i id="auto-export-status-icon" data-lucide="alert-circle" class="w-4 h-4 mt-0.5 text-amber-600 shrink-0"></i>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span id="auto-export-status-title" class="text-xs font-bold">Auto Export Paused (Unsaved Diagram)</span>
+                  <button
+                    id="btn-auto-export-save-now"
+                    type="button"
+                    class="text-xs font-semibold px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-2xs shrink-0"
+                  >
+                    Save Diagram Now
+                  </button>
+                </div>
+                <p id="auto-export-status-desc" class="text-[11px] text-amber-800 mt-1 leading-relaxed">
+                  Auto export is tied strictly to saved diagrams. Please save your current diagram to LocalStorage to activate automatic background exports.
+                </p>
+              </div>
+            </div>
+
             <!-- Auto Settings Options -->
             <div class="space-y-4">
               <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
@@ -636,6 +916,194 @@
             Done
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- SAVE DIAGRAM MODAL -->
+    <div id="modal-save-diagram" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+      <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md flex flex-col overflow-hidden animate-in fade-in zoom-in-95">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <div class="p-1.5 bg-blue-50 text-blue-600 rounded-lg border border-blue-100">
+              <i data-lucide="save" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 id="modal-save-title" class="text-sm font-bold text-slate-800">Save Diagram to LocalStorage</h3>
+              <p class="text-[11px] text-slate-500">Store and link diagram for automatic exports</p>
+            </div>
+          </div>
+          <button id="btn-close-save-modal" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors">✕</button>
+        </div>
+
+        <form id="form-save-diagram" class="p-5 space-y-4">
+          <div>
+            <label for="input-save-diagram-title" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              Diagram Title
+            </label>
+            <input
+              type="text"
+              id="input-save-diagram-title"
+              class="w-full px-3 py-2 text-xs font-medium rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800"
+              placeholder="e.g. User Authentication Flow"
+              required
+              maxlength="80"
+            />
+            <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
+              <i data-lucide="zap" class="w-3 h-3 text-amber-500"></i>
+              Once saved, Auto Export will be tied to this diagram.
+            </p>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            <button
+              type="button"
+              id="btn-cancel-save-diagram"
+              class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              id="btn-confirm-save-diagram"
+              class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
+            >
+              <i data-lucide="check" class="w-3.5 h-3.5"></i>
+              Save Diagram
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- LOAD & MANAGE SAVED DIAGRAMS MODAL -->
+    <div id="modal-saved-diagrams" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+      <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[88vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 bg-amber-50 text-amber-600 rounded-xl border border-amber-100">
+              <i data-lucide="folder" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                Saved Diagrams
+                <span id="badge-total-saved-diagrams" class="text-xs font-mono font-bold px-2 py-0.5 bg-slate-200 text-slate-700 rounded-full">0</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Diagrams stored locally in your browser's LocalStorage
+              </p>
+            </div>
+          </div>
+          <button id="btn-close-saved-diagrams-modal" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors">✕</button>
+        </div>
+
+        <!-- Toolbar / Search Bar -->
+        <div class="p-4 border-b border-slate-200 bg-white flex items-center gap-3">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input
+              type="text"
+              id="input-search-saved-diagrams"
+              class="w-full pl-9 pr-3 py-2 text-xs font-medium rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800"
+              placeholder="Search saved diagrams by title or keywords..."
+            />
+          </div>
+          <button
+            id="btn-modal-new-diagram"
+            class="px-3 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center gap-1.5 shrink-0 shadow-xs"
+          >
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            New Blank
+          </button>
+        </div>
+
+        <!-- Saved Diagrams List Content -->
+        <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-3 bg-slate-50/50">
+          <div id="saved-diagrams-list" class="space-y-2.5"></div>
+
+          <!-- Empty State -->
+          <div id="saved-diagrams-empty" class="hidden text-center py-12 px-4 border border-dashed border-slate-200 rounded-2xl bg-white">
+            <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="folder-open" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-sm font-bold text-slate-700">No Saved Diagrams Found</h4>
+            <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1 leading-relaxed">
+              You haven't saved any diagrams to LocalStorage yet, or your search didn't match any title. Click "Save" in the top bar to save your current work!
+            </p>
+            <button
+              id="btn-empty-save-current"
+              class="mt-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors"
+            >
+              <i data-lucide="save" class="w-3.5 h-3.5"></i>
+              Save Current Diagram Now
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+          <span class="text-xs text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+            Auto-export will be tied to the diagram you load.
+          </span>
+          <button
+            id="btn-finish-saved-modal"
+            class="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RENAME DIAGRAM MODAL -->
+    <div id="modal-rename-diagram" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+      <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md flex flex-col overflow-hidden animate-in fade-in zoom-in-95">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <div class="p-1.5 bg-blue-50 text-blue-600 rounded-lg border border-blue-100">
+              <i data-lucide="pencil" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800">Rename Diagram</h3>
+              <p class="text-[11px] text-slate-500">Update diagram title in LocalStorage</p>
+            </div>
+          </div>
+          <button id="btn-close-rename-modal" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors">✕</button>
+        </div>
+
+        <form id="form-rename-diagram" class="p-5 space-y-4">
+          <input type="hidden" id="input-rename-diagram-id" value="" />
+          <div>
+            <label for="input-rename-diagram-title" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              New Diagram Title
+            </label>
+            <input
+              type="text"
+              id="input-rename-diagram-title"
+              class="w-full px-3 py-2 text-xs font-medium rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800"
+              required
+              maxlength="80"
+            />
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            <button
+              type="button"
+              id="btn-cancel-rename-diagram"
+              class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              id="btn-confirm-rename-diagram"
+              class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors shadow-xs"
+            >
+              Save Title
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -917,7 +1385,10 @@ sequenceDiagram
         const KEY_CODE = 'vanilla_mermaid_code';
         const KEY_SETTINGS = 'vanilla_mermaid_settings';
         const KEY_SNAPSHOTS = 'vanilla_mermaid_snapshots';
+        const KEY_SAVED_DIAGRAMS = 'vanilla_mermaid_saved_diagrams';
+        const KEY_ACTIVE_DIAGRAM_ID = 'vanilla_mermaid_active_diagram_id';
         const KEY_LANG_MIGRATED = 'vanilla_mermaid_en_migrated_v2';
+        const KEY_TOOLBAR_PINNED = 'vanilla_mermaid_toolbar_pinned';
 
         // --- 3. APPLICATION STATE ---
         function convertIndonesianDiagramToEnglish(code) {
@@ -1022,11 +1493,16 @@ sequenceDiagram
             saveToGallery: true,
           },
           snapshots: [],
+          savedDiagrams: [],
+          activeDiagramId: null,
+          activeDiagramTitle: 'Untitled Diagram',
+          isDirty: false,
           manualExportScale: 2,
           manualExportBg: 'white',
+          isToolbarPinned: localStorage.getItem(KEY_TOOLBAR_PINNED) === 'true',
         };
 
-        // Load persisted settings & snapshots
+        // Load persisted settings, snapshots & saved diagrams
         try {
           const savedSettings = localStorage.getItem(KEY_SETTINGS);
           if (savedSettings) Object.assign(state.autoSettings, JSON.parse(savedSettings));
@@ -1036,6 +1512,44 @@ sequenceDiagram
               ...s,
               code: convertIndonesianDiagramToEnglish(s.code)
             }));
+          }
+          const rawSavedDiagrams = localStorage.getItem(KEY_SAVED_DIAGRAMS);
+          if (rawSavedDiagrams) {
+            state.savedDiagrams = JSON.parse(rawSavedDiagrams).map(d => ({
+              ...d,
+              code: convertIndonesianDiagramToEnglish(d.code)
+            }));
+          }
+          const activeId = localStorage.getItem(KEY_ACTIVE_DIAGRAM_ID);
+          if (activeId) {
+            const found = state.savedDiagrams.find(d => d.id === activeId);
+            if (found) {
+              state.activeDiagramId = found.id;
+              state.activeDiagramTitle = found.title;
+              if (found.theme) state.theme = found.theme;
+              if (found.canvasBg) state.canvasBg = found.canvasBg;
+              if (found.code === state.code) {
+                state.isDirty = false;
+              } else {
+                state.isDirty = true;
+              }
+            } else {
+              localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+              state.activeDiagramId = null;
+              state.activeDiagramTitle = 'Untitled Diagram';
+              state.isDirty = true;
+            }
+          } else {
+            // Check if current code matches any saved diagram
+            const matchingSaved = state.savedDiagrams.find(d => d.code.trim() === (state.code || '').trim());
+            if (matchingSaved) {
+              state.activeDiagramId = matchingSaved.id;
+              state.activeDiagramTitle = matchingSaved.title;
+              state.isDirty = false;
+              localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, matchingSaved.id);
+            } else {
+              state.isDirty = true;
+            }
           }
         } catch(e) {}
 
@@ -1083,8 +1597,66 @@ sequenceDiagram
           galleryContainer: document.getElementById('gallery-container'),
           galleryEmpty: document.getElementById('gallery-empty'),
           btnLabelPngScale: document.getElementById('btn-label-png-scale'),
-          btnToggleExtraTools: document.getElementById('btn-toggle-extra-tools'),
           extraToolbarGroup: document.getElementById('extra-toolbar-group'),
+          btnUnpinToolbar: document.getElementById('btn-unpin-toolbar'),
+          btnMainMenu: document.getElementById('btn-main-menu'),
+          dropdownMainMenu: document.getElementById('dropdown-main-menu'),
+          btnPinMenuToggle: document.getElementById('btn-pin-menu-toggle'),
+          iconPinMenu: document.getElementById('icon-pin-menu'),
+          labelPinMenu: document.getElementById('label-pin-menu'),
+          menuItemTemplates: document.getElementById('menu-item-templates'),
+          iconChevronTemplates: document.getElementById('icon-chevron-templates'),
+          menuTemplatesAccordion: document.getElementById('menu-templates-accordion'),
+          btnMenuToggleAutoExport: document.getElementById('btn-menu-toggle-auto-export'),
+          menuAutoStatusBadge: document.getElementById('menu-auto-status-badge'),
+          menuItemGallery: document.getElementById('menu-item-gallery'),
+          menuSnapshotCount: document.getElementById('menu-snapshot-count'),
+          menuItemQuickPng: document.getElementById('menu-item-quick-png'),
+          menuItemExportModal: document.getElementById('menu-item-export-modal'),
+          menuItemNewDiagram: document.getElementById('menu-item-new-diagram'),
+          menuItemSaveDiagram: document.getElementById('menu-item-save-diagram'),
+          menuItemSaveIcon: document.getElementById('menu-item-save-icon'),
+          menuItemSaveIconWrap: document.getElementById('menu-item-save-icon-wrap'),
+          menuItemSaveTitle: document.getElementById('menu-item-save-title'),
+          menuItemSaveDesc: document.getElementById('menu-item-save-desc'),
+          menuItemSaveBadge: document.getElementById('menu-item-save-badge'),
+          menuItemLoadDiagram: document.getElementById('menu-item-load-diagram'),
+          menuSavedDiagramsCounter: document.getElementById('menu-saved-diagrams-counter'),
+
+          // Saved Diagram & Header Elements
+          currentDiagramTitle: document.getElementById('current-diagram-title'),
+          diagramSaveBadge: document.getElementById('diagram-save-badge'),
+          diagramInfoContainer: document.getElementById('diagram-info-container'),
+          btnNewDiagram: document.getElementById('btn-new-diagram'),
+          btnSaveDiagram: document.getElementById('btn-save-diagram'),
+          btnOpenSavedModal: document.getElementById('btn-open-saved-modal'),
+          savedDiagramsCounter: document.getElementById('saved-diagrams-counter'),
+          badgeTotalSavedDiagrams: document.getElementById('badge-total-saved-diagrams'),
+          modalSaveDiagram: document.getElementById('modal-save-diagram'),
+          modalSaveTitle: document.getElementById('modal-save-title'),
+          formSaveDiagram: document.getElementById('form-save-diagram'),
+          inputSaveDiagramTitle: document.getElementById('input-save-diagram-title'),
+          btnCloseSaveModal: document.getElementById('btn-close-save-modal'),
+          btnCancelSaveDiagram: document.getElementById('btn-cancel-save-diagram'),
+          modalSavedDiagrams: document.getElementById('modal-saved-diagrams'),
+          inputSearchSavedDiagrams: document.getElementById('input-search-saved-diagrams'),
+          btnModalNewDiagram: document.getElementById('btn-modal-new-diagram'),
+          savedDiagramsList: document.getElementById('saved-diagrams-list'),
+          savedDiagramsEmpty: document.getElementById('saved-diagrams-empty'),
+          btnCloseSavedDiagramsModal: document.getElementById('btn-close-saved-diagrams-modal'),
+          btnFinishSavedModal: document.getElementById('btn-finish-saved-modal'),
+          btnEmptySaveCurrent: document.getElementById('btn-empty-save-current'),
+          modalRenameDiagram: document.getElementById('modal-rename-diagram'),
+          formRenameDiagram: document.getElementById('form-rename-diagram'),
+          inputRenameDiagramId: document.getElementById('input-rename-diagram-id'),
+          inputRenameDiagramTitle: document.getElementById('input-rename-diagram-title'),
+          btnCloseRenameModal: document.getElementById('btn-close-rename-modal'),
+          btnCancelRenameDiagram: document.getElementById('btn-cancel-rename-diagram'),
+          autoExportStatusBanner: document.getElementById('auto-export-status-banner'),
+          autoExportStatusIcon: document.getElementById('auto-export-status-icon'),
+          autoExportStatusTitle: document.getElementById('auto-export-status-title'),
+          autoExportStatusDesc: document.getElementById('auto-export-status-desc'),
+          btnAutoExportSaveNow: document.getElementById('btn-auto-export-save-now'),
         };
 
         // Initialize Lucide icons
@@ -1259,7 +1831,11 @@ sequenceDiagram
         function generateFilename(ext = 'png') {
           const now = new Date();
           const d = now.toISOString().replace(/[-:T]/g, '').slice(0, 14);
-          return `sequence-diagram-${d}.${ext}`;
+          const titleSlug = (state.activeDiagramTitle || 'sequence-diagram')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '') || 'sequence-diagram';
+          return `${titleSlug}-${d}.${ext}`;
         }
 
         // --- 7. REALTIME RENDERING & VALIDATION ---
@@ -1272,6 +1848,30 @@ sequenceDiagram
           state.code = code;
           localStorage.setItem(KEY_CODE, code);
           updateLineNumbers();
+
+          // Evaluate saved vs unsaved status
+          if (state.activeDiagramId) {
+            const savedItem = state.savedDiagrams.find(d => d.id === state.activeDiagramId);
+            state.isDirty = !savedItem || savedItem.code.trim() !== code.trim();
+          } else {
+            // Check if there is an exact matching saved diagram
+            const matchingSaved = state.savedDiagrams.find(d => d.code.trim() === code.trim());
+            if (matchingSaved) {
+              state.activeDiagramId = matchingSaved.id;
+              state.activeDiagramTitle = matchingSaved.title;
+              state.isDirty = false;
+              localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, matchingSaved.id);
+            } else {
+              state.isDirty = true;
+            }
+          }
+
+          if (typeof updateDiagramHeaderUI === 'function') {
+            updateDiagramHeaderUI();
+          }
+          if (typeof updateAutoExportBannerUI === 'function') {
+            updateAutoExportBannerUI();
+          }
 
           if (!code.trim()) {
             el.mermaidTarget.innerHTML = '';
@@ -1299,7 +1899,7 @@ sequenceDiagram
             const lineCount = code.split('\n').length;
             el.codeStats.textContent = `${lineCount} lines • ${code.length} chars`;
 
-            // Trigger auto export if enabled
+            // Trigger auto export only if tied to a saved diagram
             scheduleAutoExport();
           } catch(err) {
             // Display error and keep last valid diagram visible
@@ -1317,13 +1917,24 @@ sequenceDiagram
           el.lineNumbers.innerHTML = lines.map((_, i) => `<div>${i + 1}</div>`).join('');
         }
 
-        // Auto Export Worker
+        // Auto Export Worker (Strictly tied to Saved Diagrams in LocalStorage)
         function scheduleAutoExport() {
           if (!state.autoSettings.enabled) return;
           if (!state.currentSvg || !state.code.trim()) return;
 
+          // REQUIREMENT: Auto export should be tied to saved diagram not for unsaved diagrams
+          const activeSaved = state.savedDiagrams.find(d => d.id === state.activeDiagramId);
+          if (!activeSaved) {
+            // Unsaved diagram: suppress auto export
+            return;
+          }
+
           clearTimeout(autoExportDebounceTimer);
           autoExportDebounceTimer = setTimeout(async () => {
+            // Re-verify diagram is still saved before exporting
+            const currentSaved = state.savedDiagrams.find(d => d.id === state.activeDiagramId);
+            if (!currentSaved) return;
+
             try {
               const filename = generateFilename(state.autoSettings.format);
               if (state.autoSettings.format === 'png') {
@@ -1337,6 +1948,8 @@ sequenceDiagram
                   const snapshot = {
                     id: Date.now().toString(),
                     timestamp: Date.now(),
+                    diagramId: currentSaved.id,
+                    diagramTitle: currentSaved.title,
                     code: state.code,
                     previewDataUrl: dataUrl,
                     format: 'png',
@@ -1349,9 +1962,9 @@ sequenceDiagram
 
                 if (state.autoSettings.autoDownload) {
                   triggerDownload(dataUrl, filename);
-                  showToast(`Image automatically downloaded: ${filename}`, true);
+                  showToast(`Auto-downloaded for "${currentSaved.title}": ${filename}`, true);
                 } else {
-                  showToast('Snapshot automatically saved to gallery!', true);
+                  showToast(`Snapshot auto-saved for "${currentSaved.title}"`, true);
                 }
               } else {
                 // SVG
@@ -1361,7 +1974,7 @@ sequenceDiagram
                   const url = URL.createObjectURL(blob);
                   triggerDownload(url, filename);
                   setTimeout(() => URL.revokeObjectURL(url), 1000);
-                  showToast(`SVG vector automatically downloaded: ${filename}`, true);
+                  showToast(`SVG auto-downloaded for "${currentSaved.title}": ${filename}`, true);
                 }
               }
             } catch(e) {
@@ -1625,6 +2238,10 @@ sequenceDiagram
         // Reset Code
         const resetToStarter = () => {
           el.codeInput.value = STARTER_CODE;
+          state.activeDiagramId = null;
+          state.activeDiagramTitle = 'Starter Diagram (Unsaved)';
+          state.isDirty = true;
+          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
           renderSequenceDiagram();
           showToast('Code reset to default starter');
         };
@@ -1634,64 +2251,102 @@ sequenceDiagram
         // Clear Code
         document.getElementById('btn-clear-code').addEventListener('click', () => {
           el.codeInput.value = 'sequenceDiagram\n    ';
+          state.activeDiagramId = null;
+          state.activeDiagramTitle = 'New Diagram';
+          state.isDirty = true;
+          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
           renderSequenceDiagram();
           showToast('Editor cleared');
         });
 
-        // --- 11. TEMPLATES MENU ---
-        const btnTemplates = document.getElementById('btn-templates-menu');
-        btnTemplates.addEventListener('click', (e) => {
-          e.stopPropagation();
-          el.dropdownTemplates.classList.toggle('hidden');
-          el.dropdownTheme.classList.add('hidden');
-        });
+        // --- 11. TEMPLATES MENU & PREDEFINED THEMES ---
+        function loadTemplate(id) {
+          const tmpl = TEMPLATES.find(x => x.id === id);
+          if (!tmpl) return;
 
-        el.templatesList.innerHTML = TEMPLATES.map(t => `
-          <button class="tmpl-select-btn w-full text-left px-3.5 py-2 hover:bg-blue-50/70 transition-colors group" data-tmpl-id="${t.id}">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold text-slate-800 group-hover:text-blue-700">${t.name}</span>
-              <span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">${t.category}</span>
-            </div>
-            <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">${t.desc}</p>
-          </button>
-        `).join('');
+          el.codeInput.value = tmpl.code;
+          state.activeDiagramId = null;
+          state.activeDiagramTitle = `${tmpl.name} (Draft)`;
+          state.isDirty = true;
+          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
 
-        el.templatesList.querySelectorAll('.tmpl-select-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const id = btn.getAttribute('data-tmpl-id');
-            const tmpl = TEMPLATES.find(x => x.id === id);
-            if (tmpl) {
-              el.codeInput.value = tmpl.code;
-              if (tmpl.id === 'monokai') {
-                state.canvasBg = 'monokai';
-                state.manualExportBg = 'monokai';
-                el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard', 'bg-monokai-theme');
-                el.paneDiagram.classList.add('bg-monokai-theme');
-                document.querySelectorAll('.bg-option').forEach(b => {
-                  if (b.getAttribute('data-bg') === 'monokai') {
-                    b.classList.replace('text-slate-700', 'text-blue-600');
-                    b.classList.add('font-semibold');
-                  } else {
-                    b.classList.replace('text-blue-600', 'text-slate-700');
-                    b.classList.remove('font-semibold');
-                  }
-                });
-                document.querySelectorAll('.export-bg-choice').forEach(b => {
-                  if (b.getAttribute('data-bg') === 'monokai') {
-                    b.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
-                    b.classList.remove('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
-                  } else {
-                    b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
-                    b.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
-                  }
-                });
+          if (tmpl.id === 'monokai') {
+            state.canvasBg = 'monokai';
+            state.manualExportBg = 'monokai';
+            el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard', 'bg-monokai-theme');
+            el.paneDiagram.classList.add('bg-monokai-theme');
+            document.querySelectorAll('.bg-option').forEach(b => {
+              if (b.getAttribute('data-bg') === 'monokai') {
+                b.classList.replace('text-slate-700', 'text-blue-600');
+                b.classList.add('font-semibold');
+              } else {
+                b.classList.replace('text-blue-600', 'text-slate-700');
+                b.classList.remove('font-semibold');
               }
-              renderSequenceDiagram();
-              showToast(`Template loaded: ${tmpl.name}`);
-              el.dropdownTemplates.classList.add('hidden');
-            }
+            });
+            document.querySelectorAll('.export-bg-choice').forEach(b => {
+              if (b.getAttribute('data-bg') === 'monokai') {
+                b.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+                b.classList.remove('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+              } else {
+                b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
+              }
+            });
+          }
+          renderSequenceDiagram();
+          showToast(`Template loaded: ${tmpl.name}`);
+          if (el.dropdownTemplates) el.dropdownTemplates.classList.add('hidden');
+          if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+        }
+
+        const btnTemplates = document.getElementById('btn-templates-menu');
+        if (btnTemplates) {
+          btnTemplates.addEventListener('click', (e) => {
+            e.stopPropagation();
+            el.dropdownTemplates.classList.toggle('hidden');
+            if (el.dropdownTheme) el.dropdownTheme.classList.add('hidden');
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
           });
-        });
+        }
+
+        // Populate toolbar dropdown templates
+        if (el.templatesList) {
+          el.templatesList.innerHTML = TEMPLATES.map(t => `
+            <button class="tmpl-select-btn w-full text-left px-3.5 py-2 hover:bg-purple-50/70 transition-colors group cursor-pointer" data-tmpl-id="${t.id}">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-800 group-hover:text-purple-700">${t.name}</span>
+                <span class="text-[10px] font-medium text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100">${t.category}</span>
+              </div>
+              <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">${t.desc}</p>
+            </button>
+          `).join('');
+
+          el.templatesList.querySelectorAll('.tmpl-select-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              loadTemplate(btn.getAttribute('data-tmpl-id'));
+            });
+          });
+        }
+
+        // Populate menu accordion templates
+        if (el.menuTemplatesAccordion) {
+          el.menuTemplatesAccordion.innerHTML = TEMPLATES.map(t => `
+            <button class="menu-tmpl-btn w-full text-left px-2.5 py-1.5 hover:bg-purple-50/80 transition-colors group rounded-md cursor-pointer" data-tmpl-id="${t.id}">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-800 group-hover:text-purple-700">${t.name}</span>
+                <span class="text-[9px] font-medium text-purple-700 bg-purple-100/70 px-1.5 py-0.2 rounded">${t.category}</span>
+              </div>
+              <p class="text-[10px] text-slate-500 line-clamp-1 mt-0.5">${t.desc}</p>
+            </button>
+          `).join('');
+
+          el.menuTemplatesAccordion.querySelectorAll('.menu-tmpl-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              loadTemplate(btn.getAttribute('data-tmpl-id'));
+            });
+          });
+        }
 
         // --- 12. THEME & CANVAS BACKGROUND MENU ---
         const btnTheme = document.getElementById('btn-theme-menu');
@@ -1748,9 +2403,16 @@ sequenceDiagram
           });
         });
 
-        window.addEventListener('click', () => {
-          el.dropdownTemplates.classList.add('hidden');
-          el.dropdownTheme.classList.add('hidden');
+        window.addEventListener('click', (e) => {
+          if (el.dropdownTemplates && !el.dropdownTemplates.contains(e.target) && e.target !== btnTemplates && !btnTemplates?.contains(e.target)) {
+            el.dropdownTemplates.classList.add('hidden');
+          }
+          if (el.dropdownTheme && !el.dropdownTheme.contains(e.target) && e.target !== btnTheme && !btnTheme?.contains(e.target)) {
+            el.dropdownTheme.classList.add('hidden');
+          }
+          if (el.dropdownMainMenu && !el.dropdownMainMenu.contains(e.target) && e.target !== el.btnMainMenu && !el.btnMainMenu?.contains(e.target)) {
+            el.dropdownMainMenu.classList.add('hidden');
+          }
         });
 
         // --- 13. EXPORT MODAL & ACTIONS ---
@@ -1770,25 +2432,133 @@ sequenceDiagram
         document.getElementById('btn-close-modal').addEventListener('click', closeModal);
         document.getElementById('btn-finish-modal').addEventListener('click', closeModal);
 
-        // Toggle Extra Toolbar Tools (Show/Hide By Default)
-        let extraToolsVisible = false;
-        if (el.btnToggleExtraTools && el.extraToolbarGroup) {
-          el.btnToggleExtraTools.addEventListener('click', () => {
-            extraToolsVisible = !extraToolsVisible;
-            if (extraToolsVisible) {
-              el.extraToolbarGroup.classList.remove('hidden');
-              el.extraToolbarGroup.classList.add('flex');
-              el.btnToggleExtraTools.classList.add('bg-blue-50', 'border-blue-300', 'text-blue-600');
-              el.btnToggleExtraTools.classList.remove('bg-white', 'border-slate-200', 'text-slate-600');
-              el.btnToggleExtraTools.title = 'Hide Additional Tools & Options';
-            } else {
-              el.extraToolbarGroup.classList.add('hidden');
-              el.extraToolbarGroup.classList.remove('flex');
-              el.btnToggleExtraTools.classList.remove('bg-blue-50', 'border-blue-300', 'text-blue-600');
-              el.btnToggleExtraTools.classList.add('bg-white', 'border-slate-200', 'text-slate-600');
-              el.btnToggleExtraTools.title = 'Show Additional Tools & Options';
-              el.dropdownTemplates.classList.add('hidden');
+        // --- QUICK PNG DOWNLOAD HELPER ---
+        async function triggerQuickPngDownload() {
+          if (!state.currentSvg) {
+            showToast('No diagram available to download', true);
+            return;
+          }
+          try {
+            const filename = generateFilename('png');
+            const { dataUrl } = await svgToPngDataUrl(state.currentSvg, 2, 'white');
+            triggerDownload(dataUrl, filename);
+            showToast(`Successfully downloaded ${filename}`);
+          } catch(e) {
+            console.error(e);
+            showToast('Failed to export PNG image', true);
+          }
+        }
+
+        const btnQuickPng = document.getElementById('btn-quick-download-png');
+        if (btnQuickPng) {
+          btnQuickPng.addEventListener('click', triggerQuickPngDownload);
+        }
+
+        // --- TOOLBAR PINNING & MENU MANAGEMENT ---
+        // Unless pinned, the quick tool icons do NOT appear on the toolbar.
+        function setToolbarPinned(isPinned, showToastMsg = false) {
+          state.isToolbarPinned = isPinned;
+          localStorage.setItem(KEY_TOOLBAR_PINNED, isPinned ? 'true' : 'false');
+
+          if (isPinned) {
+            el.extraToolbarGroup.classList.remove('hidden');
+            el.extraToolbarGroup.classList.add('flex');
+            if (el.labelPinMenu) el.labelPinMenu.textContent = 'Pinned';
+            if (el.btnPinMenuToggle) {
+              el.btnPinMenuToggle.classList.add('bg-blue-50', 'border-blue-300', 'text-blue-700');
+              el.btnPinMenuToggle.classList.remove('bg-white', 'border-slate-200', 'text-slate-700');
+              el.btnPinMenuToggle.title = 'Tools are pinned to the toolbar (Click to Unpin)';
             }
+            if (el.iconPinMenu) {
+              el.iconPinMenu.setAttribute('data-lucide', 'pin-off');
+            }
+            if (showToastMsg) showToast('Tools pinned to toolbar 📌');
+          } else {
+            el.extraToolbarGroup.classList.add('hidden');
+            el.extraToolbarGroup.classList.remove('flex');
+            if (el.labelPinMenu) el.labelPinMenu.textContent = 'Pin to Toolbar';
+            if (el.btnPinMenuToggle) {
+              el.btnPinMenuToggle.classList.remove('bg-blue-50', 'border-blue-300', 'text-blue-700');
+              el.btnPinMenuToggle.classList.add('bg-white', 'border-slate-200', 'text-slate-700');
+              el.btnPinMenuToggle.title = 'Pin quick tool icons directly to the toolbar';
+            }
+            if (el.iconPinMenu) {
+              el.iconPinMenu.setAttribute('data-lucide', 'pin');
+            }
+            if (el.dropdownTemplates) el.dropdownTemplates.classList.add('hidden');
+            if (showToastMsg) showToast('Tools unpinned from toolbar');
+          }
+          if (window.lucide) lucide.createIcons();
+        }
+
+        // Initialize pinned state (defaults to unpinned unless previously pinned)
+        setToolbarPinned(state.isToolbarPinned, false);
+
+        // Menu button toggle
+        if (el.btnMainMenu) {
+          el.btnMainMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            el.dropdownMainMenu.classList.toggle('hidden');
+            if (el.dropdownTemplates) el.dropdownTemplates.classList.add('hidden');
+            if (el.dropdownTheme) el.dropdownTheme.classList.add('hidden');
+          });
+        }
+
+        // Pin/Unpin actions
+        if (el.btnPinMenuToggle) {
+          el.btnPinMenuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setToolbarPinned(!state.isToolbarPinned, true);
+          });
+        }
+
+        if (el.btnUnpinToolbar) {
+          el.btnUnpinToolbar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setToolbarPinned(false, true);
+          });
+        }
+
+        // Menu Item: Predefined Themes & Templates accordion toggle
+        if (el.menuItemTemplates && el.menuTemplatesAccordion) {
+          el.menuItemTemplates.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = el.menuTemplatesAccordion.classList.toggle('hidden');
+            if (el.iconChevronTemplates) {
+              el.iconChevronTemplates.classList.toggle('rotate-180', !isHidden);
+            }
+          });
+        }
+
+        // Menu Item: Auto export toggle
+        if (el.btnMenuToggleAutoExport) {
+          el.btnMenuToggleAutoExport.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleAutoExport();
+          });
+        }
+
+        // Menu Item: Gallery
+        if (el.menuItemGallery) {
+          el.menuItemGallery.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            openModal('gallery');
+          });
+        }
+
+        // Menu Item: Quick PNG
+        if (el.menuItemQuickPng) {
+          el.menuItemQuickPng.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            triggerQuickPngDownload();
+          });
+        }
+
+        // Menu Item: Export Modal
+        if (el.menuItemExportModal) {
+          el.menuItemExportModal.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            openModal('manual');
           });
         }
 
@@ -1844,19 +2614,6 @@ sequenceDiagram
           try {
             const filename = generateFilename('png');
             const { dataUrl } = await svgToPngDataUrl(state.currentSvg, state.manualExportScale, state.manualExportBg);
-            triggerDownload(dataUrl, filename);
-            showToast(`Successfully downloaded ${filename}`);
-          } catch(e) {
-            console.error(e);
-          }
-        });
-
-        // Quick Download PNG (Header)
-        document.getElementById('btn-quick-download-png').addEventListener('click', async () => {
-          if (!state.currentSvg) return;
-          try {
-            const filename = generateFilename('png');
-            const { dataUrl } = await svgToPngDataUrl(state.currentSvg, 2, 'white');
             triggerDownload(dataUrl, filename);
             showToast(`Successfully downloaded ${filename}`);
           } catch(e) {
@@ -1924,17 +2681,608 @@ sequenceDiagram
           }, 2500);
         });
 
+        // --- 13B. SAVED DIAGRAMS MANAGEMENT (LOCALSTORAGE) ---
+        function updateDiagramHeaderUI() {
+          if (el.currentDiagramTitle) {
+            el.currentDiagramTitle.textContent = state.activeDiagramTitle || 'Untitled Diagram';
+          }
+          const savedCount = state.savedDiagrams.length;
+          if (el.savedDiagramsCounter) {
+            el.savedDiagramsCounter.textContent = savedCount;
+          }
+          if (el.menuSavedDiagramsCounter) {
+            el.menuSavedDiagramsCounter.textContent = savedCount;
+          }
+          if (el.badgeTotalSavedDiagrams) {
+            el.badgeTotalSavedDiagrams.textContent = savedCount;
+          }
+
+          if (state.activeDiagramId && !state.isDirty) {
+            if (el.diagramSaveBadge) {
+              el.diagramSaveBadge.textContent = 'Saved';
+              el.diagramSaveBadge.className = 'shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-md uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200';
+            }
+            if (el.btnSaveDiagram) {
+              el.btnSaveDiagram.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+              el.btnSaveDiagram.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white transition-colors shadow-xs cursor-pointer';
+              el.btnSaveDiagram.title = `Diagram "${state.activeDiagramTitle}" is up to date in LocalStorage`;
+            }
+            if (el.menuItemSaveTitle) el.menuItemSaveTitle.textContent = 'Saved (Up to Date)';
+            if (el.menuItemSaveDesc) el.menuItemSaveDesc.textContent = `"${state.activeDiagramTitle}" is saved in LocalStorage`;
+            if (el.menuItemSaveBadge) {
+              el.menuItemSaveBadge.textContent = 'Saved';
+              el.menuItemSaveBadge.className = 'text-[10px] font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200';
+            }
+            if (el.menuItemSaveIcon) el.menuItemSaveIcon.setAttribute('data-lucide', 'check');
+            if (el.menuItemSaveIconWrap) {
+              el.menuItemSaveIconWrap.className = 'w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0';
+            }
+          } else if (state.activeDiagramId && state.isDirty) {
+            if (el.diagramSaveBadge) {
+              el.diagramSaveBadge.textContent = 'Unsaved Changes';
+              el.diagramSaveBadge.className = 'shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-md uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200';
+            }
+            if (el.btnSaveDiagram) {
+              el.btnSaveDiagram.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i>';
+              el.btnSaveDiagram.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white transition-colors shadow-xs cursor-pointer';
+              el.btnSaveDiagram.title = `Save unsaved changes to "${state.activeDiagramTitle}" (Ctrl+S / Cmd+S)`;
+            }
+            if (el.menuItemSaveTitle) el.menuItemSaveTitle.textContent = 'Save Changes';
+            if (el.menuItemSaveDesc) el.menuItemSaveDesc.textContent = `Save updates to "${state.activeDiagramTitle}"`;
+            if (el.menuItemSaveBadge) {
+              el.menuItemSaveBadge.textContent = 'Ctrl+S';
+              el.menuItemSaveBadge.className = 'text-[10px] font-mono font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200';
+            }
+            if (el.menuItemSaveIcon) el.menuItemSaveIcon.setAttribute('data-lucide', 'save');
+            if (el.menuItemSaveIconWrap) {
+              el.menuItemSaveIconWrap.className = 'w-7 h-7 rounded-lg bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center shrink-0';
+            }
+          } else {
+            if (el.diagramSaveBadge) {
+              el.diagramSaveBadge.textContent = 'Unsaved';
+              el.diagramSaveBadge.className = 'shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-md uppercase tracking-wider bg-slate-200 text-slate-700 border border-slate-300';
+            }
+            if (el.btnSaveDiagram) {
+              el.btnSaveDiagram.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i>';
+              el.btnSaveDiagram.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white transition-colors shadow-xs cursor-pointer';
+              el.btnSaveDiagram.title = 'Save new diagram to LocalStorage (Ctrl+S / Cmd+S)';
+            }
+            if (el.menuItemSaveTitle) el.menuItemSaveTitle.textContent = 'Save Diagram...';
+            if (el.menuItemSaveDesc) el.menuItemSaveDesc.textContent = 'Save diagram to LocalStorage';
+            if (el.menuItemSaveBadge) {
+              el.menuItemSaveBadge.textContent = 'Ctrl+S';
+              el.menuItemSaveBadge.className = 'text-[10px] font-mono font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200';
+            }
+            if (el.menuItemSaveIcon) el.menuItemSaveIcon.setAttribute('data-lucide', 'save');
+            if (el.menuItemSaveIconWrap) {
+              el.menuItemSaveIconWrap.className = 'w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0';
+            }
+          }
+
+          if (window.lucide) window.lucide.createIcons();
+        }
+
+        function updateAutoExportBannerUI() {
+          if (!el.autoExportStatusBanner) return;
+          const isSaved = !!state.savedDiagrams.find(d => d.id === state.activeDiagramId);
+          const enabled = state.autoSettings.enabled;
+
+          if (!enabled) {
+            el.autoExportStatusBanner.className = 'p-3.5 rounded-xl border flex items-start gap-3 bg-slate-50 border-slate-200 text-slate-700 transition-colors';
+            if (el.autoExportStatusIcon) el.autoExportStatusIcon.className = 'w-4 h-4 mt-0.5 text-slate-400 shrink-0';
+            if (el.autoExportStatusTitle) el.autoExportStatusTitle.textContent = 'Auto Export Disabled';
+            if (el.autoExportStatusDesc) el.autoExportStatusDesc.textContent = 'Enable the master toggle above to automatically export diagrams. Auto export only runs for diagrams saved in LocalStorage.';
+            if (el.btnAutoExportSaveNow) el.btnAutoExportSaveNow.classList.add('hidden');
+          } else if (isSaved) {
+            el.autoExportStatusBanner.className = 'p-3.5 rounded-xl border flex items-start gap-3 bg-emerald-50/80 border-emerald-200 text-emerald-900 transition-colors';
+            if (el.autoExportStatusIcon) el.autoExportStatusIcon.className = 'w-4 h-4 mt-0.5 text-emerald-600 shrink-0';
+            if (el.autoExportStatusTitle) el.autoExportStatusTitle.textContent = `Auto Export Active (Tied to "${state.activeDiagramTitle}")`;
+            if (el.autoExportStatusDesc) el.autoExportStatusDesc.textContent = `Exports are tied strictly to this saved diagram in LocalStorage. Changes trigger auto-export after a ${state.autoSettings.delayMs / 1000}s pause.`;
+            if (el.btnAutoExportSaveNow) el.btnAutoExportSaveNow.classList.add('hidden');
+          } else {
+            el.autoExportStatusBanner.className = 'p-3.5 rounded-xl border flex items-start gap-3 bg-amber-50/80 border-amber-200 text-amber-900 transition-colors';
+            if (el.autoExportStatusIcon) el.autoExportStatusIcon.className = 'w-4 h-4 mt-0.5 text-amber-600 shrink-0';
+            if (el.autoExportStatusTitle) el.autoExportStatusTitle.textContent = 'Auto Export Paused (Unsaved Diagram)';
+            if (el.autoExportStatusDesc) el.autoExportStatusDesc.textContent = 'Auto export is tied strictly to saved diagrams. Save your current diagram to LocalStorage to activate automatic exports.';
+            if (el.btnAutoExportSaveNow) el.btnAutoExportSaveNow.classList.remove('hidden');
+          }
+          if (window.lucide) window.lucide.createIcons();
+        }
+
+        // Open Save Diagram Dialog
+        function openSaveModal(suggestedTitle = '') {
+          const defaultTitle = suggestedTitle || (state.activeDiagramTitle && !state.activeDiagramTitle.includes('(Draft)') ? state.activeDiagramTitle : 'My Sequence Diagram');
+          el.inputSaveDiagramTitle.value = defaultTitle;
+          el.modalSaveDiagram.classList.remove('hidden');
+          el.inputSaveDiagramTitle.focus();
+          el.inputSaveDiagramTitle.select();
+        }
+
+        function closeSaveModal() {
+          el.modalSaveDiagram.classList.add('hidden');
+        }
+
+        // Open Saved Diagrams Library
+        function openSavedDiagramsModal() {
+          el.inputSearchSavedDiagrams.value = '';
+          renderSavedDiagramsList();
+          el.modalSavedDiagrams.classList.remove('hidden');
+        }
+
+        function closeSavedDiagramsModal() {
+          el.modalSavedDiagrams.classList.add('hidden');
+        }
+
+        // Open Rename Dialog
+        function openRenameModal(id) {
+          const diag = state.savedDiagrams.find(d => d.id === id);
+          if (!diag) return;
+          el.inputRenameDiagramId.value = diag.id;
+          el.inputRenameDiagramTitle.value = diag.title;
+          el.modalRenameDiagram.classList.remove('hidden');
+          el.inputRenameDiagramTitle.focus();
+          el.inputRenameDiagramTitle.select();
+        }
+
+        function closeRenameModal() {
+          el.modalRenameDiagram.classList.add('hidden');
+        }
+
+        // Quick Save action (e.g. from header button or Ctrl+S)
+        function saveCurrentDiagram(forcePrompt = false) {
+          if (!state.code || !state.code.trim()) {
+            showToast('Cannot save an empty diagram');
+            return;
+          }
+
+          // If it's already an active saved diagram and not forced to prompt, save changes directly
+          if (state.activeDiagramId && !forcePrompt) {
+            const index = state.savedDiagrams.findIndex(d => d.id === state.activeDiagramId);
+            if (index !== -1) {
+              state.savedDiagrams[index].code = state.code;
+              state.savedDiagrams[index].theme = state.theme;
+              state.savedDiagrams[index].canvasBg = state.canvasBg;
+              state.savedDiagrams[index].updatedAt = Date.now();
+              state.isDirty = false;
+              localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+              updateDiagramHeaderUI();
+              updateAutoExportUI();
+              showToast(`Changes saved to "${state.savedDiagrams[index].title}"!`, true);
+
+              // Auto export is tied to saved diagram: trigger export now that it's saved
+              if (state.autoSettings.enabled) {
+                scheduleAutoExport();
+              }
+              return;
+            }
+          }
+
+          // Otherwise, prompt for diagram title
+          openSaveModal(state.activeDiagramTitle && !state.activeDiagramTitle.includes('(Draft)') ? state.activeDiagramTitle : '');
+        }
+
+        // Confirm Save Diagram (Creates or Updates Named Diagram in LocalStorage)
+        function confirmSaveDiagram(title) {
+          const cleanTitle = (title || '').trim() || 'Untitled Diagram';
+          const now = Date.now();
+
+          if (state.activeDiagramId) {
+            const index = state.savedDiagrams.findIndex(d => d.id === state.activeDiagramId);
+            if (index !== -1) {
+              state.savedDiagrams[index].title = cleanTitle;
+              state.savedDiagrams[index].code = state.code;
+              state.savedDiagrams[index].theme = state.theme;
+              state.savedDiagrams[index].canvasBg = state.canvasBg;
+              state.savedDiagrams[index].updatedAt = now;
+              state.activeDiagramTitle = cleanTitle;
+              state.isDirty = false;
+              localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+              closeSaveModal();
+              updateDiagramHeaderUI();
+              updateAutoExportUI();
+              showToast(`Diagram "${cleanTitle}" saved to LocalStorage!`, true);
+              if (state.autoSettings.enabled) {
+                scheduleAutoExport();
+              }
+              return;
+            }
+          }
+
+          // New diagram entry
+          const newDiag = {
+            id: 'diag_' + now + '_' + Math.random().toString(36).substring(2, 7),
+            title: cleanTitle,
+            code: state.code,
+            theme: state.theme,
+            canvasBg: state.canvasBg,
+            createdAt: now,
+            updatedAt: now,
+          };
+
+          state.savedDiagrams.unshift(newDiag);
+          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+
+          state.activeDiagramId = newDiag.id;
+          state.activeDiagramTitle = newDiag.title;
+          state.isDirty = false;
+          localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, newDiag.id);
+
+          closeSaveModal();
+          updateDiagramHeaderUI();
+          updateAutoExportUI();
+          showToast(`Diagram "${cleanTitle}" saved to LocalStorage!`, true);
+
+          // Trigger tied auto-export if enabled
+          if (state.autoSettings.enabled) {
+            scheduleAutoExport();
+          }
+        }
+
+        // Load Diagram from LocalStorage
+        function loadSavedDiagram(id) {
+          const diag = state.savedDiagrams.find(d => d.id === id);
+          if (!diag) return;
+
+          state.activeDiagramId = diag.id;
+          state.activeDiagramTitle = diag.title;
+          state.code = diag.code;
+          state.isDirty = false;
+          localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, diag.id);
+          localStorage.setItem(KEY_CODE, diag.code);
+
+          el.codeInput.value = diag.code;
+
+          if (diag.theme) {
+            state.theme = diag.theme;
+            el.currentThemeLabel.textContent = diag.theme;
+            initMermaid(diag.theme);
+          }
+          if (diag.canvasBg) {
+            state.canvasBg = diag.canvasBg;
+            el.paneDiagram.classList.remove('bg-white', 'bg-slate-900', 'bg-slate-100', 'bg-checkerboard', 'bg-monokai-theme');
+            if (diag.canvasBg === 'dark') el.paneDiagram.classList.add('bg-slate-900');
+            else if (diag.canvasBg === 'monokai') el.paneDiagram.classList.add('bg-monokai-theme');
+            else if (diag.canvasBg === 'light-slate') el.paneDiagram.classList.add('bg-slate-100');
+            else if (diag.canvasBg === 'transparent') el.paneDiagram.classList.add('bg-checkerboard');
+            else el.paneDiagram.classList.add('bg-white');
+          }
+
+          renderSequenceDiagram();
+          closeSavedDiagramsModal();
+          updateDiagramHeaderUI();
+          updateAutoExportUI();
+          showToast(`Loaded "${diag.title}" from LocalStorage`, true);
+
+          // Auto-export is tied to saved diagram: trigger export
+          if (state.autoSettings.enabled) {
+            scheduleAutoExport();
+          }
+        }
+
+        // Delete Diagram from LocalStorage
+        function deleteSavedDiagram(id) {
+          const target = state.savedDiagrams.find(d => d.id === id);
+          if (!target) return;
+
+          state.savedDiagrams = state.savedDiagrams.filter(d => d.id !== id);
+          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+
+          if (state.activeDiagramId === id) {
+            state.activeDiagramId = null;
+            state.activeDiagramTitle = `${target.title} (Unsaved Draft)`;
+            state.isDirty = true;
+            localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+          }
+
+          renderSavedDiagramsList(el.inputSearchSavedDiagrams.value);
+          updateDiagramHeaderUI();
+          updateAutoExportUI();
+          showToast(`Deleted "${target.title}" from LocalStorage`);
+        }
+
+        // Duplicate Diagram
+        function duplicateSavedDiagram(id) {
+          const orig = state.savedDiagrams.find(d => d.id === id);
+          if (!orig) return;
+
+          const now = Date.now();
+          const copy = {
+            ...orig,
+            id: 'diag_' + now + '_' + Math.random().toString(36).substring(2, 7),
+            title: `${orig.title} (Copy)`,
+            createdAt: now,
+            updatedAt: now,
+          };
+
+          state.savedDiagrams.unshift(copy);
+          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+          renderSavedDiagramsList(el.inputSearchSavedDiagrams.value);
+          updateDiagramHeaderUI();
+          showToast(`Duplicated "${orig.title}"`);
+        }
+
+        // Rename Diagram in LocalStorage
+        function renameSavedDiagram(id, newTitle) {
+          const clean = (newTitle || '').trim();
+          if (!clean) return;
+
+          const diag = state.savedDiagrams.find(d => d.id === id);
+          if (!diag) return;
+
+          diag.title = clean;
+          diag.updatedAt = Date.now();
+          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+
+          if (state.activeDiagramId === id) {
+            state.activeDiagramTitle = clean;
+          }
+
+          closeRenameModal();
+          renderSavedDiagramsList(el.inputSearchSavedDiagrams.value);
+          updateDiagramHeaderUI();
+          updateAutoExportUI();
+          showToast(`Renamed to "${clean}"`, true);
+        }
+
+        // Create New Diagram
+        function createNewDiagram() {
+          state.activeDiagramId = null;
+          state.activeDiagramTitle = 'Untitled Diagram';
+          state.isDirty = true;
+          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+          el.codeInput.value = STARTER_CODE;
+          closeSavedDiagramsModal();
+          renderSequenceDiagram();
+          updateDiagramHeaderUI();
+          updateAutoExportUI();
+          showToast('Created new blank diagram');
+        }
+
+        // Render Saved Diagrams List with Search Filter
+        function renderSavedDiagramsList(query = '') {
+          const q = (query || '').toLowerCase().trim();
+          const filtered = state.savedDiagrams.filter(d => {
+            if (!q) return true;
+            return d.title.toLowerCase().includes(q) || d.code.toLowerCase().includes(q);
+          });
+
+          if (el.badgeTotalSavedDiagrams) {
+            el.badgeTotalSavedDiagrams.textContent = state.savedDiagrams.length;
+          }
+
+          if (filtered.length === 0) {
+            el.savedDiagramsList.innerHTML = '';
+            el.savedDiagramsEmpty.classList.remove('hidden');
+            if (window.lucide) window.lucide.createIcons();
+            return;
+          }
+
+          el.savedDiagramsEmpty.classList.add('hidden');
+          el.savedDiagramsList.innerHTML = filtered.map(item => {
+            const isActive = item.id === state.activeDiagramId;
+            const updatedDate = new Date(item.updatedAt || item.createdAt || Date.now());
+            const dateStr = updatedDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+            const timeStr = updatedDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+            const lineCount = (item.code || '').split('\n').length;
+
+            return `
+              <div class="p-4 rounded-xl border ${isActive ? 'border-blue-500 bg-blue-50/40 ring-2 ring-blue-100' : 'border-slate-200 bg-white hover:border-slate-300'} transition-all shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 group">
+                <div class="flex items-start gap-3 min-w-0 flex-1">
+                  <div class="p-2 rounded-lg ${isActive ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-600'} transition-colors shrink-0 mt-0.5">
+                    <i data-lucide="${isActive ? 'check-circle' : 'file-code'}" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <h4 class="text-xs font-bold text-slate-800 truncate">${escapeHtml(item.title)}</h4>
+                      ${isActive ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200">Active</span>' : ''}
+                    </div>
+                    <div class="flex items-center gap-2 text-[11px] text-slate-500 mt-1 flex-wrap">
+                      <span>Saved: ${dateStr} at ${timeStr}</span>
+                      <span>•</span>
+                      <span>${lineCount} lines</span>
+                      <span>•</span>
+                      <span class="capitalize">${item.theme || 'default'} theme</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100 shrink-0">
+                  <button
+                    class="btn-load-diagram px-3 py-1.5 rounded-lg text-xs font-semibold ${isActive ? 'bg-slate-200 text-slate-700' : 'bg-blue-600 hover:bg-blue-700 text-white'} transition-colors shadow-2xs flex items-center gap-1"
+                    data-diagram-id="${item.id}"
+                    title="Load this diagram into editor"
+                  >
+                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                    ${isActive ? 'Loaded' : 'Load'}
+                  </button>
+
+                  <button
+                    class="btn-rename-diagram p-1.5 rounded-lg text-slate-600 hover:text-slate-800 hover:bg-slate-100 border border-slate-200 transition-colors"
+                    data-diagram-id="${item.id}"
+                    title="Rename Diagram"
+                  >
+                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                  </button>
+
+                  <button
+                    class="btn-duplicate-diagram p-1.5 rounded-lg text-slate-600 hover:text-slate-800 hover:bg-slate-100 border border-slate-200 transition-colors"
+                    data-diagram-id="${item.id}"
+                    title="Duplicate Diagram"
+                  >
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  </button>
+
+                  <button
+                    class="btn-delete-diagram p-1.5 rounded-lg text-rose-600 hover:text-rose-800 hover:bg-rose-50 border border-rose-200 transition-colors"
+                    data-diagram-id="${item.id}"
+                    title="Delete Diagram from LocalStorage"
+                  >
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          // Bind card action buttons
+          el.savedDiagramsList.querySelectorAll('.btn-load-diagram').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-diagram-id');
+              loadSavedDiagram(id);
+            });
+          });
+
+          el.savedDiagramsList.querySelectorAll('.btn-rename-diagram').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-diagram-id');
+              openRenameModal(id);
+            });
+          });
+
+          el.savedDiagramsList.querySelectorAll('.btn-duplicate-diagram').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-diagram-id');
+              duplicateSavedDiagram(id);
+            });
+          });
+
+          el.savedDiagramsList.querySelectorAll('.btn-delete-diagram').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-diagram-id');
+              deleteSavedDiagram(id);
+            });
+          });
+
+          if (window.lucide) window.lucide.createIcons();
+        }
+
+        function escapeHtml(str) {
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+        }
+
+        // Wire Saved Diagram Event Listeners (Toolbar & Menu)
+        if (el.btnNewDiagram) {
+          el.btnNewDiagram.addEventListener('click', createNewDiagram);
+        }
+        if (el.menuItemNewDiagram) {
+          el.menuItemNewDiagram.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            createNewDiagram();
+          });
+        }
+        if (el.diagramInfoContainer) {
+          el.diagramInfoContainer.addEventListener('click', () => {
+            if (state.activeDiagramId) {
+              openRenameModal(state.activeDiagramId);
+            } else {
+              saveCurrentDiagram(true);
+            }
+          });
+        }
+        if (el.btnSaveDiagram) {
+          el.btnSaveDiagram.addEventListener('click', () => saveCurrentDiagram(false));
+        }
+        if (el.menuItemSaveDiagram) {
+          el.menuItemSaveDiagram.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            saveCurrentDiagram(false);
+          });
+        }
+        if (el.btnOpenSavedModal) {
+          el.btnOpenSavedModal.addEventListener('click', openSavedDiagramsModal);
+        }
+        if (el.menuItemLoadDiagram) {
+          el.menuItemLoadDiagram.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            openSavedDiagramsModal();
+          });
+        }
+        if (el.btnCloseSaveModal) {
+          el.btnCloseSaveModal.addEventListener('click', closeSaveModal);
+        }
+        if (el.btnCancelSaveDiagram) {
+          el.btnCancelSaveDiagram.addEventListener('click', closeSaveModal);
+        }
+        if (el.formSaveDiagram) {
+          el.formSaveDiagram.addEventListener('submit', (e) => {
+            e.preventDefault();
+            confirmSaveDiagram(el.inputSaveDiagramTitle.value);
+          });
+        }
+        if (el.btnCloseSavedDiagramsModal) {
+          el.btnCloseSavedDiagramsModal.addEventListener('click', closeSavedDiagramsModal);
+        }
+        if (el.btnFinishSavedModal) {
+          el.btnFinishSavedModal.addEventListener('click', closeSavedDiagramsModal);
+        }
+        if (el.inputSearchSavedDiagrams) {
+          el.inputSearchSavedDiagrams.addEventListener('input', (e) => {
+            renderSavedDiagramsList(e.target.value);
+          });
+        }
+        if (el.btnModalNewDiagram) {
+          el.btnModalNewDiagram.addEventListener('click', createNewDiagram);
+        }
+        if (el.btnEmptySaveCurrent) {
+          el.btnEmptySaveCurrent.addEventListener('click', () => {
+            closeSavedDiagramsModal();
+            saveCurrentDiagram(true);
+          });
+        }
+        if (el.btnAutoExportSaveNow) {
+          el.btnAutoExportSaveNow.addEventListener('click', () => {
+            closeModal();
+            saveCurrentDiagram(true);
+          });
+        }
+        if (el.btnCloseRenameModal) {
+          el.btnCloseRenameModal.addEventListener('click', closeRenameModal);
+        }
+        if (el.btnCancelRenameDiagram) {
+          el.btnCancelRenameDiagram.addEventListener('click', closeRenameModal);
+        }
+        if (el.formRenameDiagram) {
+          el.formRenameDiagram.addEventListener('submit', (e) => {
+            e.preventDefault();
+            renameSavedDiagram(el.inputRenameDiagramId.value, el.inputRenameDiagramTitle.value);
+          });
+        }
+
+        // Global Keyboard Shortcut: Ctrl+S / Cmd+S to save diagram to LocalStorage
+        window.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            saveCurrentDiagram(false);
+          }
+        });
+
         // --- 14. AUTO EXPORT CONFIGURATION & GALLERY ---
         function updateAutoExportUI() {
           const enabled = state.autoSettings.enabled;
+          const isSaved = !!state.savedDiagrams.find(d => d.id === state.activeDiagramId);
           el.autoSwitchEnabled.checked = enabled;
+
           if (enabled) {
-            el.autoStatusPill.textContent = 'Active';
-            el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-700';
-            el.btnToggleAutoExport.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-emerald-50 border-emerald-300 text-emerald-800 shadow-2xs';
-            el.iconAutoZap.className = 'w-4 h-4 text-emerald-600 fill-emerald-600 animate-pulse';
-            if (el.labelAutoExport) el.labelAutoExport.textContent = 'Auto Export: On';
-            el.btnToggleAutoExport.title = 'Auto Export: Active (Click to Disable)';
+            if (isSaved) {
+              el.autoStatusPill.textContent = 'Active (Tied to Saved)';
+              el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-700';
+              el.btnToggleAutoExport.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-emerald-50 border-emerald-300 text-emerald-800 shadow-2xs';
+              el.iconAutoZap.className = 'w-4 h-4 text-emerald-600 fill-emerald-600 animate-pulse';
+              if (el.labelAutoExport) el.labelAutoExport.textContent = 'Auto Export: On';
+              el.btnToggleAutoExport.title = `Auto Export: Active (Tied to "${state.activeDiagramTitle}")`;
+            } else {
+              el.autoStatusPill.textContent = 'Paused (Unsaved Diagram)';
+              el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-amber-100 text-amber-800 border border-amber-200';
+              el.btnToggleAutoExport.className = 'flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border text-xs font-semibold transition-all bg-amber-50 border-amber-300 text-amber-800 shadow-2xs';
+              el.iconAutoZap.className = 'w-4 h-4 text-amber-600';
+              if (el.labelAutoExport) el.labelAutoExport.textContent = 'Auto: Paused';
+              el.btnToggleAutoExport.title = 'Auto Export: Paused (Current diagram is not saved to LocalStorage)';
+            }
           } else {
             el.autoStatusPill.textContent = 'Disabled';
             el.autoStatusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-slate-200 text-slate-600';
@@ -1943,13 +3291,49 @@ sequenceDiagram
             if (el.labelAutoExport) el.labelAutoExport.textContent = 'Auto Export: Off';
             el.btnToggleAutoExport.title = 'Auto Export: Disabled (Click to Enable)';
           }
+
+          // Sync Main Menu Auto Export Badges & Button
+          if (el.menuAutoStatusBadge) {
+            if (enabled) {
+              if (isSaved) {
+                el.menuAutoStatusBadge.textContent = 'Active';
+                el.menuAutoStatusBadge.className = 'text-[10px] font-semibold px-1.5 py-0.2 rounded-md uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200';
+              } else {
+                el.menuAutoStatusBadge.textContent = 'Paused';
+                el.menuAutoStatusBadge.className = 'text-[10px] font-semibold px-1.5 py-0.2 rounded-md uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200';
+              }
+            } else {
+              el.menuAutoStatusBadge.textContent = 'Off';
+              el.menuAutoStatusBadge.className = 'text-[10px] font-semibold px-1.5 py-0.2 rounded-md uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200';
+            }
+          }
+          if (el.btnMenuToggleAutoExport) {
+            if (enabled) {
+              el.btnMenuToggleAutoExport.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition-colors cursor-pointer';
+              el.btnMenuToggleAutoExport.textContent = 'Enabled';
+            } else {
+              el.btnMenuToggleAutoExport.className = 'px-2.5 py-1 text-[11px] font-semibold rounded-md border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 transition-colors cursor-pointer';
+              el.btnMenuToggleAutoExport.textContent = 'Toggle';
+            }
+          }
+
+          updateAutoExportBannerUI();
           localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
         }
 
         function toggleAutoExport() {
           state.autoSettings.enabled = !state.autoSettings.enabled;
           updateAutoExportUI();
-          showToast(state.autoSettings.enabled ? 'Automatic image export enabled ⚡' : 'Automatic image export disabled');
+          if (state.autoSettings.enabled) {
+            const isSaved = !!state.savedDiagrams.find(d => d.id === state.activeDiagramId);
+            if (isSaved) {
+              showToast(`Automatic export enabled ⚡ (Tied to "${state.activeDiagramTitle}")`);
+            } else {
+              showToast('Auto export enabled, but paused until diagram is saved to LocalStorage', true);
+            }
+          } else {
+            showToast('Automatic image export disabled');
+          }
         }
 
         el.btnToggleAutoExport.addEventListener('click', toggleAutoExport);
@@ -1969,6 +3353,7 @@ sequenceDiagram
         el.autoSelectDelay.addEventListener('change', (e) => {
           state.autoSettings.delayMs = parseInt(e.target.value, 10);
           localStorage.setItem(KEY_SETTINGS, JSON.stringify(state.autoSettings));
+          updateAutoExportBannerUI();
         });
         el.autoSelectFormat.addEventListener('change', (e) => {
           state.autoSettings.format = e.target.value;
@@ -1980,6 +3365,14 @@ sequenceDiagram
           const count = state.snapshots.length;
           el.snapshotCount.textContent = count;
           el.modalSnapshotCount.textContent = count;
+          if (el.menuSnapshotCount) {
+            el.menuSnapshotCount.textContent = count;
+            if (count > 0) {
+              el.menuSnapshotCount.className = 'font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200';
+            } else {
+              el.menuSnapshotCount.className = 'font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200';
+            }
+          }
           if (count > 0) {
             el.btnHeaderGallery.classList.remove('hidden');
             el.btnHeaderGallery.classList.add('flex');
@@ -1992,20 +3385,24 @@ sequenceDiagram
 
           el.galleryContainer.innerHTML = state.snapshots.map(s => {
             const time = new Date(s.timestamp).toLocaleTimeString();
+            const diagLabel = s.diagramTitle ? `<div class="text-[10px] font-semibold text-blue-600 truncate mb-1">${escapeHtml(s.diagramTitle)}</div>` : '';
             return `
               <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs flex flex-col">
                 <div class="h-32 bg-slate-100 flex items-center justify-center p-2 overflow-hidden border-b border-slate-100">
                   <img src="${s.previewDataUrl}" class="max-h-full max-w-full object-contain" alt="Snapshot Preview" />
                 </div>
-                <div class="p-3 flex items-center justify-between">
-                  <span class="text-[11px] font-mono text-slate-500">${time}</span>
-                  <div class="flex items-center gap-1.5">
-                    <a href="${s.previewDataUrl}" download="sequence-snapshot-${s.id}.png" class="py-1 px-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
-                      Download
-                    </a>
-                    <button class="restore-snap-btn py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium" data-snap-id="${s.id}">
-                      Restore
-                    </button>
+                <div class="p-3 flex flex-col justify-between gap-1.5">
+                  ${diagLabel}
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-mono text-slate-500">${time}</span>
+                    <div class="flex items-center gap-1.5">
+                      <a href="${s.previewDataUrl}" download="sequence-snapshot-${s.id}.png" class="py-1 px-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
+                        Download
+                      </a>
+                      <button class="restore-snap-btn py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium" data-snap-id="${s.id}">
+                        Restore
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2018,6 +3415,14 @@ sequenceDiagram
               const snap = state.snapshots.find(x => x.id === id);
               if (snap) {
                 el.codeInput.value = snap.code;
+                if (snap.diagramId) {
+                  const linkedDiag = state.savedDiagrams.find(d => d.id === snap.diagramId);
+                  if (linkedDiag) {
+                    state.activeDiagramId = linkedDiag.id;
+                    state.activeDiagramTitle = linkedDiag.title;
+                    localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, linkedDiag.id);
+                  }
+                }
                 renderSequenceDiagram();
                 closeModal();
                 showToast('Code restored from snapshot!', true);
@@ -2037,9 +3442,11 @@ sequenceDiagram
 
         // --- 15. BOOTSTRAP APP ---
         el.codeInput.value = state.code;
+        updateDiagramHeaderUI();
         updateAutoExportUI();
         updateGalleryUI();
         renderSequenceDiagram();
+        if (window.lucide) window.lucide.createIcons();
       })();
     </script>
   </body>
