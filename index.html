@@ -24,6 +24,14 @@
             fontFamily: {
               sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
               mono: ['"JetBrains Mono"', 'ui-monospace', 'Menlo', 'monospace'],
+            },
+            zIndex: {
+              '60': '60',
+              '70': '70',
+              '80': '80',
+              '90': '90',
+              '100': '100',
+              '110': '110',
             }
           }
         }
@@ -45,6 +53,12 @@
       }
       pre, code, textarea, .font-mono {
         font-family: 'JetBrains Mono', monospace;
+      }
+      #modal-confirm-new-diagram {
+        z-index: 100 !important;
+      }
+      #toast {
+        z-index: 110 !important;
       }
       /* Custom Scrollbars */
       ::-webkit-scrollbar {
@@ -305,7 +319,7 @@
                   </div>
                   <div>
                     <div class="text-xs font-semibold text-slate-800 group-hover:text-blue-700">New Diagram</div>
-                    <div class="text-[11px] text-slate-500">Blank or starter Mermaid diagram</div>
+                    <div class="text-[11px] text-slate-500">Clear editor &amp; start new diagram</div>
                   </div>
                 </div>
                 <span class="text-[10px] font-mono font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">New</span>
@@ -357,22 +371,6 @@
                   <div>
                     <div class="text-xs font-semibold text-slate-800 group-hover:text-blue-700">Copy Diagram Code</div>
                     <div class="text-[11px] text-slate-500">Copy editor contents to clipboard</div>
-                  </div>
-                </div>
-              </button>
-
-              <!-- 5. Clear Editor -->
-              <button
-                id="menu-item-clear-code"
-                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
-              >
-                <div class="flex items-center gap-2.5">
-                  <div class="w-7 h-7 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                  </div>
-                  <div>
-                    <div class="text-xs font-semibold text-slate-800 group-hover:text-rose-700">Clear Editor</div>
-                    <div class="text-[11px] text-slate-500">Clear editor to start fresh</div>
                   </div>
                 </div>
               </button>
@@ -909,6 +907,51 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- CONFIRM NEW DIAGRAM MODAL -->
+    <div id="modal-confirm-new-diagram" class="hidden fixed inset-0 z-[100] z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+      <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-sm flex flex-col overflow-hidden animate-in fade-in zoom-in-95">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <div class="p-1.5 bg-amber-50 text-amber-600 rounded-lg border border-amber-200">
+              <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800">New Diagram</h3>
+              <p class="text-[11px] text-slate-500">Confirm editor reset</p>
+            </div>
+          </div>
+          <button id="btn-close-confirm-new-modal" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors cursor-pointer" aria-label="Close modal">✕</button>
+        </div>
+
+        <div class="p-5">
+          <p class="text-xs text-slate-600 leading-relaxed">
+            The editor contains active diagram content. Creating a new diagram will clear the editor and any unsaved changes will be lost.
+          </p>
+          <p class="text-xs font-semibold text-slate-700 mt-2.5">
+            Do you want to proceed and clear the editor?
+          </p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 px-5 py-3.5 bg-slate-50 border-t border-slate-200">
+          <button
+            type="button"
+            id="btn-cancel-confirm-new"
+            class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            id="btn-action-confirm-new"
+            class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+          >
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            Clear &amp; Create New
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1636,6 +1679,10 @@ sequenceDiagram
           inputRenameDiagramTitle: document.getElementById('input-rename-diagram-title'),
           btnCloseRenameModal: document.getElementById('btn-close-rename-modal'),
           btnCancelRenameDiagram: document.getElementById('btn-cancel-rename-diagram'),
+          modalConfirmNewDiagram: document.getElementById('modal-confirm-new-diagram'),
+          btnCloseConfirmNewModal: document.getElementById('btn-close-confirm-new-modal'),
+          btnCancelConfirmNew: document.getElementById('btn-cancel-confirm-new'),
+          btnActionConfirmNew: document.getElementById('btn-action-confirm-new'),
         };
 
         // Initialize Lucide icons
@@ -1850,8 +1897,10 @@ sequenceDiagram
 
           if (!code.trim()) {
             el.mermaidTarget.innerHTML = '';
+            state.currentSvg = '';
             el.statusValid.classList.add('hidden');
             el.statusInvalid.classList.add('hidden');
+            if (el.codeStats) el.codeStats.textContent = '0 lines • 0 chars';
             return;
           }
 
@@ -2270,22 +2319,6 @@ sequenceDiagram
         };
         document.getElementById('btn-reset-code')?.addEventListener('click', resetToStarter);
         document.getElementById('btn-fix-syntax')?.addEventListener('click', resetToStarter);
-
-        // Clear Code (Menu Item & Button)
-        const handleClearCode = () => {
-          el.codeInput.value = 'flowchart TD\n    Start([Start]) --> End([End])\n';
-          state.activeDiagramId = null;
-          state.activeDiagramTitle = 'New Diagram';
-          state.isDirty = true;
-          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
-          renderMermaidDiagram();
-          showToast('Editor cleared');
-        };
-        document.getElementById('btn-clear-code')?.addEventListener('click', handleClearCode);
-        document.getElementById('menu-item-clear-code')?.addEventListener('click', () => {
-          handleClearCode();
-          closeMainMenu();
-        });
 
         // --- 11. TEMPLATES MENU & PREDEFINED THEMES ---
         function loadTemplate(id) {
@@ -3080,18 +3113,57 @@ sequenceDiagram
           showToast(`Renamed to "${clean}"`, true);
         }
 
-        // Create New Diagram
+        // Confirm New Diagram Modal Helpers
+        function openConfirmNewModal() {
+          if (el.modalConfirmNewDiagram) {
+            el.modalConfirmNewDiagram.classList.remove('hidden');
+            el.btnActionConfirmNew?.focus();
+          }
+        }
+
+        function closeConfirmNewModal() {
+          if (el.modalConfirmNewDiagram) {
+            el.modalConfirmNewDiagram.classList.add('hidden');
+          }
+        }
+
+        // Create New Diagram (Prompts confirmation if editor has content)
         function createNewDiagram() {
+          const hasContent = (el.codeInput.value || '').trim().length > 0;
+          if (hasContent) {
+            openConfirmNewModal();
+          } else {
+            executeNewDiagram();
+          }
+        }
+
+        // Executes clearing editor and resetting diagram state
+        function executeNewDiagram() {
           clearTimeout(autosaveDebounceTimer);
+          closeConfirmNewModal();
+          closeSavedDiagramsModal();
+          if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+
           state.activeDiagramId = null;
           state.activeDiagramTitle = 'Untitled Diagram';
-          state.isDirty = true;
+          state.isDirty = false;
           localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
-          el.codeInput.value = STARTER_CODE;
-          closeSavedDiagramsModal();
-          renderSequenceDiagram();
+
+          el.codeInput.value = '';
+          state.code = '';
+          localStorage.setItem(KEY_CODE, '');
+
+          // Reset canvas zoom & position to default center
+          state.scale = 1;
+          state.posX = 0;
+          state.posY = 0;
+          updateCanvasTransform();
+
+          renderMermaidDiagram();
           updateDiagramHeaderUI();
-          showToast('Created new blank diagram');
+          updateLineNumbers();
+          el.codeInput.focus();
+          showToast('Editor cleared for new diagram');
         }
 
         // Render Saved Diagrams List with Search Filter
@@ -3302,9 +3374,31 @@ sequenceDiagram
             renameSavedDiagram(el.inputRenameDiagramId.value, el.inputRenameDiagramTitle.value);
           });
         }
+        if (el.btnCloseConfirmNewModal) {
+          el.btnCloseConfirmNewModal.addEventListener('click', closeConfirmNewModal);
+        }
+        if (el.btnCancelConfirmNew) {
+          el.btnCancelConfirmNew.addEventListener('click', closeConfirmNewModal);
+        }
+        if (el.btnActionConfirmNew) {
+          el.btnActionConfirmNew.addEventListener('click', executeNewDiagram);
+        }
+        if (el.modalConfirmNewDiagram) {
+          el.modalConfirmNewDiagram.addEventListener('click', (e) => {
+            if (e.target === el.modalConfirmNewDiagram) {
+              closeConfirmNewModal();
+            }
+          });
+        }
 
-        // Global Keyboard Shortcut: Ctrl+S / Cmd+S to save diagram to LocalStorage
+        // Global Keyboard Shortcut: Ctrl+S / Cmd+S and Escape
         window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            if (el.modalConfirmNewDiagram && !el.modalConfirmNewDiagram.classList.contains('hidden')) {
+              closeConfirmNewModal();
+              return;
+            }
+          }
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
             e.preventDefault();
             saveCurrentDiagram(false);
