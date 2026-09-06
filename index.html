@@ -375,6 +375,42 @@
                 </div>
               </button>
 
+              <!-- 4b. Download Mermaid .mmd File -->
+              <button
+                id="menu-item-download-mmd"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+                title="Download raw Mermaid syntax as a .mmd file to disk"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 group-hover:text-indigo-700">Download Diagram (.mmd)</div>
+                    <div class="text-[11px] text-slate-500">Direct file save (ideal for file:// mode)</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">.mmd</span>
+              </button>
+
+              <!-- 4c. Open / Import Diagram File -->
+              <button
+                id="menu-item-import-file"
+                class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors cursor-pointer"
+                title="Open local .mmd, .mermaid, or .txt diagram file"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-700 flex items-center justify-center shrink-0">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-slate-800 group-hover:text-cyan-800">Open Diagram File...</div>
+                    <div class="text-[11px] text-slate-500">Import .mmd, .mermaid, or .txt from disk</div>
+                  </div>
+                </div>
+              </button>
+              <input type="file" id="file-input-diagram" accept=".mmd,.mermaid,.txt,.md" class="hidden" />
+
               <div class="border-t border-slate-100 my-1"></div>
 
               <!-- SECTION B: TOOLS & ACTIONS -->
@@ -684,20 +720,24 @@
           </div>
 
           <!-- Download & Copy Action Buttons -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-            <button id="btn-modal-download-png" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <button id="btn-modal-download-png" class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
               <i data-lucide="image" class="w-4 h-4"></i>
-              <span id="btn-label-png-scale">Download PNG Image (2x)</span>
+              <span id="btn-label-png-scale">PNG Image (2x)</span>
             </button>
-            <button id="btn-modal-download-svg" class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
+            <button id="btn-modal-download-svg" class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer">
               <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i>
-              <span>Download SVG Vector</span>
+              <span>SVG Vector</span>
             </button>
-            <button id="btn-modal-copy-png" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer">
+            <button id="btn-modal-download-mmd" class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer" title="Download raw Mermaid syntax as a .mmd file to disk">
+              <i data-lucide="file-text" class="w-4 h-4 text-indigo-200"></i>
+              <span>Mermaid (.mmd)</span>
+            </button>
+            <button id="btn-modal-copy-png" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer sm:col-span-1">
               <i data-lucide="copy" class="w-4 h-4 text-slate-500"></i>
               <span id="copy-png-label">Copy PNG to Clipboard</span>
             </button>
-            <button id="btn-modal-copy-svg" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer">
+            <button id="btn-modal-copy-svg" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer sm:col-span-2">
               <i data-lucide="copy" class="w-4 h-4 text-slate-500"></i>
               <span id="copy-svg-label">Copy SVG Markup Code</span>
             </button>
@@ -739,6 +779,15 @@
         </div>
 
         <form id="form-save-diagram" class="p-5 space-y-4">
+          <!-- Callout for file:// or restricted storage -->
+          <div id="callout-file-protocol" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
+            <i data-lucide="info" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+            <div>
+              <div class="font-semibold">Local File Mode (file://)</div>
+              <div class="text-[11px] text-amber-800 mt-0.5">Browser security sandboxes persistent LocalStorage. Saving will cache the diagram in memory and download a <strong>.mmd</strong> file directly to your disk.</div>
+            </div>
+          </div>
+
           <div>
             <label for="input-save-diagram-title" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
               Diagram Title
@@ -753,26 +802,38 @@
             />
             <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
               <i data-lucide="zap" class="w-3 h-3 text-amber-500"></i>
-              Once saved, Auto Export will be tied to this diagram.
+              Once saved, changes will be tracked to this diagram.
             </p>
           </div>
 
-          <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
             <button
               type="button"
-              id="btn-cancel-save-diagram"
-              class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+              id="btn-save-download-mmd"
+              class="px-3 py-2 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+              title="Download diagram syntax as .mmd file to disk"
             >
-              Cancel
+              <i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-600"></i>
+              <span>Download .mmd</span>
             </button>
-            <button
-              type="submit"
-              id="btn-confirm-save-diagram"
-              class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
-            >
-              <i data-lucide="check" class="w-3.5 h-3.5"></i>
-              Save Diagram
-            </button>
+
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                id="btn-cancel-save-diagram"
+                class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                id="btn-confirm-save-diagram"
+                class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
+              >
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span id="btn-confirm-save-label">Save Diagram</span>
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -1438,6 +1499,54 @@ sequenceDiagram
         const KEY_LANG_MIGRATED = 'vanilla_mermaid_en_migrated_v2';
         const KEY_TOOLBAR_PINNED = 'vanilla_mermaid_toolbar_pinned';
 
+        // --- 2B. SAFE STORAGE WRAPPER (Handles file:// protocol opaque origin and restricted sandbox) ---
+        const memoryStore = new Map();
+        let isStorageWorking = false;
+
+        try {
+          if (typeof window !== 'undefined' && 'localStorage' in window && window.localStorage !== null) {
+            const testKey = '__garis_storage_test__';
+            window.localStorage.setItem(testKey, testKey);
+            window.localStorage.removeItem(testKey);
+            isStorageWorking = true;
+          }
+        } catch (e) {
+          isStorageWorking = false;
+          console.warn('LocalStorage is restricted or unavailable (likely running via file:// protocol). Using safe in-memory fallback.');
+        }
+
+        const safeStorage = {
+          isAvailable: isStorageWorking,
+          isLocalFile: typeof window !== 'undefined' && window.location && window.location.protocol === 'file:',
+          getItem(key) {
+            if (isStorageWorking) {
+              try {
+                return window.localStorage.getItem(key);
+              } catch (e) {}
+            }
+            return memoryStore.has(key) ? memoryStore.get(key) : null;
+          },
+          setItem(key, value) {
+            const strVal = String(value);
+            if (isStorageWorking) {
+              try {
+                window.localStorage.setItem(key, strVal);
+                return;
+              } catch (e) {}
+            }
+            memoryStore.set(key, strVal);
+          },
+          removeItem(key) {
+            if (isStorageWorking) {
+              try {
+                window.localStorage.removeItem(key);
+                return;
+              } catch (e) {}
+            }
+            memoryStore.delete(key);
+          }
+        };
+
         // --- 3. APPLICATION STATE ---
         function convertIndonesianDiagramToEnglish(code) {
           if (!code) return STARTER_CODE;
@@ -1500,13 +1609,13 @@ sequenceDiagram
             .replace(/Pelanggan/g, 'Customer');
         }
 
-        let initialSavedCode = localStorage.getItem(KEY_CODE);
-        const hasMigrated = localStorage.getItem(KEY_LANG_MIGRATED);
+        let initialSavedCode = safeStorage.getItem(KEY_CODE);
+        const hasMigrated = safeStorage.getItem(KEY_LANG_MIGRATED);
 
         if (!initialSavedCode || !hasMigrated || initialSavedCode.includes('Pengguna') || initialSavedCode.includes('Pelanggan') || initialSavedCode.includes('kredensial') || initialSavedCode.includes('Frontend Web')) {
           initialSavedCode = convertIndonesianDiagramToEnglish(initialSavedCode || STARTER_CODE);
-          localStorage.setItem(KEY_CODE, initialSavedCode);
-          localStorage.setItem(KEY_LANG_MIGRATED, 'true');
+          safeStorage.setItem(KEY_CODE, initialSavedCode);
+          safeStorage.setItem(KEY_LANG_MIGRATED, 'true');
         }
 
         // Automatic repair: if stored code had the deactivated without activation bug in microservices
@@ -1515,18 +1624,18 @@ sequenceDiagram
             /StockSvc->>StockSvc: Reserve item inventory/g,
             'activate StockSvc\n        StockSvc->>StockSvc: Reserve item inventory'
           );
-          localStorage.setItem(KEY_CODE, initialSavedCode);
+          safeStorage.setItem(KEY_CODE, initialSavedCode);
         }
 
         // Restore last configuration from localStorage
-        const savedZoom = parseFloat(localStorage.getItem(KEY_ZOOM));
-        const savedPanX = parseFloat(localStorage.getItem(KEY_PAN_X));
-        const savedPanY = parseFloat(localStorage.getItem(KEY_PAN_Y));
-        const savedTheme = localStorage.getItem(KEY_THEME) || 'default';
-        const savedCanvasBg = localStorage.getItem(KEY_CANVAS_BG) || 'white';
-        const savedLayout = localStorage.getItem(KEY_LAYOUT) || 'split';
-        const savedExportScale = parseInt(localStorage.getItem(KEY_MANUAL_EXPORT_SCALE), 10);
-        const savedExportBg = localStorage.getItem(KEY_MANUAL_EXPORT_BG) || 'white';
+        const savedZoom = parseFloat(safeStorage.getItem(KEY_ZOOM));
+        const savedPanX = parseFloat(safeStorage.getItem(KEY_PAN_X));
+        const savedPanY = parseFloat(safeStorage.getItem(KEY_PAN_Y));
+        const savedTheme = safeStorage.getItem(KEY_THEME) || 'default';
+        const savedCanvasBg = safeStorage.getItem(KEY_CANVAS_BG) || 'white';
+        const savedLayout = safeStorage.getItem(KEY_LAYOUT) || 'split';
+        const savedExportScale = parseInt(safeStorage.getItem(KEY_MANUAL_EXPORT_SCALE), 10);
+        const savedExportBg = safeStorage.getItem(KEY_MANUAL_EXPORT_BG) || 'white';
 
         const state = {
           code: initialSavedCode,
@@ -1539,28 +1648,28 @@ sequenceDiagram
           posY: !isNaN(savedPanY) ? savedPanY : 0,
           isDragging: false,
           dragStart: { x: 0, y: 0 },
-          showGrid: localStorage.getItem(KEY_SHOW_GRID) !== 'false',
+          showGrid: safeStorage.getItem(KEY_SHOW_GRID) !== 'false',
           layout: ['split', 'editor', 'diagram'].includes(savedLayout) ? savedLayout : 'split',
-          autosaveEnabled: localStorage.getItem(KEY_AUTOSAVE_ENABLED) !== 'false',
+          autosaveEnabled: safeStorage.getItem(KEY_AUTOSAVE_ENABLED) !== 'false',
           savedDiagrams: [],
           activeDiagramId: null,
           activeDiagramTitle: 'Untitled Diagram',
           isDirty: false,
           manualExportScale: (!isNaN(savedExportScale) && savedExportScale >= 1 && savedExportScale <= 4) ? savedExportScale : 2,
           manualExportBg: savedExportBg,
-          isToolbarPinned: localStorage.getItem(KEY_TOOLBAR_PINNED) === 'true',
+          isToolbarPinned: safeStorage.getItem(KEY_TOOLBAR_PINNED) === 'true',
         };
 
         // Load persisted saved diagrams
         try {
-          const rawSavedDiagrams = localStorage.getItem(KEY_SAVED_DIAGRAMS);
+          const rawSavedDiagrams = safeStorage.getItem(KEY_SAVED_DIAGRAMS);
           if (rawSavedDiagrams) {
             state.savedDiagrams = JSON.parse(rawSavedDiagrams).map(d => ({
               ...d,
               code: convertIndonesianDiagramToEnglish(d.code)
             }));
           }
-          const activeId = localStorage.getItem(KEY_ACTIVE_DIAGRAM_ID);
+          const activeId = safeStorage.getItem(KEY_ACTIVE_DIAGRAM_ID);
           if (activeId) {
             const found = state.savedDiagrams.find(d => d.id === activeId);
             if (found) {
@@ -1574,7 +1683,7 @@ sequenceDiagram
                 state.isDirty = true;
               }
             } else {
-              localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+              safeStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
               state.activeDiagramId = null;
               state.activeDiagramTitle = 'Untitled Diagram';
               state.isDirty = true;
@@ -1586,7 +1695,7 @@ sequenceDiagram
               state.activeDiagramId = matchingSaved.id;
               state.activeDiagramTitle = matchingSaved.title;
               state.isDirty = false;
-              localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, matchingSaved.id);
+              safeStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, matchingSaved.id);
             } else {
               state.isDirty = true;
             }
@@ -1864,6 +1973,21 @@ sequenceDiagram
           return `${titleSlug}-${d}.${ext}`;
         }
 
+        function downloadMermaidFile(title, code) {
+          const rawTitle = title || state.activeDiagramTitle || 'diagram';
+          const baseName = rawTitle
+            .toLowerCase()
+            .replace(/[^a-z0-9_-]+/g, '-')
+            .replace(/^-+|-+$/g, '') || 'diagram';
+          const filename = `${baseName}.mmd`;
+          const content = code !== undefined ? code : state.code;
+          const blob = new Blob([content], { type: 'text/vnd.mermaid;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          triggerDownload(url, filename);
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+          return filename;
+        }
+
         // --- 7. REALTIME RENDERING & VALIDATION ---
         let renderDebounceTimer = null;
         let lastRenderedValidCode = '';
@@ -1871,7 +1995,7 @@ sequenceDiagram
         async function renderMermaidDiagram() {
           const code = el.codeInput.value;
           state.code = code;
-          localStorage.setItem(KEY_CODE, code);
+          safeStorage.setItem(KEY_CODE, code);
           updateLineNumbers();
 
           // Evaluate saved vs unsaved status
@@ -1885,7 +2009,7 @@ sequenceDiagram
               state.activeDiagramId = matchingSaved.id;
               state.activeDiagramTitle = matchingSaved.title;
               state.isDirty = false;
-              localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, matchingSaved.id);
+              safeStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, matchingSaved.id);
             } else {
               state.isDirty = true;
             }
@@ -1977,7 +2101,7 @@ sequenceDiagram
             state.savedDiagrams[index].canvasBg = state.canvasBg;
             state.savedDiagrams[index].updatedAt = Date.now();
             state.isDirty = false;
-            localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+            safeStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
             updateDiagramHeaderUI();
 
             showToast(`Autosaved "${state.savedDiagrams[index].title}"`, true);
@@ -1989,9 +2113,9 @@ sequenceDiagram
         function persistCanvasTransform() {
           clearTimeout(persistTransformTimer);
           persistTransformTimer = setTimeout(() => {
-            localStorage.setItem(KEY_ZOOM, state.scale.toFixed(2));
-            localStorage.setItem(KEY_PAN_X, Math.round(state.posX));
-            localStorage.setItem(KEY_PAN_Y, Math.round(state.posY));
+            safeStorage.setItem(KEY_ZOOM, state.scale.toFixed(2));
+            safeStorage.setItem(KEY_PAN_X, Math.round(state.posX));
+            safeStorage.setItem(KEY_PAN_Y, Math.round(state.posY));
           }, 150);
         }
 
@@ -2113,7 +2237,7 @@ sequenceDiagram
         function applyGrid(showGrid, persist = true) {
           state.showGrid = !!showGrid;
           if (persist) {
-            localStorage.setItem(KEY_SHOW_GRID, state.showGrid ? 'true' : 'false');
+            safeStorage.setItem(KEY_SHOW_GRID, state.showGrid ? 'true' : 'false');
           }
           if (state.showGrid) {
             el.canvasStage.classList.add('bg-dots');
@@ -2179,7 +2303,7 @@ sequenceDiagram
             } else {
               pct = Math.min(Math.max((el.paneEditor.clientWidth / window.innerWidth) * 100, 20), 80);
             }
-            localStorage.setItem(KEY_EDITOR_SPLIT, Math.round(pct));
+            safeStorage.setItem(KEY_EDITOR_SPLIT, Math.round(pct));
           }
         }
 
@@ -2207,7 +2331,7 @@ sequenceDiagram
         window.addEventListener('resize', () => {
           if (state.layout === 'split') {
             const isMobile = window.innerWidth < 768;
-            const savedSplit = parseFloat(localStorage.getItem(KEY_EDITOR_SPLIT)) || 45;
+            const savedSplit = parseFloat(safeStorage.getItem(KEY_EDITOR_SPLIT)) || 45;
             if (isMobile) {
               el.paneEditor.style.width = '100%';
               el.paneEditor.style.height = savedSplit + '%';
@@ -2222,7 +2346,7 @@ sequenceDiagram
         function applyLayout(id, persist = true) {
           state.layout = id;
           if (persist) {
-            localStorage.setItem(KEY_LAYOUT, id);
+            safeStorage.setItem(KEY_LAYOUT, id);
           }
           document.querySelectorAll('.layout-btn').forEach(b => {
             b.classList.remove('bg-white', 'text-slate-800', 'shadow-2xs', 'font-semibold');
@@ -2235,7 +2359,7 @@ sequenceDiagram
           }
 
           const isMobile = window.innerWidth < 768;
-          const savedSplit = parseFloat(localStorage.getItem(KEY_EDITOR_SPLIT)) || 45;
+          const savedSplit = parseFloat(safeStorage.getItem(KEY_EDITOR_SPLIT)) || 45;
           if (id === 'split') {
             el.paneEditor.classList.remove('hidden');
             el.paneDiagram.classList.remove('hidden');
@@ -2313,7 +2437,7 @@ sequenceDiagram
           state.activeDiagramId = null;
           state.activeDiagramTitle = 'Starter Diagram (Unsaved)';
           state.isDirty = true;
-          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+          safeStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
           renderMermaidDiagram();
           showToast('Code reset to default starter');
         };
@@ -2329,7 +2453,7 @@ sequenceDiagram
           state.activeDiagramId = null;
           state.activeDiagramTitle = `${tmpl.name} (Draft)`;
           state.isDirty = true;
-          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+          safeStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
 
           if (tmpl.id === 'monokai') {
             state.canvasBg = 'monokai';
@@ -2413,7 +2537,7 @@ sequenceDiagram
         function applyTheme(theme, persist = true, rerender = true) {
           state.theme = theme;
           if (persist) {
-            localStorage.setItem(KEY_THEME, theme);
+            safeStorage.setItem(KEY_THEME, theme);
             if (state.activeDiagramId && state.autosaveEnabled) {
               scheduleAutosave();
             }
@@ -2442,7 +2566,7 @@ sequenceDiagram
         function applyCanvasBg(bg, persist = true) {
           state.canvasBg = bg;
           if (persist) {
-            localStorage.setItem(KEY_CANVAS_BG, bg);
+            safeStorage.setItem(KEY_CANVAS_BG, bg);
             if (state.activeDiagramId && state.autosaveEnabled) {
               scheduleAutosave();
             }
@@ -2545,7 +2669,7 @@ sequenceDiagram
         // Unless pinned, the quick tool icons do NOT appear on the toolbar.
         function setToolbarPinned(isPinned, showToastMsg = false) {
           state.isToolbarPinned = isPinned;
-          localStorage.setItem(KEY_TOOLBAR_PINNED, isPinned ? 'true' : 'false');
+          safeStorage.setItem(KEY_TOOLBAR_PINNED, isPinned ? 'true' : 'false');
 
           if (isPinned) {
             el.extraToolbarGroup.classList.remove('hidden');
@@ -2648,7 +2772,7 @@ sequenceDiagram
 
         function toggleAutosave() {
           state.autosaveEnabled = !state.autosaveEnabled;
-          localStorage.setItem(KEY_AUTOSAVE_ENABLED, state.autosaveEnabled ? 'true' : 'false');
+          safeStorage.setItem(KEY_AUTOSAVE_ENABLED, state.autosaveEnabled ? 'true' : 'false');
           updateAutosaveMenuUI();
           updateDiagramHeaderUI();
 
@@ -2716,7 +2840,7 @@ sequenceDiagram
           btn.addEventListener('click', () => {
             const sc = parseInt(btn.getAttribute('data-scale'), 10);
             state.manualExportScale = sc;
-            localStorage.setItem(KEY_MANUAL_EXPORT_SCALE, sc);
+            safeStorage.setItem(KEY_MANUAL_EXPORT_SCALE, sc);
             document.querySelectorAll('.scale-choice').forEach(b => {
               b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
               b.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
@@ -2732,7 +2856,7 @@ sequenceDiagram
           btn.addEventListener('click', () => {
             const bg = btn.getAttribute('data-bg');
             state.manualExportBg = bg;
-            localStorage.setItem(KEY_MANUAL_EXPORT_BG, bg);
+            safeStorage.setItem(KEY_MANUAL_EXPORT_BG, bg);
             document.querySelectorAll('.export-bg-choice').forEach(b => {
               b.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-700', 'font-semibold');
               b.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'font-medium');
@@ -2902,6 +3026,15 @@ sequenceDiagram
         function openSaveModal(suggestedTitle = '') {
           const defaultTitle = suggestedTitle || (state.activeDiagramTitle && !state.activeDiagramTitle.includes('(Draft)') ? state.activeDiagramTitle : 'My Diagram');
           el.inputSaveDiagramTitle.value = defaultTitle;
+          const isFileProtocolOrRestricted = !safeStorage.isAvailable || safeStorage.isLocalFile;
+          const calloutEl = document.getElementById('callout-file-protocol');
+          if (calloutEl) {
+            calloutEl.classList.toggle('hidden', !isFileProtocolOrRestricted);
+          }
+          const btnConfirmLabel = document.getElementById('btn-confirm-save-label');
+          if (btnConfirmLabel) {
+            btnConfirmLabel.textContent = isFileProtocolOrRestricted ? 'Save & Download .mmd' : 'Save Diagram';
+          }
           el.modalSaveDiagram.classList.remove('hidden');
           el.inputSaveDiagramTitle.focus();
           el.inputSaveDiagramTitle.select();
@@ -2944,6 +3077,8 @@ sequenceDiagram
             return;
           }
 
+          const isFileProtocolOrRestricted = !safeStorage.isAvailable || safeStorage.isLocalFile;
+
           // If it's already an active saved diagram and not forced to prompt, save changes directly
           if (state.activeDiagramId && !forcePrompt) {
             const index = state.savedDiagrams.findIndex(d => d.id === state.activeDiagramId);
@@ -2954,9 +3089,14 @@ sequenceDiagram
               state.savedDiagrams[index].canvasBg = state.canvasBg;
               state.savedDiagrams[index].updatedAt = Date.now();
               state.isDirty = false;
-              localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+              safeStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
               updateDiagramHeaderUI();
-              showToast(`Changes saved to "${state.savedDiagrams[index].title}"!`, true);
+              if (isFileProtocolOrRestricted) {
+                downloadMermaidFile(state.savedDiagrams[index].title, state.code);
+                showToast(`Saved & downloaded "${state.savedDiagrams[index].title}.mmd"!`, true);
+              } else {
+                showToast(`Changes saved to "${state.savedDiagrams[index].title}"!`, true);
+              }
               return;
             }
           }
@@ -2970,6 +3110,7 @@ sequenceDiagram
           const cleanTitle = (title || '').trim() || 'Untitled Diagram';
           const now = Date.now();
           clearTimeout(autosaveDebounceTimer);
+          const isFileProtocolOrRestricted = !safeStorage.isAvailable || safeStorage.isLocalFile;
 
           if (state.activeDiagramId) {
             const index = state.savedDiagrams.findIndex(d => d.id === state.activeDiagramId);
@@ -2981,10 +3122,15 @@ sequenceDiagram
               state.savedDiagrams[index].updatedAt = now;
               state.activeDiagramTitle = cleanTitle;
               state.isDirty = false;
-              localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+              safeStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
               closeSaveModal();
               updateDiagramHeaderUI();
-              showToast(`Diagram "${cleanTitle}" saved to LocalStorage!`, true);
+              if (isFileProtocolOrRestricted) {
+                downloadMermaidFile(cleanTitle, state.code);
+                showToast(`Saved & downloaded "${cleanTitle}.mmd"!`, true);
+              } else {
+                showToast(`Diagram "${cleanTitle}" saved!`, true);
+              }
               return;
             }
           }
@@ -3001,16 +3147,21 @@ sequenceDiagram
           };
 
           state.savedDiagrams.unshift(newDiag);
-          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+          safeStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
 
           state.activeDiagramId = newDiag.id;
           state.activeDiagramTitle = newDiag.title;
           state.isDirty = false;
-          localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, newDiag.id);
+          safeStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, newDiag.id);
 
           closeSaveModal();
           updateDiagramHeaderUI();
-          showToast(`Diagram "${cleanTitle}" saved to LocalStorage!`, true);
+          if (isFileProtocolOrRestricted) {
+            downloadMermaidFile(cleanTitle, state.code);
+            showToast(`Saved & downloaded "${cleanTitle}.mmd"!`, true);
+          } else {
+            showToast(`Diagram "${cleanTitle}" saved!`, true);
+          }
         }
 
         // Load Diagram from LocalStorage
@@ -3023,8 +3174,8 @@ sequenceDiagram
           state.activeDiagramTitle = diag.title;
           state.code = diag.code;
           state.isDirty = false;
-          localStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, diag.id);
-          localStorage.setItem(KEY_CODE, diag.code);
+          safeStorage.setItem(KEY_ACTIVE_DIAGRAM_ID, diag.id);
+          safeStorage.setItem(KEY_CODE, diag.code);
 
           el.codeInput.value = diag.code;
 
@@ -3043,7 +3194,7 @@ sequenceDiagram
             else el.paneDiagram.classList.add('bg-white');
           }
 
-          renderSequenceDiagram();
+          renderMermaidDiagram();
           closeSavedDiagramsModal();
           updateDiagramHeaderUI();
           showToast(`Loaded "${diag.title}" from LocalStorage`, true);
@@ -3056,13 +3207,13 @@ sequenceDiagram
 
           clearTimeout(autosaveDebounceTimer);
           state.savedDiagrams = state.savedDiagrams.filter(d => d.id !== id);
-          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+          safeStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
 
           if (state.activeDiagramId === id) {
             state.activeDiagramId = null;
             state.activeDiagramTitle = `${target.title} (Unsaved Draft)`;
             state.isDirty = true;
-            localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+            safeStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
           }
 
           renderSavedDiagramsList(el.inputSearchSavedDiagrams.value);
@@ -3085,7 +3236,7 @@ sequenceDiagram
           };
 
           state.savedDiagrams.unshift(copy);
-          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+          safeStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
           renderSavedDiagramsList(el.inputSearchSavedDiagrams.value);
           updateDiagramHeaderUI();
           showToast(`Duplicated "${orig.title}"`);
@@ -3101,7 +3252,7 @@ sequenceDiagram
 
           diag.title = clean;
           diag.updatedAt = Date.now();
-          localStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
+          safeStorage.setItem(KEY_SAVED_DIAGRAMS, JSON.stringify(state.savedDiagrams));
 
           if (state.activeDiagramId === id) {
             state.activeDiagramTitle = clean;
@@ -3147,11 +3298,11 @@ sequenceDiagram
           state.activeDiagramId = null;
           state.activeDiagramTitle = 'Untitled Diagram';
           state.isDirty = false;
-          localStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+          safeStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
 
           el.codeInput.value = '';
           state.code = '';
-          localStorage.setItem(KEY_CODE, '');
+          safeStorage.setItem(KEY_CODE, '');
 
           // Reset canvas zoom & position to default center
           state.scale = 1;
@@ -3241,9 +3392,16 @@ sequenceDiagram
                   </button>
 
                   <button
+                    class="btn-download-diag-mmd p-1.5 rounded-lg text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 border border-indigo-200 transition-colors"
+                    data-diagram-id="${item.id}"
+                    title="Download .mmd file to disk"
+                  >
+                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button
                     class="btn-delete-diagram p-1.5 rounded-lg text-rose-600 hover:text-rose-800 hover:bg-rose-50 border border-rose-200 transition-colors"
                     data-diagram-id="${item.id}"
-                    title="Delete Diagram from LocalStorage"
+                    title="Delete Diagram"
                   >
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                   </button>
@@ -3271,6 +3429,17 @@ sequenceDiagram
             btn.addEventListener('click', () => {
               const id = btn.getAttribute('data-diagram-id');
               duplicateSavedDiagram(id);
+            });
+          });
+
+          el.savedDiagramsList.querySelectorAll('.btn-download-diag-mmd').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-diagram-id');
+              const diag = state.savedDiagrams.find(d => d.id === id);
+              if (diag) {
+                const fname = downloadMermaidFile(diag.title, diag.code);
+                showToast(`Downloaded ${fname}!`);
+              }
             });
           });
 
@@ -3330,6 +3499,113 @@ sequenceDiagram
             openSavedDiagramsModal();
           });
         }
+        // Direct Download .mmd from Save Modal
+        const btnSaveDownloadMmd = document.getElementById('btn-save-download-mmd');
+        if (btnSaveDownloadMmd) {
+          btnSaveDownloadMmd.addEventListener('click', () => {
+            const title = el.inputSaveDiagramTitle.value.trim() || state.activeDiagramTitle || 'diagram';
+            const fname = downloadMermaidFile(title, state.code);
+            showToast(`Downloaded ${fname}!`);
+          });
+        }
+
+        // Direct Download .mmd from Export Modal
+        const btnModalDownloadMmd = document.getElementById('btn-modal-download-mmd');
+        if (btnModalDownloadMmd) {
+          btnModalDownloadMmd.addEventListener('click', () => {
+            const fname = downloadMermaidFile(state.activeDiagramTitle, state.code);
+            showToast(`Downloaded ${fname}!`);
+          });
+        }
+
+        // Download Diagram (.mmd) from Main Menu
+        const btnMenuDownloadMmd = document.getElementById('menu-item-download-mmd');
+        if (btnMenuDownloadMmd) {
+          btnMenuDownloadMmd.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            const fname = downloadMermaidFile(state.activeDiagramTitle, state.code);
+            showToast(`Downloaded ${fname}!`);
+          });
+        }
+
+        // Open / Import Diagram File (.mmd, .mermaid, .txt) from Main Menu
+        const fileInputDiagram = document.getElementById('file-input-diagram');
+        const btnMenuImportFile = document.getElementById('menu-item-import-file');
+        if (btnMenuImportFile && fileInputDiagram) {
+          btnMenuImportFile.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+            fileInputDiagram.value = '';
+            fileInputDiagram.click();
+          });
+          fileInputDiagram.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              const text = ev.target.result;
+              if (typeof text === 'string') {
+                const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, '');
+                state.code = text;
+                el.codeInput.value = text;
+                state.activeDiagramId = null;
+                state.activeDiagramTitle = fileNameWithoutExt || 'Imported Diagram';
+                state.isDirty = false;
+                safeStorage.setItem(KEY_CODE, text);
+                safeStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+                renderMermaidDiagram();
+                updateDiagramHeaderUI();
+                updateLineNumbers();
+                showToast(`Imported "${file.name}"!`, true);
+              }
+            };
+            reader.onerror = () => showToast('Failed to read file', true);
+            reader.readAsText(file);
+          });
+        }
+
+        // Drag & Drop Diagram file import into editor pane
+        const paneEditor = document.getElementById('pane-editor');
+        if (paneEditor) {
+          paneEditor.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            paneEditor.classList.add('ring-2', 'ring-blue-500');
+          });
+          paneEditor.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            paneEditor.classList.remove('ring-2', 'ring-blue-500');
+          });
+          paneEditor.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            paneEditor.classList.remove('ring-2', 'ring-blue-500');
+            const files = e.dataTransfer && e.dataTransfer.files;
+            if (files && files.length > 0) {
+              const file = files[0];
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                const text = ev.target.result;
+                if (typeof text === 'string') {
+                  const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, '');
+                  state.code = text;
+                  el.codeInput.value = text;
+                  state.activeDiagramId = null;
+                  state.activeDiagramTitle = fileNameWithoutExt || 'Imported Diagram';
+                  state.isDirty = false;
+                  safeStorage.setItem(KEY_CODE, text);
+                  safeStorage.removeItem(KEY_ACTIVE_DIAGRAM_ID);
+                  renderMermaidDiagram();
+                  updateDiagramHeaderUI();
+                  updateLineNumbers();
+                  showToast(`Opened "${file.name}"!`, true);
+                }
+              };
+              reader.readAsText(file);
+            }
+          });
+        }
+
         if (el.btnCloseSaveModal) {
           el.btnCloseSaveModal.addEventListener('click', closeSaveModal);
         }

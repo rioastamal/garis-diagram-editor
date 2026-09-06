@@ -60,16 +60,21 @@ start index.html
 4. **Automatic Boot Configuration**:
    - Your preferences—including the last selected **Theme**, **Canvas Background**, **Zoom scale**, **Pan coordinates**, **Grid state**, **Layout mode**, and **Editor split**—are automatically remembered and loaded at boot time.
 
-5. **Save & Autosave (LocalStorage)**:
+5. **Save & Autosave (LocalStorage & file:// Safe Storage)**:
    - Save your diagram to LocalStorage using the **Save** button or <kbd>Ctrl</kbd> + <kbd>S</kbd> / <kbd>Cmd</kbd> + <kbd>S</kbd>.
+   - **Offline `file://` Safe Fallback**: When opened directly from disk via `file://` protocol, browser security sandboxes persistent LocalStorage. The built-in Safe Storage wrapper catches this gracefully, maintains an in-memory session store, and triggers an automatic direct download of the diagram as a `.mmd` file to your computer.
    - **Autosave**: Once saved, any subsequent code, theme, or background edits are automatically saved in the background after an 800ms debounce. You can toggle Autosave on/off at any time from the main menu.
-   - Open **Load Saved Diagrams** from the menu to search, load, duplicate, rename, or delete saved diagrams.
+   - Open **Load Saved Diagrams** from the menu to search, load, duplicate, rename, download `.mmd`, or delete saved diagrams.
+   - **Direct File Import & Drag-and-Drop**: You can open `.mmd`, `.mermaid`, or `.txt` files directly from disk via "Open Diagram File..." or by dragging and dropping them straight onto the editor.
 
-6. **Export Your Work**:
+6. **Export & File Sharing**:
    - **Quick PNG**: Click the Quick Download icon for an instant 2x PNG download.
    - **Custom Export**: Open the Export dialog to choose image resolution (`1x`, `2x`, `3x`, `4x`) and background color (`White`, `Dark`, `Transparent`, `Monokai`).
    - **Vector SVG**: Download scalable SVG vector files or copy raw SVG markup directly to your clipboard.
+   - **Download .mmd**: Export raw Mermaid source code directly as a `.mmd` file from the main menu, Save dialog, Export dialog, or library cards.
    - **Copy Code**: Copy the Mermaid syntax directly to your clipboard.
+
+> **Tip for `file://` usage**: When opening `index.html` or `dist/index.html` directly from disk via `file://`, modern browsers restrict persistent LocalStorage for security reasons. Garis handles this seamlessly by keeping diagrams in memory and downloading `.mmd` files directly to your computer. For persistent cross-session LocalStorage, you can also run a quick local HTTP server (e.g., `python3 -m http.server 3000` or `npx serve .`).
 
 ---
 
@@ -116,7 +121,7 @@ start index.html
 ## Tech Stack
 
 - **Application**: Vanilla HTML5, CSS3, ES2022 JavaScript (no framework overhead)
-- **Diagram Engine**: [Mermaid.js](https://mermaid.js.org/) (v10.9.1 loaded via CDN)
+- **Diagram Engine**: [Mermaid.js](https://mermaid.js.org/) (v11 loaded via CDN)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) (loaded via CDN)
 - **Iconography**: [Lucide Icons](https://lucide.dev/) (loaded via CDN)
 
