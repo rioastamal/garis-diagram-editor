@@ -40,21 +40,6 @@ xdg-open index.html
 start index.html
 ```
 
-*(Optional)* If you prefer serving it over a local HTTP server:
-
-```bash
-# Using Python 3
-python3 -m http.server 3000
-
-# Using PHP
-php -S localhost:3000
-
-# Using npx
-npx serve .
-```
-
-Then visit `http://localhost:3000` in your browser.
-
 ---
 
 ## How to Use
@@ -137,11 +122,27 @@ Then visit `http://localhost:3000` in your browser.
 
 ---
 
+## Offline Standalone Build
+
+To generate a 100% offline self-contained HTML file with all CDN libraries (Tailwind CSS, Lucide Icons, and Mermaid.js) downloaded and inlined:
+
+```bash
+# Run the offline build script
+./build.sh
+```
+
+The offline bundle will be created at `dist/index.html`. You can open this file in any browser without any internet connection.
+
+---
+
 ## Project Structure
 
 ```text
 .
-├── index.html          # Complete self-contained application (UI, styling, and logic)
+├── index.html          # Source application (UI, styling, and logic)
+├── build.sh            # Script to build 100% offline standalone bundle
+├── dist/
+│   └── index.html      # Compiled 100% offline standalone application
 ├── LICENSE             # MIT License
 └── README.md           # Documentation
 ```
