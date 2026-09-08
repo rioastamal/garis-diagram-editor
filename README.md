@@ -179,6 +179,7 @@ The offline bundle will be created at `dist/index.html`. You can open this file 
 - **GitHub Repository Menu**: Added direct GitHub repository menu item under *About & Community* in the main tools menu.
 - **Icon Rendering Fix**: Rendered GitHub icon with a native inline SVG mark.
 - **Version Indicator**: Displayed diagram editor version (`v1.1`) under the GitHub menu linking to GitHub release notes.
+- **Mobile Theme Dropdown Alignment**: Fixed canvas toolbar theme dropdown positioning from `right-0` to `left-0` with vertical scrolling to prevent off-screen overflow on mobile.
 
 ### v1.0
 - **Initial Release**: Standalone browser-native Mermaid diagram editor and visualizer in a single portable file (`index.html`).
