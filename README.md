@@ -21,7 +21,7 @@ There is **no installation, no npm packages, and no build step** required.
 Download [`index.html`](index.html) directly, or clone the repository:
 
 ```bash
-git clone https://github.com/your-username/garis-diagram-editor.git
+git clone https://github.com/rioastamal/garis-diagram-editor.git
 cd garis-diagram-editor
 ```
 
