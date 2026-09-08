@@ -532,6 +532,24 @@
                 </div>
                 <i data-lucide="external-link" class="w-4 h-4 text-slate-400 group-hover:text-slate-600"></i>
               </a>
+
+              <!-- Diagram Version -->
+              <div class="px-3 pt-2 pb-1 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                <div class="flex items-center gap-1.5 text-slate-500">
+                  <i data-lucide="tag" class="w-3.5 h-3.5 text-slate-400"></i>
+                  <span>Diagram Version</span>
+                </div>
+                <a
+                  id="menu-item-version"
+                  href="https://github.com/rioastamal/garis-diagram-editor/releases/tag/v1.1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-mono text-[10px] font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 px-2 py-0.5 rounded border border-slate-200 hover:border-blue-200 transition-colors"
+                  title="View v1.1 on GitHub"
+                >
+                  v1.1
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -3588,10 +3606,16 @@ sequenceDiagram
           });
         }
 
-        // GitHub Repository menu item click (close dropdown)
+        // GitHub Repository & Version click (close dropdown)
         const menuItemGithub = document.getElementById('menu-item-github');
         if (menuItemGithub) {
           menuItemGithub.addEventListener('click', () => {
+            if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
+          });
+        }
+        const menuItemVersion = document.getElementById('menu-item-version');
+        if (menuItemVersion) {
+          menuItemVersion.addEventListener('click', () => {
             if (el.dropdownMainMenu) el.dropdownMainMenu.classList.add('hidden');
           });
         }

@@ -6,6 +6,23 @@ Supports **all Mermaid diagram families**: Flowcharts, Sequence Diagrams, Mindma
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [How to Run (Standalone Mode)](#how-to-run-standalone-mode)
+- [How to Use](#how-to-use)
+- [Key Features](#key-features)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Tech Stack](#tech-stack)
+- [Offline Standalone Build](#offline-standalone-build)
+- [Project Structure](#project-structure)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
+---
+
 ## Overview
 
 **Garis Diagram Editor** is a 100% client-side, zero-build tool designed for software engineers, systems architects, and technical writers. Everything—the code editor, live SVG diagram renderer, interactive pan/zoom canvas, LocalStorage library with autosave, boot-time configuration persistence, and multi-format export engine—runs entirely in your browser inside one portable file: `index.html`.
@@ -151,6 +168,29 @@ The offline bundle will be created at `dist/index.html`. You can open this file 
 ├── LICENSE             # MIT License
 └── README.md           # Documentation
 ```
+
+---
+
+## Changelog
+
+### v1.1
+- **Mobile UI Optimization**: Hide "Untitled Diagram" title and save status badge on mobile viewports to prevent header clutter.
+- **Mobile Pinch-to-Zoom Restriction**: Disabled mobile browser viewport pinch-to-zoom across the UI while preserving responsive pinch-zooming exclusively within the diagram canvas pane.
+- **GitHub Repository Menu**: Added direct GitHub repository menu item under *About & Community* in the main tools menu.
+- **Icon Rendering Fix**: Rendered GitHub icon with a native inline SVG mark.
+- **Version Indicator**: Displayed diagram editor version (`v1.1`) under the GitHub menu linking to GitHub release notes.
+
+### v1.0
+- **Initial Release**: Standalone browser-native Mermaid diagram editor and visualizer in a single portable file (`index.html`).
+- **Comprehensive Diagram Support**: Support for Flowcharts, Sequence Diagrams, Mindmaps, Class Diagrams, State Diagrams, ER Models, and Git Graphs.
+- **Live Preview & Validation**: Real-time syntax validation, instant diagram compilation, and line/character count metrics.
+- **Interactive Canvas**: Multi-directional mouse and touch panning, zoom controls (20% to 350%), fit-to-screen, and customizable canvas grid.
+- **Theming & Backgrounds**: 6 Mermaid themes (Default, Dark, Forest, Neutral, Base, Monokai) and 5 canvas background presets.
+- **LocalStorage & Autosave**: Local diagram management (save, load, duplicate, rename, delete) with debounced background autosaving.
+- **Offline `file://` Protocol Fallback**: In-memory session store and direct `.mmd` file export when opened directly from disk.
+- **Multi-Format Export**: High-DPI PNG export (1x–4x), scalable vector SVG download/copy, and raw `.mmd` source file download.
+- **Starter Templates**: Pre-loaded diagrams for software architectures, workflows, and state machines.
+- **Offline Build Tooling**: Added `build.sh` script to inline all dependencies into a standalone offline `dist/index.html`.
 
 ---
 
