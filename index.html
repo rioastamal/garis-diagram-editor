@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Garis Diagram Editor - Standalone Visualizer</title>
     <meta name="description" content="Garis Diagram Editor - Real-time Mermaid diagram editor and visualizer for flowcharts, sequence diagrams, mindmaps, architecture models, and more in standalone Vanilla JS." />
     <meta property="og:title" content="Garis Diagram Editor" />
@@ -45,6 +45,9 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 
     <style>
+      html, body {
+        touch-action: pan-x pan-y;
+      }
       body {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         color: #1e293b;
@@ -74,6 +77,9 @@
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
+      }
+      #canvas-stage {
+        touch-action: none;
       }
       /* Ensure Mermaid SVG scales nicely inside container */
       .mermaid-container svg {
@@ -663,7 +669,7 @@
         </div>
 
         <!-- Pan & Drag Interactive Stage -->
-        <div id="canvas-stage" class="relative flex-1 w-full h-full overflow-hidden cursor-grab active:cursor-grabbing bg-dots">
+        <div id="canvas-stage" class="relative flex-1 w-full h-full overflow-hidden cursor-grab active:cursor-grabbing bg-dots touch-none">
           <div id="canvas-transform" class="absolute inset-0 flex items-center justify-center pointer-events-none p-12 transition-transform duration-75">
             <div id="mermaid-target" class="mermaid-container pointer-events-auto filter drop-shadow-sm select-text"></div>
           </div>
@@ -2166,13 +2172,14 @@ sequenceDiagram
             );
             initialPinchScale = state.scale;
           }
-        }, { passive: true });
+        }, { passive: false });
 
         window.addEventListener('touchmove', (e) => {
           if (state.isDragging && e.touches.length === 1) {
             state.posX = e.touches[0].clientX - state.dragStart.x;
             state.posY = e.touches[0].clientY - state.dragStart.y;
             updateCanvasTransform();
+            if (e.cancelable) e.preventDefault();
           } else if (e.touches.length === 2 && touchStartDist > 0) {
             const dist = Math.hypot(
               e.touches[0].clientX - e.touches[1].clientX,
@@ -2181,8 +2188,9 @@ sequenceDiagram
             const factor = dist / touchStartDist;
             state.scale = Math.max(0.2, Math.min(3.5, initialPinchScale * factor));
             updateCanvasTransform();
+            if (e.cancelable) e.preventDefault();
           }
-        }, { passive: true });
+        }, { passive: false });
 
         window.addEventListener('touchend', () => {
           if (state.isDragging) {
@@ -2191,6 +2199,38 @@ sequenceDiagram
           }
           touchStartDist = 0;
         }, { passive: true });
+
+        window.addEventListener('touchcancel', () => {
+          if (state.isDragging) {
+            state.isDragging = false;
+            persistCanvasTransform();
+          }
+          touchStartDist = 0;
+        }, { passive: true });
+
+        // Disable viewport pinch-to-zoom everywhere outside canvas stage
+        document.addEventListener('touchstart', (e) => {
+          if (e.touches.length > 1 && !e.target.closest('#canvas-stage')) {
+            if (e.cancelable) e.preventDefault();
+          }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+          if (e.touches.length > 1 && !e.target.closest('#canvas-stage')) {
+            if (e.cancelable) e.preventDefault();
+          }
+        }, { passive: false });
+
+        // Prevent iOS Safari page-level pinch-to-zoom gestures
+        document.addEventListener('gesturestart', (e) => {
+          e.preventDefault();
+        });
+        document.addEventListener('gesturechange', (e) => {
+          e.preventDefault();
+        });
+        document.addEventListener('gestureend', (e) => {
+          e.preventDefault();
+        });
 
         el.canvasStage.addEventListener('wheel', (e) => {
           if (e.ctrlKey || e.metaKey) {
