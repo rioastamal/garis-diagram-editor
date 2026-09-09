@@ -173,6 +173,9 @@ The offline bundle will be created at `dist/index.html`. You can open this file 
 
 ## Changelog
 
+### v1.2.1
+- **Fullscreen Export Dialog Fix**: Relocated the export modal inside the diagram pane (`#pane-diagram`) so that the Export dialog opens and renders properly while in fullscreen mode.
+
 ### v1.2
 - **Zoom Controls Reordering**: Swapped Zoom In and Zoom Out button positions (`[ - ] [ 100% ] [ + ]`) in the diagram pane toolbar for a more conventional zoom layout.
 
