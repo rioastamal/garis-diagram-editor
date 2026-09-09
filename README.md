@@ -173,6 +173,9 @@ The offline bundle will be created at `dist/index.html`. You can open this file 
 
 ## Changelog
 
+### v1.2
+- **Zoom Controls Reordering**: Swapped Zoom In and Zoom Out button positions (`[ - ] [ 100% ] [ + ]`) in the diagram pane toolbar for a more conventional zoom layout.
+
 ### v1.1
 - **Mobile UI Optimization**: Hide "Untitled Diagram" title and save status badge on mobile viewports to prevent header clutter.
 - **Mobile Pinch-to-Zoom Restriction**: Disabled mobile browser viewport pinch-to-zoom across the UI while preserving responsive pinch-zooming exclusively within the diagram canvas pane.
